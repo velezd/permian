@@ -1,3 +1,3 @@
 rpms:
 test:
-docs:
+doc:
