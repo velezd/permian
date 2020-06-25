@@ -10,6 +10,8 @@ Welcome to rtt-pipeline's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   classes
+
 Indices and tables
 ==================
 
