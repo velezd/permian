@@ -1,5 +1,6 @@
+.PHONY: rpms test doc
+
 rpms:
 test:
 doc:
-	mkdir -p doc/_build/html
-	touch doc/_build/html/empty
+	make -C doc html
