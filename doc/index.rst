@@ -11,6 +11,7 @@ Welcome to rtt-pipeline's documentation!
    :caption: Contents:
 
    classes
+   plugins
 
 Indices and tables
 ==================
