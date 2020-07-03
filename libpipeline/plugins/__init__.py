@@ -12,6 +12,7 @@ import os
 from importlib import import_module
 
 from ..workflows.factory import WorkflowFactory
+from ..reportsenders.factory import ReportSenderFactory
 
 def load():
     """Import all plugin packages."""
@@ -43,12 +44,13 @@ def register_provisioner(name, provisioner_class=None):
 
 def register_reportSender(name, reportSender_class=None):
     """
-    Redirects to TODO
+    Redirects to ReportSenderFactory.register
 
     ReportSenders handle sending of the results to external systems such as
     email, messagebus or test case management systems. They could also provide
     locally available resutls summary files.
     """
+    return ReportSenderFactory.register(name, reportSender_class)
 
 
 def register_resultsProcessor(name, resultsProcessor_class=None):
