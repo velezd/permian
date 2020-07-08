@@ -100,6 +100,14 @@ class TestRuns():
         """
         # TODO: wait also for ResultsCollector (which should wait for all ResultsSenders)
 
+    # TODO: consider using functools.lru_cache or functools.cached_property
+    @property
+    def testPlansMapping(self):
+        """
+        Mapping of testPlans to caseRunConfigurations. The keys are TestPlan
+        ids and values are caseRunConfigurations which belong to the TestPlan.
+        """
+
 class CaseRunConfiguration():
     """Representation of case-run-configuration containing logic for state and
     result management as well as information about workflow responsible for
