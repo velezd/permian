@@ -13,6 +13,7 @@ from importlib import import_module
 
 from ..workflows.factory import WorkflowFactory
 from ..reportsenders.factory import ReportSenderFactory
+from .. import hooks
 
 def load():
     """Import all plugin packages."""
@@ -61,3 +62,27 @@ def register_resultsProcessor(name, resultsProcessor_class=None):
     additional information based on external sources such as bugzilla or change
     state of the results.
     """
+
+def make_hook(name):
+    """
+    Redirects to hooks.define
+
+    TBD
+    """
+    return hooks.define(name)
+
+def hook_callback(hook_name):
+    """
+    Redirects to hooks.run_on
+
+    TBD
+    """
+    return hooks.run_on(hook_name)
+
+def hook_threaded_callback(hook_name):
+    """
+    Redirects to hooks.run_threaded_on
+
+    TBD
+    """
+    return hooks.run_threaded_on(hook_name)
