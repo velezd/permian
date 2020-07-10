@@ -3,9 +3,10 @@ import inspect
 import itertools
 import threading
 
+from . import builtin
+
 HOOKS = {}
 CALLBACKS = {}
-
 
 def define(name=None):
     """
