@@ -11,6 +11,7 @@ here.
 import os
 from importlib import import_module
 
+from ..events.factory import EventFactory
 from ..workflows.factory import WorkflowFactory
 from ..reportsenders.factory import ReportSenderFactory
 from .. import hooks
@@ -62,6 +63,14 @@ def register_resultsProcessor(name, resultsProcessor_class=None):
     additional information based on external sources such as bugzilla or change
     state of the results.
     """
+
+def register_event(name, event_class=None):
+    """
+    Redirects to EventFactory.register
+
+    TBD
+    """
+    return EventFactory.register(name, event_class)
 
 def make_hook(name):
     """
