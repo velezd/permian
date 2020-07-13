@@ -25,11 +25,14 @@ def pipeline_command(base_parser, args):
     Note that this technique (calling other parsers from the parse function)
     should be avoided.
     """
-    base_parser.add_argument('command')
+    base_parser.add_argument(
+        'command',
+        choices=CliFactory.known_commands((None, 'pipeline'))
+    )
     options, _ = base_parser.parse_known_args(args)
     return CliFactory.parse(options.command, args, base_parser)
 
 @CliFactory.register(None)
 def unknown_command(base_parser, args):
-    print('Pipeline executed with unknown command.')
+    print('Pipeline executed with unknown name (no corresponding command was found).')
     sys.exit(2)

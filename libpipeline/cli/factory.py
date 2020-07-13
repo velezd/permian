@@ -19,3 +19,7 @@ class CliFactory():
             base_parser = base_argparser()
         parser = cls.commands.get(name, cls.commands[None])
         return parser(base_parser, args)
+
+    @classmethod
+    def known_commands(cls, excludes=(None)):
+        return [ cmd for cmd in cls.commands if cmd not in excludes ]
