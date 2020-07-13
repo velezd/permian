@@ -52,11 +52,11 @@ def register_event(name, event_class=None):
 
 def make_hook(name):
     """
-    Redirects to hooks.define
+    Redirects to hooks.register.define
 
     TBD
     """
-    return hooks.define(name)
+    return hooks.register.define(name)
 
 def hook_callback(hook_name):
     """
@@ -64,7 +64,7 @@ def hook_callback(hook_name):
 
     TBD
     """
-    return hooks.run_on(hook_name)
+    return hooks.register.run_on(hook_name)
 
 def hook_threaded_callback(hook_name):
     """
@@ -72,4 +72,4 @@ def hook_threaded_callback(hook_name):
 
     TBD
     """
-    return hooks.run_threaded_on(hook_name)
+    return hooks.register.run_threaded_on(hook_name)

@@ -1,4 +1,4 @@
-from . import define
+from .register import define
 
 @define()
 def pipeline_ended(pipeline):
