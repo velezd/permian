@@ -14,6 +14,8 @@ class CliFactory():
         return decorator
 
     @classmethod
-    def parse(cls, name, args):
+    def parse(cls, name, args, base_parser=None):
+        if base_parser is None:
+            base_parser = base_argparser()
         parser = cls.commands.get(name, cls.commands[None])
-        return parser(base_argparser(), args)
+        return parser(base_parser, args)
