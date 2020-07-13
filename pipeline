@@ -1,0 +1,5 @@
+#!/usr/bin/python
+
+from libpipeline.cli import main
+
+main()
