@@ -51,7 +51,7 @@ def register_event(name, event_class=None):
     """
     return EventFactory.register(name, event_class)
 
-def make_hook(name):
+def make_hook(name=None):
     """
     Redirects to hooks.register.define
 
