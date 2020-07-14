@@ -12,6 +12,7 @@ CliFactory class.
 import sys
 import os
 
+from .. import plugins
 from ..pipeline import run_pipeline
 from .factory import CliFactory
 from . import builtin
@@ -26,6 +27,7 @@ def main(*raw_args):
     Custom CLI arguments can be optionally provided as *args. If those are not
     provided sys.argv content is used as CLI arguments.
     """
+    plugins.load()
     if not raw_args:
         raw_args = sys.argv
     command_name, *args = raw_args
