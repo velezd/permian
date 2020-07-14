@@ -13,7 +13,7 @@ from importlib import import_module
 
 def load():
     """Import all plugin packages."""
-    plugins_path = 'plugins'
+    plugins_path = os.path.dirname(os.path.abspath(__file__))
     for plugin_name in sorted(os.listdir(plugins_path)):
         if not os.path.isdir(os.path.join(plugins_path, plugin_name)):
             continue
