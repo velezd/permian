@@ -11,6 +11,7 @@ CliFactory class.
 
 import sys
 import os
+import logging
 
 from .. import plugins
 from ..pipeline import run_pipeline
@@ -33,5 +34,12 @@ def main(*raw_args):
     command_name, *args = raw_args
     filename = os.path.basename(command_name)
     options, event_spec = CliFactory.parse(filename, args)
+    # TODO: Move logging_level to config where --debug|--quiet would set override
+    logging_level = logging.INFO
+    if options.debug:
+        logging_level = logging.DEBUG
+    if options.quiet:
+        logging_level = logging.WARN
+    logging.basicConfig(level=logging_level)
     result = run_pipeline(event_spec, options.config, options.override)
     sys.exit(result)

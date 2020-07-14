@@ -14,6 +14,17 @@ def base_argparser():
         action='append',
         help='',
     )
+    verbosity = parser.add_mutually_exclusive_group()
+    verbosity.add_argument(
+        '--debug', '-d',
+        action='store_true',
+        help='',
+    )
+    verbosity.add_argument(
+        '--quiet', '-q',
+        action='store_true',
+        help='',
+    )
     return parser
 
 class Override():
