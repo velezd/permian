@@ -1,11 +1,15 @@
 import copy
 import os
 import threading
+import logging
 
 from .config import Config
 from .events.factory import EventFactory
 from .testruns import TestRuns
+from .webui import WebUI
 from . import hooks
+
+LOGGER = logging.getLogger(__name__)
 
 def run_pipeline(event, config_paths, overrides, env=None):
     """
@@ -52,6 +56,7 @@ class Pipeline():
         self.library = None
         self.testRuns = None
         self.executed = False
+        self.webUI = None
 
     def _checkThreads(self):
         """
@@ -70,11 +75,14 @@ class Pipeline():
         and when ended all the pipeline related activities (except daemon
         threads) are be finished.
         """
+        LOGGER.debug('Starting pipeline')
         self._checkThreads()
         if self.executed:
             raise Exception('The pipeline can be executed only once')
         self.executed = True
+        LOGGER.debug('Starting WebUI')
         self._startWebUI()
+        LOGGER.debug('WebUI started')
         self._cloneLibrary()
         self._makeTestRuns()
         self._prepareReporting()
@@ -90,7 +98,9 @@ class Pipeline():
         Start WebUI daemon thread and start providing the pipeline status over
         HTTP.
         """
-        pass
+        self.webUI = WebUI(self)
+        self.webUI.start()
+        self.webUI.waitUntilStarted()
 
     def _cloneLibrary(self, target_directory=None):
         """
