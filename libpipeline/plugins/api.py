@@ -1,6 +1,7 @@
 from ..events.factory import EventFactory
 from ..workflows.factory import WorkflowFactory
 from ..reportsenders.factory import ReportSenderFactory
+from ..cli.factory import CliFactory
 from .. import hooks
 
 def register_workflow(name, workflow_class=None):
@@ -73,3 +74,21 @@ def hook_threaded_callback(hook_name):
     TBD
     """
     return hooks.register.run_threaded_on(hook_name)
+
+
+def register_command_parser(name, parse_function=None):
+    """
+    Redirects to cli.factory.CliFactory.register_command
+
+    TBD
+    """
+    return CliFactory.register_command(name, parse_function)
+
+
+def register_command_args_extension(extension):
+    """
+    Redirects to cli.factory.CliFactory.register_argparser_extension
+
+    TBD
+    """
+    return CliFactory.register_argparser_extension(extension)
