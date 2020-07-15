@@ -1,3 +1,26 @@
+"""
+TODO: Add information about possibilities to extend the pipeline. It should be categorized so that one can focus only on the area they want to extend.
+In each category, provide description about which tclib data is handled by the extension (in case of Workflow, ReportSender)
+
+Workflows:
+
+Provisioners:
+
+ReportSenders:
+
+ResultsProcessors:
+
+Input events (triggers):
+Note: Mention it's good to add CLI actions associated with the event (creating the event)
+
+CommandLine:
+
+Web UI:
+
+Hooks:
+
+"""
+
 from ..events.factory import EventFactory
 from ..workflows.factory import WorkflowFactory
 from ..reportsenders.factory import ReportSenderFactory
