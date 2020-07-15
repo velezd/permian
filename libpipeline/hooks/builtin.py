@@ -1,6 +1,6 @@
 from .register import define
 
-@define()
+@define
 def pipeline_ended(pipeline):
     """
     Signal the pipeline and all non-daemon threads have ended and no further

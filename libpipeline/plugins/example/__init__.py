@@ -55,17 +55,17 @@ class ExampleEvent(Event):
         super().__init__(event_type, payload, other_data)
         example_hook('Hello from Event constructor')
 
-@api.make_hook()
+@api.make_hook
 def example_hook(msg):
     pass
 
 # let's call threaded callback first
-@api.hook_threaded_callback('example_hook')
+@api.hook_threaded_callback(example_hook)
 def example_threaded_callback(msg):
     time.sleep(0.5)
     LOGGER.info('(threaded) Example hook says: %r' % msg)
 
-@api.hook_callback('example_hook')
+@api.hook_callback(example_hook)
 def example_callback(msg):
     LOGGER.info('Example hook says: %r' % msg)
     LOGGER.debug("And here's also a debug message!")

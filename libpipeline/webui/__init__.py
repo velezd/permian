@@ -25,7 +25,7 @@ def get_random_free_port():
 def get_ip():
     return socket.gethostbyname(socket.gethostname())
 
-@run_threaded_on('WebUI_starting')
+@run_threaded_on(hooks.WebUI_starting)
 def signalWhenStarted(webUI):
     while True:
         try:
@@ -44,7 +44,7 @@ def signalWhenStarted(webUI):
             break
     webUI.unlock()
 
-@run_on('WebUI_started')
+@run_on(hooks.WebUI_started)
 def webUIStartedMsg(webUI):
     LOGGER.info(f'WebUI started at: {webUI.address}')
     
