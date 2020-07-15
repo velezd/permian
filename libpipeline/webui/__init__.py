@@ -3,7 +3,9 @@ import logging
 import requests
 import time
 import socket
-from flask import Flask
+import uuid
+import flask
+from flask import Flask, Blueprint
 
 from ..hooks.register import run_on, run_threaded_on
 from . import hooks
@@ -29,7 +31,7 @@ def get_ip():
 def signalWhenStarted(webUI):
     while True:
         try:
-            response = requests.get(webUI.address)
+            response = requests.get(f'{webUI.address}webUIuuid') # TODO: Fix the URL creation
         except requests.exceptions.ConnectionError:
             # The WebUI is not listening on the port
             if not webUI.is_alive():
@@ -39,29 +41,40 @@ def signalWhenStarted(webUI):
             continue
         if response.status_code == 200:
             # TODO: check uuid of the WebUI instance to detect possible port collision with other pipeline running on the same host
+            if response.text != webUI.uuid:
+                raise Exception("UUID of the webUI doesn't match. There's some other application/webUI running on the expected port!")
             break
-        if response.status_code == 404: # TODO: Remove me
-            break
+        continue
     webUI.unlock()
 
 @run_on(hooks.WebUI_started)
 def webUIStartedMsg(webUI):
     LOGGER.info(f'WebUI started at: {webUI.address}')
-    
+
+@run_on(hooks.WebUI_started)
+def waitAWhile(webUI):
+    time.sleep(30)
+
 class WebUI(threading.Thread):
-    app = Flask(__name__)
     def __init__(self, pipeline):
         super().__init__(daemon=True)
+        self.app = Flask(__name__)
+        self.app.register_blueprint(main)
         self.pipeline = pipeline
         self.listen_ip = self.config('listen_ip')
         self.port = None # delay obtaining the port until the very moment before the flask app is started to limit potential random port collision
         self._operationalLock = threading.Lock()
         self._operationalLock.acquire() # immediately acquire the lock as the webUI is not running yet
+        self.uuid = uuid.uuid4().hex
+        self.app.config.update(
+            ENV='embedded',
+            pipeline=self.pipeline,
+            webUI=self,
+        )
 
     def run(self):
         self.port = get_port(self.config('port'))
         hooks.WebUI_starting(self)
-        self.app.config.update(ENV='embedded')
         self.app.run(self.listen_ip, self.port)
 
     def config(self, option):
@@ -84,3 +97,19 @@ class WebUI(threading.Thread):
         LOGGER.debug(f'Unlocking webUI {self}')
         hooks.WebUI_started(self)
         self._operationalLock.release()
+
+def currentWebUI():
+    return flask.current_app.config['webUI']
+
+def currentPipeline():
+    return flask.current_app.config['pipeline']
+
+main = Blueprint('main', __name__)
+
+@main.route('/')
+def index():
+    return 'Hello!'
+
+@main.route('/webUIuuid')
+def webUIuuid():
+    return currentWebUI().uuid
