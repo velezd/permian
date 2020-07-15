@@ -2,6 +2,7 @@ from ..events.factory import EventFactory
 from ..workflows.factory import WorkflowFactory
 from ..reportsenders.factory import ReportSenderFactory
 from ..cli.factory import CliFactory
+from ..webui import WebUI
 from .. import hooks
 
 def register_workflow(name, workflow_class=None):
@@ -92,3 +93,11 @@ def register_command_args_extension(extension):
     TBD
     """
     return CliFactory.register_argparser_extension(extension)
+
+def register_WebUI_blueprint(blueprint):
+    """
+    Redirects to webui.WebUI.registerBlueprint
+
+    TBD
+    """
+    return WebUI.registerBlueprint(blueprint)

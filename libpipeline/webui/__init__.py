@@ -56,10 +56,18 @@ def waitAWhile(webUI):
     time.sleep(30)
 
 class WebUI(threading.Thread):
+    blueprints=[]
+
+    @classmethod
+    def registerBlueprint(cls, blueprint):
+        cls.blueprints.append(blueprint)
+        return blueprint
+
     def __init__(self, pipeline):
         super().__init__(daemon=True)
         self.app = Flask(__name__)
-        self.app.register_blueprint(main)
+        for blueprint in self.blueprints:
+            self.app.register_blueprint(blueprint)
         self.pipeline = pipeline
         self.listen_ip = self.config('listen_ip')
         self.port = None # delay obtaining the port until the very moment before the flask app is started to limit potential random port collision
@@ -105,6 +113,7 @@ def currentPipeline():
     return flask.current_app.config['pipeline']
 
 main = Blueprint('main', __name__)
+WebUI.registerBlueprint(main)
 
 @main.route('/')
 def index():
