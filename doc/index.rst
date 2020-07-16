@@ -12,6 +12,7 @@ Welcome to rtt-pipeline's documentation!
 
    classes
    plugins
+   webui
 
 Indices and tables
 ==================
