@@ -8,8 +8,11 @@ Plugins should add their functionality only via functions defined in
 libpipeline.plugins.api
 """
 
+import logging
 import os
 from importlib import import_module
+
+from . import api
 
 def load():
     """Import all plugin packages."""

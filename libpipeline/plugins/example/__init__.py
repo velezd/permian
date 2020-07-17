@@ -9,7 +9,7 @@ from ...reportsenders.base import BaseReportSender
 
 LOGGER = logging.getLogger(__name__)
 
-@api.register_workflow("example")
+@api.workflows.register("example")
 class ExampleWorkflow(IsolatedWorkflow):
     def execute(self):
         LOGGER.info("Let's rock!")
@@ -27,7 +27,7 @@ class ExampleWorkflow(IsolatedWorkflow):
 class ExampleProvisioner():
     pass
 
-@api.register_reportSender
+@api.reportsenders.register
 class ExampleReportSender(BaseReportSender):
     def processPartialResult(self, result):
         LOGGER.info('Got partial result: %r', result)
@@ -49,34 +49,34 @@ class ExampleReportSender(BaseReportSender):
 class ExampleResultsProcessor():
     pass
 
-@api.register_event('example')
+@api.events.register('example')
 class ExampleEvent(Event):
     def __init__(self, event_type, payload, other_data):
         super().__init__(event_type, payload, other_data)
         example_hook('Hello from Event constructor')
 
-@api.make_hook
+@api.hooks.make
 def example_hook(msg):
     pass
 
 # let's call threaded callback first
-@api.hook_threaded_callback(example_hook)
+@api.hooks.threaded_callback_on(example_hook)
 def example_threaded_callback(msg):
     time.sleep(0.5)
     LOGGER.info('(threaded) Example hook says: %r' % msg)
 
-@api.hook_callback(example_hook)
+@api.hooks.callback_on(example_hook)
 def example_callback(msg):
     LOGGER.info('Example hook says: %r' % msg)
     LOGGER.debug("And here's also a debug message!")
     time.sleep(1)
 
-@api.register_command_parser('example')
+@api.cli.register_command_parser('example')
 def example_command(base_parser, args):
     options = base_parser.parse_args(args)
     return options, json.dumps({'type': 'example', 'payload':None})
 
-@api.register_command_args_extension
+@api.cli.register_command_args_extension
 def example_argparse_extension(parser):
     parser.add_argument('--example-argument', action='store_true')
     return parser
