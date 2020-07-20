@@ -5,7 +5,7 @@ import time
 import socket
 import uuid
 import flask
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint, render_template
 
 from ..hooks.register import run_on, run_threaded_on
 from . import hooks
@@ -108,7 +108,7 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    return 'Hello!'
+    return render_template('index.html')
 
 @main.route('/webUIuuid')
 def webUIuuid():
