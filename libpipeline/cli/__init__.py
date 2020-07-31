@@ -25,7 +25,7 @@ def main(*raw_args):
     the file from which the pipeline is executed) and corresponding command
     parser is used for event generation and option parsing.
 
-    Custom CLI arguments can be optionally provided as *args. If those are not
+    Custom CLI arguments can be optionally provided as \*args. If those are not
     provided sys.argv content is used as CLI arguments.
     """
     plugins.load()

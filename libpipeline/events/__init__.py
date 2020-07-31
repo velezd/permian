@@ -24,6 +24,7 @@ mandatory items:
  * payload
 
 Resulting in json like::
+
   {
     'type' : 'explosion',
     'payload' : {
