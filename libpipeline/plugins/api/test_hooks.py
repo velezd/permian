@@ -3,6 +3,7 @@ from time import sleep
 from libpipeline.plugins.api.hooks import make, callback_on, threaded_callback_on
 from libpipeline.hooks.register import HOOKS, CALLBACKS
 
+hook_function = None
 
 class TestHooksApi(unittest.TestCase):
     OLD_HOOKS = []
@@ -19,8 +20,8 @@ class TestHooksApi(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        HOOKS = cls.OLD_HOOKS.copy()
-        CALLBACKS = cls.OLD_CALLBACKS.copy()
+        HOOKS = cls.OLD_HOOKS
+        CALLBACKS = cls.OLD_CALLBACKS
         global hook_function
         del hook_function
 

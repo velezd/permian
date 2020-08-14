@@ -5,7 +5,7 @@ test: test.lint test.unit test.integration
 test.lint:
 	pylint-3 -E libpipeline
 test.unit:
-	python3 -m unittest discover -v -s tests/unittests
+	python3 -m unittest discover -v
 test.integration:
 	./run_integration_tests.sh
 doc:
