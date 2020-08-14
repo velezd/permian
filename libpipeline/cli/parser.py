@@ -12,6 +12,7 @@ def base_argparser():
     parser.add_argument(
         '--config', '-c',
         action='append',
+        default=[],
         help='',
     )
     verbosity = parser.add_mutually_exclusive_group()
