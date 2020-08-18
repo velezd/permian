@@ -58,3 +58,28 @@ class OverrideCallback(argparse.Action):
         if values.section not in dest:
             dest[values.section] = {}
         dest[values.section][values.option] = values.value
+
+class ToPayload(argparse.Action):
+    """ 
+    Collects arguments into payload dict with dest as the key
+    """
+    def __init__(self, option_strings, dest, **kwargs):
+        self.payload_dest = dest
+        super().__init__(option_strings, "payload", **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string):
+        if namespace.payload is None:
+            namespace.payload = {}
+        namespace.payload[self.payload_dest] = values
+
+def bool_argument(value):
+    """
+    Custom argparse type that translates human readable booleans into True or False
+    """
+    positive = ['yes', 'true', '1']
+    negative = ['no', 'false', '0']
+    if value.lower() in positive:
+        return True
+    if value.lower() in negative:
+        return False
+    raise argparse.ArgumentTypeError("'%s' is not a valid boolean - must be one of '%s'." % (value, ','.join(positive + negative)))

@@ -1,3 +1,5 @@
+import functools
+
 class Event():
     """
     Base class of event which takes the event payload and stores it in payload
@@ -13,3 +15,14 @@ class Event():
 
     def format_branch_spec(self, fmt):
         return fmt.format(**self.payload)
+
+def payload_override(payload_name):
+    def decorator(method):
+        @functools.wraps(method)
+        def decorated(self, *args, **kwargs):
+            try:
+                return self.payload[payload_name]
+            except KeyError:
+                return method(self, *args, **kwargs)
+        return decorated
+    return decorator
