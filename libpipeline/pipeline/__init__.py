@@ -2,12 +2,14 @@ import copy
 import os
 import threading
 import logging
+from tclib.library import Library
 
-from .config import Config
-from .events.factory import EventFactory
-from .testruns import TestRuns
-from .webui import WebUI
-from . import hooks
+from ..config import Config
+from ..events.factory import EventFactory
+from ..testruns import TestRuns
+from ..webui import WebUI
+from .. import hooks
+from . import testplans_library
 
 LOGGER = logging.getLogger(__name__)
 
@@ -108,7 +110,13 @@ class Pipeline():
         store them in :py:attr:`library` attribute using
         :py:class:`tclib.Library`.
         """
-        pass
+        try:
+            # first try direct specification of path to library
+            target_directory = self.config.get('library', 'directPath')
+        except KeyError:
+            target_directory = testplans_library.clone(target_directory, self.event, self.config)
+        self.config.load_from_library(target_directory)
+        self.library = Library(target_directory)
 
     def _makeTestRuns(self):
         """

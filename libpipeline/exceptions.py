@@ -21,3 +21,12 @@ class UnknownCommandError(Exception):
     Raised when the pipeline is called with unknown command.
     """
     pass
+
+class LibraryNotFound(Exception):
+    """
+    Raised when pipeline couldn't obtain library.
+    """
+    def __init__(self, repoURL, attempted_branches):
+        self.repoURL = repoURL
+        self.attempted_branches = attempted_branches
+        super().__init__(self, f"Couldn't clone repository from '{repoURL}'. Attemted branches: '{attempted_branches}'")
