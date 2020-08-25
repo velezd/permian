@@ -5,30 +5,12 @@ import os
 import re
 import subprocess
 
-from .testplans_library import clone, branchname_strategy
-from ..config import Config, DEFAULT_CONFIG_LOCATION
+from .library_repo import clone, branchname_strategy
 from ..events.base import Event
+from ..config import Config
 from ..exceptions import LibraryNotFound
 
-# TODO: move to some common test library
-class TestEvent(Event):
-    def __init__(self, payload=None):
-        super().__init__('test', payload or {}, None)
-
-# TODO: move to some common test library
-TEST_DEFAULT_CONFIG_LOCATION = './tests/test_default.ini'
-
-# TODO: move to some common test library
-def config(cmdline_overrides=None, environment=None, configs_locations=(TEST_DEFAULT_CONFIG_LOCATION,), default_config_location=DEFAULT_CONFIG_LOCATION):
-    return Config(
-        cmdline_overrides or {},
-        environment or {},
-        configs_locations,
-        default_config_location
-    )
-
-# TODO: move to some common test library
-def make_testrepo(src_directory):
+def make_git_testrepo(src_directory):
     """
     Take ``src_directory`` and make a git repository from it.
     Take all subdirectories and consider them as branches. The directory can
@@ -79,7 +61,7 @@ class TestBranchnameStrategy(unittest.TestCase):
                     'branchNameFormat': branchName,
                 })
                 self.assertEqual(
-                    list(branchname_strategy('exact-match')(TestEvent(), config(self.overrides))),
+                    list(branchname_strategy('exact-match')(Event('test', {}, None), Config(self.overrides, {}, []))),
                     [branchName]
                 )
 
@@ -89,7 +71,7 @@ class TestBranchnameStrategy(unittest.TestCase):
             'branchNameFormat': 'Fo0-1.2a.3-4b-5.6c',
         })
         self.assertEqual(
-            list(branchname_strategy('drop-least-significant')(TestEvent(), config(self.overrides))),
+            list(branchname_strategy('drop-least-significant')(Event('test', {}, None), Config(self.overrides, {}, []))),
             [
                 'Fo0-1.2a.3-4b-5.6c',
                 'Fo0-1.2a.3-4b-5',
@@ -104,7 +86,7 @@ class TestBranchnameStrategy(unittest.TestCase):
 class TestCloneLibrary(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.testrepo = make_testrepo('./tests/repos/test_clone.src')
+        cls.testrepo = make_git_testrepo('./tests/repos/test_clone.src')
 
     @classmethod
     def tearDownClass(cls):
@@ -133,8 +115,8 @@ class TestCloneLibrary(unittest.TestCase):
             'branchNameStrategy': 'exact-match',
             'branchNameFormat': 'PRODUCT',
         })
-        event = TestEvent()
-        self.clone_library(None, event, config(self.overrides))
+        event = Event('test', {}, None)
+        self.clone_library(None, event, Config(self.overrides, {}, []))
         self.assertBranch("PRODUCT")
 
     def test_nonexistent_branch(self):
@@ -142,9 +124,9 @@ class TestCloneLibrary(unittest.TestCase):
             'branchNameStrategy': 'exact-match',
             'branchNameFormat': 'nonexistent',
         })
-        event = TestEvent()
+        event = Event('test', {}, None)
         with self.assertRaises(LibraryNotFound):
-            self.clone_library(None, event, config(self.overrides))
+            self.clone_library(None, event, Config(self.overrides, {}, []))
 
     def test_nonexistent_repo(self):
         self.overrides['library'].update({
@@ -152,12 +134,12 @@ class TestCloneLibrary(unittest.TestCase):
             'branchNameFormat': 'PRODUCT',
             'repoURL': '/does/not/exist',
         })
-        event = TestEvent()
+        event = Event('test', {}, None)
         with self.assertRaises(LibraryNotFound):
-            self.clone_library(None, event, config(self.overrides))
+            self.clone_library(None, event, Config(self.overrides, {}, []))
 
-    @patch('libpipeline.pipeline.testplans_library.branchname_strategy', new=mocked_strategy_selector)
+    @patch('libpipeline.pipeline.library_repo.branchname_strategy', new=mocked_strategy_selector)
     def test_first_branch_is_used(self):
-        event = TestEvent()
-        self.clone_library(None, event, config(self.overrides))
+        event = Event('test', {}, None)
+        self.clone_library(None, event, Config(self.overrides, {}, []))
         self.assertBranch("PRODUCT-MAJOR.MINOR.FOO")
