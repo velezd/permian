@@ -1,4 +1,7 @@
 import functools
+from ..testruns import CaseRunConfiguration, ConfigurationsList, CaseRunConfigurationsList
+from tclib.expressions import eval_bool
+#from ..exceptions import UnknownEventSubTypeExpression
 
 class Event():
     """
@@ -15,6 +18,44 @@ class Event():
 
     def format_branch_spec(self, fmt):
         return fmt.format(**self.payload)
+
+    def generate_caseRunConfigurations(self, library, config):
+        """ Generates caseRunConfigurations for testcases in library relevant to this event
+
+        :param library: Library
+        :type library: tclib.Library
+        :param config: Pipeline configuration
+        :type config: libpipeline.config.Config
+        :return: CaseRunConfigurations
+        :rtype: CaseRunConfigurationsList
+        """
+        caseruns = CaseRunConfigurationsList()
+
+        for testplan in self.filter_testPlans(library):
+            # Init testplan configurations as ConfigurationsList
+            testplan_configurations = ConfigurationsList(testplan.configurations,
+                                                         merge_method=config.get('library', 'defaultCaseConfigMergeMethod'))
+            for testcase in testplan.verificationTestCases:
+                # Merge testplan configurations with testcase configurations
+                caserun_configurations = testplan_configurations.merge(testcase.configurations)
+                for configuration in caserun_configurations:
+                    # Create CaseRunConfiguration
+                    caseruns.append(CaseRunConfiguration(testcase, configuration, [testplan]))
+
+        return caseruns
+
+    def filter_testPlans(self, library):
+        """ Filters testplan from library based on:
+        - event type and testplan.artifact_type
+        - testplan execute_on filter
+
+        :param library: pipeline library
+        :type library: tclib.Library
+        :return: Filtered testplans
+        :rtype: list of tclib.TestPlan
+        """
+        return library.getTestPlansByQuery('tp.artifact_type == event.type and tp.eval_execute_on(event=event)', event=self)
+
 
 def payload_override(payload_name):
     def decorator(method):

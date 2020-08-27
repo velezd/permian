@@ -1,4 +1,4 @@
-from ..exceptions import UnexpectedState, NotReady, StateChangeError
+from ..exceptions import UnexpectedState, NotReady, StateChangeError, UnknownTestConfigurationMergeMethod
 
 UNSET = object()
 
@@ -55,6 +55,7 @@ class TestRuns():
         configuration, they are merged into one object keeping records
         of the Test plans the case-run-configurations belong to.
         """
+        self.caseRunConfigurations = event.generate_caseRunConfigurations(library, config)
 
     def assignWorkflows(self):
         """
@@ -252,3 +253,90 @@ class CaseRunConfiguration():
         if not isinstance(other, CaseRunConfiguration):
             raise NotImplementedError()
         return (self.testcase, self.configuration) == (other.testcase, other.configuration)
+
+class CaseRunConfigurationsList(list):
+    """ Special list object with modified behaviour of append method for use with CaseRunConfigurations """
+    def append(self, other_caserun):
+        # If CaseRunConfiguration already created add current testplan to its running_for
+        if other_caserun in self:
+            self[self.index(other_caserun)] += other_caserun
+        else:
+            super().append(other_caserun)
+
+class ConfigurationDictHybrid(dict):
+    """ Configuration dict that tries to combine configurations while respecting limitations """
+    def merge(self, other):
+        """ Merges self and other dict by preserving key-values from other dict and adding unique keys from self """
+        config = other.copy()
+        for missing_key in self.keys() - other.keys():
+            config[missing_key] = self[missing_key]
+        return config
+
+    def compatible_with(self, other):
+        """ Checks if this configuration dict can be merged with other dict using the Hybrid method:
+        all keys that are in both dicts must have the same value
+        """
+        for key, value in self.items():
+            if key in other and value != other[key]:
+                return False
+        return True
+
+class ConfigurationDictStrict(dict):
+    """ Configuration dict that 'merges' only exactly the same configurations """
+    def merge(self, other):
+        """ Just returns other dict as it has to be the same in order to be 'merged' """
+        return other
+
+    def compatible_with(self, other):
+        """ Checks if this configuration dict can be merged with other dict using the Strict method:
+        must be the same
+        """
+        return self == other
+
+class ConfigurationsList(list):
+    def __init__(self, clist, merge_method):
+        """ List of configurations used for testplan that then extends and/or limits testcase configurations during merge
+
+        :param clist: (Testplan) Configurations
+        :type clist: list of dicts, None
+        :param merge_method: name of merge method - determines the type of configurations
+        :type merge_method: string
+        """
+        # Handle None configurations list
+        if clist is None:
+            clist = []
+        # Conver configurations to particular ConfigurationDict based on merge_method
+        if merge_method == 'intersection':
+            clist = [ ConfigurationDictStrict(item) for item in clist ]
+        elif merge_method == 'extension':
+            clist = [ ConfigurationDictHybrid(item) for item in clist ]
+        else:
+            raise UnknownTestConfigurationMergeMethod(merge_method)
+        super().__init__(clist)
+
+    def merge(self, other):
+        """ Merges self configurations and other configurations
+        If self configurations is empty, the other configurations are returned
+        If other configurations is empty, empty dict is added
+
+        :param testcase: Testcase
+        :type testcase: tclib.TestCase
+        :param testplan: Testplan
+        :type testplan: tclib.TestPlan
+        :return: Configurations
+        :rtype: list of dicts
+        """
+        configs = []
+        # Handle no other configurations
+        if other == None:
+            other = [{}]
+        # Handle no self configurations
+        if self == []:
+            return other
+        # Perform merge
+        for self_config in self:
+            for other_config in other:
+                if self_config.compatible_with(other_config):
+                    configs.append(self_config.merge(other_config))
+
+        return configs

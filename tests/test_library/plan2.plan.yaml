@@ -1,0 +1,24 @@
+name: testplan 2
+description: First test plan
+point_person: zveleba@redhat.com
+tags:
+  - foo_tag
+  - bar_tag
+artifact_type: test
+execute_on:
+  - filter: "'test2' in event.other_data"
+parent_plan:
+verified_by:
+  test_cases:
+    direct_list:
+      - testcase 1
+reporting:
+  - type: email
+    condition:
+    template: |
+      email template
+acceptance_criteria:
+  test_cases:
+    direct_list:
+      - testcase 1
+document: just testplan

@@ -30,3 +30,10 @@ class LibraryNotFound(Exception):
         self.repoURL = repoURL
         self.attempted_branches = attempted_branches
         super().__init__(self, f"Couldn't clone repository from '{repoURL}'. Attemted branches: '{attempted_branches}'")
+
+class UnknownTestConfigurationMergeMethod(Exception):
+    """
+    Raised when merge method used durring merge of test configurations in testplan and testcase doesn't exist
+    """
+    def __init__(self, method):
+        super().__init__('Unknown testcase configurations merge method: %s' % method)
