@@ -13,7 +13,7 @@ verified_by:
     direct_list:
       - testcase 1
 reporting:
-  - type: email
+  - type: test
     condition:
     data:
       template: |

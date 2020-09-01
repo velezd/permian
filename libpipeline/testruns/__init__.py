@@ -1,5 +1,6 @@
 from ..exceptions import UnexpectedState, NotReady, StateChangeError, UnknownTestConfigurationMergeMethod
 from ..workflows.factory import WorkflowFactory
+from ..resultsrouter import ResultsRouter
 from .result import UNSET, STATES, RESULTS
 
 class TestRuns():
@@ -13,7 +14,7 @@ class TestRuns():
         """List of CaseRunConfigurations taking part in this execution"""
         self.populateCaseRunConfigurations(library, event, settings)
         self.assignWorkflows()
-        self.resultsCollector = None # TODO: ResultsCollector(self.caseRunConfigurations)
+        self.resultsRouter = ResultsRouter(self, library, event, settings)
 
     def populateCaseRunConfigurations(self, library, event, settings):
         """
@@ -60,7 +61,9 @@ class TestRuns():
         :return: None
         :rtype: None
         """
+        self.resultsRouter.start()
         # TODO: notify ResultsCollector
+        # TODO: start workflows
 
     def wait(self):
         """
@@ -72,7 +75,8 @@ class TestRuns():
         :return: None
         :rtype: None
         """
-        # TODO: wait also for ResultsCollector (which should wait for all ResultsSenders)
+        # TODO: wait for workflows
+        self.resultsRouter.wait()
 
     # TODO: consider using functools.lru_cache or functools.cached_property
     @property

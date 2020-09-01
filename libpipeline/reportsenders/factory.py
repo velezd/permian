@@ -34,21 +34,25 @@ class ReportSenderFactory():
         return decorator
 
     @classmethod
-    def assign(cls, testPlan, caseRunConfigurations, settings):
+    def assign(cls, testPlan, caseRunConfigurations, event, settings):
         """
-        Assign instance of reportSender to all reporting structures in
-        the provided testPlan.
+        Create ReportSender instances based on reporting structure in the
+        `testPlan` and based on the `settings` and `event` arguments.
 
         :param testPlan: Test Plan for which the ReportSender instances should be created
         :type testPlan: tclib.structures.testplan.TestPlan
         :param caseRunConfigurations: case-run-configurations belonging to this test run
-        :type caseRunConfigurations: list
-        :param settings: TBD
-        :type settings: TBD
+        :type caseRunConfigurations: list[:class:`libpipeline.testrun.CaseRunConfiguration`]
+        :param event: Event which will be passed to created ReportSender instances.
+        :type event: libpipeline.events.base.Event
+        :param settings: Settings which will be passed to created ReportSender instances.
+        :type settings: libpipeline.settings.Settings
+        :return: Iterator of created ReportSender instances
+        :rtype: Iterator[:class:`BaseReportSender`]
         """
         for reporting in testPlan.reporting:
             reportSenderClass = cls._get_fallback(reporting.type, None, None)
-            reporting.instance = reportSenderClass(reporting, caseRunConfigurations, settings)
+            yield reportSenderClass(testPlan, reporting, caseRunConfigurations, event, settings)
 
     @classmethod
     def _get_fallback(cls, *args):
