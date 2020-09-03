@@ -3,7 +3,7 @@ import queue
 import abc
 import logging
 
-from ..testruns import Result
+from ..testruns.result import Result
 from ..exceptions import UnexpectedState
 
 LOGGER = logging.getLogger(__name__)
