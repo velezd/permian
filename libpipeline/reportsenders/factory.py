@@ -26,8 +26,8 @@ class ReportSenderFactory():
         :param reportSender_class: When not used as decorator, provide the reportSender class in this argument.
         :type reportSender_class: BaseReportSender, optional
         """
-        def decorator(workflow_class):
-            cls.reportSender_classes[name] = workflow_class
+        def decorator(reportSender_class):
+            cls.reportSender_classes[name] = reportSender_class
             return reportSender_class
         if reportSender_class is not None:
             return decorator(reportSender_class)
