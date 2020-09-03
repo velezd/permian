@@ -36,16 +36,16 @@ class TestRuns():
     This class also handles assignment of the workflows and manages their
     execution.
     """
-    def __init__(self, library, event, config):
+    def __init__(self, library, event, settings):
         self.caseRunConfigurations = []
         """List of CaseRunConfigurations taking part in this execution"""
-        self.populateCaseRunConfigurations(library, event, config)
+        self.populateCaseRunConfigurations(library, event, settings)
         self.assignWorkflows()
         self.resultsCollector = None # TODO: ResultsCollector(self.caseRunConfigurations)
 
-    def populateCaseRunConfigurations(self, library, event, config):
+    def populateCaseRunConfigurations(self, library, event, settings):
         """
-        Based on the event and config takes Test plans from library and
+        Based on the event and settings takes Test plans from library and
         for each of the Test plans collects list of Test cases and their
         configurations (in the context of the test plan). Based on those
         creates CaseRunConfiguration objects and stores them in
@@ -55,7 +55,7 @@ class TestRuns():
         configuration, they are merged into one object keeping records
         of the Test plans the case-run-configurations belong to.
         """
-        self.caseRunConfigurations = event.generate_caseRunConfigurations(library, config)
+        self.caseRunConfigurations = event.generate_caseRunConfigurations(library, settings)
 
     def assignWorkflows(self):
         """

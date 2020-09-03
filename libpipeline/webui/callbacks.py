@@ -6,7 +6,7 @@ from ..hooks.register import run_on, run_threaded_on
 from . import hooks
 
 LOGGER = logging.getLogger(__name__)
-# following lines should be controllable by config
+# following lines should be controllable by settings
 WERKZEUG_LOGGER = logging.getLogger("werkzeug")
 WERKZEUG_LOGGER.setLevel(logging.ERROR)
 

@@ -11,12 +11,12 @@ class ResultsRouter():
     :param library:
     :type library: tclib.library.Library
     """
-    def __init__(self, testRuns, library, config):
+    def __init__(self, testRuns, library, settings):
         for testPlan, caseRunConfigurations in testRuns.testPlansMapping:
             ReportSenderFactory.assign(
                 library.testplans[testPlan],
                 caseRunConfigurations,
-                config,
+                settings,
             )
         self.library = library
 

@@ -75,7 +75,7 @@ class WebUI(threading.Thread):
             return '0.0.0.0'
         if option == 'port': # TODO: Remove me
             return 'random'
-        return self.pipeline.config.get('WebUI', option)
+        return self.pipeline.settings.get('WebUI', option)
 
     @property
     def baseurl(self):

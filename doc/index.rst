@@ -13,7 +13,7 @@ Usage
    :maxdepth: 2
    :caption: End user information and how-to's:
 
-   usage/configuration
+   usage/settings
    usage/testplan-repo
    usage/webui
    usage/usage
@@ -36,7 +36,7 @@ Development
    development/code/pipeline
    development/code/exceptions
    development/code/cli
-   development/code/config
+   development/code/settings
    development/code/events
    development/code/hooks
    development/code/plugins

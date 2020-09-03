@@ -23,9 +23,9 @@ def load():
             continue
         import_module('.'.join(['libpipeline', 'plugins', plugin_name]))
 
-def plugin_configurations():
-    """ Get paths for plugin configuration files """
+def plugin_settings():
+    """ Get paths for plugin settings files """
     for plugin_name in sorted(os.listdir(PLUGINS_PATH)):
-        plugin_config = os.path.join(PLUGINS_PATH, plugin_name, 'config.ini')
-        if os.path.exists(plugin_config):
-            yield plugin_config
+        plugin_settings = os.path.join(PLUGINS_PATH, plugin_name, 'settings.ini')
+        if os.path.exists(plugin_settings):
+            yield plugin_settings

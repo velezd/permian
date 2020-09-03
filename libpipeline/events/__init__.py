@@ -51,7 +51,7 @@ for pipeline execution, the Pipeline would do something similar::
 
   from libpipeline.events.factory import EventFactory
 
-  branch_format = '{where}' # taken from config
+  branch_format = '{where}' # taken from settings
   event_string = '''{
     "type" : "explosion",
     "payload" : {
@@ -60,7 +60,7 @@ for pipeline execution, the Pipeline would do something similar::
   }'''
   event = EventFactory.make(event_string)
   branch = event.format_branch_spec(branch_format)
-  # pipeline would clone the git repository fetching the branch and proceed with next steps (passing the event along with tclib.Library and config for the execution)
+  # pipeline would clone the git repository fetching the branch and proceed with next steps (passing the event along with tclib.Library and settings for the execution)
 
 """
 from . import builtin # register builtin events

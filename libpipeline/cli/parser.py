@@ -7,10 +7,10 @@ def base_argparser():
         '--override', '-o',
         action=OverrideCallback,
         type=Override,
-        help='Override configuration option. It has to be provided in format: section.option=value',
+        help='Override settings option. It has to be provided in format: section.option=value',
     )
     parser.add_argument(
-        '--config', '-c',
+        '--settings', '-s',
         action='append',
         default=[],
         help='',

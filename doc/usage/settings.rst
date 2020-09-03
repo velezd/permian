@@ -1,14 +1,14 @@
-======================
-Pipeline configuration
-======================
+=================
+Pipeline settings
+=================
 
 ----------------------
 Command-line interface
 ----------------------
 
--------------------
-Configuration files
--------------------
+--------------
+Settings files
+--------------
 
 ---------------------
 Environment variables

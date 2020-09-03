@@ -4,7 +4,7 @@ import threading
 import logging
 from tclib.library import Library
 
-from ..config import Config
+from ..settings import Settings
 from ..events.factory import EventFactory
 from ..testruns import TestRuns
 from ..webui import WebUI
@@ -13,7 +13,7 @@ from . import library_repo
 
 LOGGER = logging.getLogger(__name__)
 
-def run_pipeline(event, config_paths, overrides, env=None):
+def run_pipeline(event, settings_paths, overrides, env=None):
     """
     Start the pipeline with provided pipeline parameters.
 
@@ -21,14 +21,14 @@ def run_pipeline(event, config_paths, overrides, env=None):
 
     :param event: JSON encoded event definition
     :type event: str
-    :param config_paths: Paths to config files independent on the event (main pipeline configuration)
-    :type config_paths: list
-    :param overrides: Direct overrides of config values, for more details see libpipeline.config.Config
+    :param settings_paths: Paths to settings files independent on the event (main pipeline settings)
+    :type settings_paths: list
+    :param overrides: Direct overrides of settings values, for more details see libpipeline.settings.Settings
     :type overrides: dict
     :param env: Alternative environemnt variables to be used instead of os.environ
     :type env: dict, optional
     """
-    pipeline = Pipeline(event, config_paths, overrides, env)
+    pipeline = Pipeline(event, settings_paths, overrides, env)
     pipeline.run()
     return 0 # TODO: Get result of pipeline and end with corresponding return code
 
@@ -43,17 +43,17 @@ class Pipeline():
 
     :param event: JSON encoded event definition
     :type event: str
-    :param config_paths: Paths to config files independent on the event (main pipeline configuration)
-    :type config_paths: list
-    :param overrides: Direct overrides of config values, for more details see libpipeline.config.Config
+    :param settings_paths: Paths to settings files independent on the event (main pipeline settings)
+    :type settings_paths: list
+    :param overrides: Direct overrides of settings values, for more details see libpipeline.settings.Settings
     :type overrides: dict
     :param env: Alternative environemnt variables to be used instead of os.environ
     :type env: dict, optional
     """
-    def __init__(self, event, config_paths, overrides, env=None):
+    def __init__(self, event, settings_paths, overrides, env=None):
         if env is None:
             env = copy.copy(os.environ)
-        self.config = Config(overrides, env, config_paths)
+        self.settings = Settings(overrides, env, settings_paths)
         self.event = EventFactory.make(event)
         self.library = None
         self.testRuns = None
@@ -112,10 +112,10 @@ class Pipeline():
         """
         try:
             # first try direct specification of path to library
-            target_directory = self.config.get('library', 'directPath')
+            target_directory = self.settings.get('library', 'directPath')
         except KeyError:
-            target_directory = library_repo.clone(target_directory, self.event, self.config)
-        self.config.load_from_library(target_directory)
+            target_directory = library_repo.clone(target_directory, self.event, self.settings)
+        self.settings.load_from_library(target_directory)
         self.library = Library(target_directory)
 
     def _makeTestRuns(self):
@@ -123,7 +123,7 @@ class Pipeline():
         Create TestRuns instance preparing prescriptions for execution and
         reporting.
         """
-        self.testRuns = TestRuns(self.library, self.event, self.config)
+        self.testRuns = TestRuns(self.library, self.event, self.settings)
 
     def _prepareReporting(self):
         """

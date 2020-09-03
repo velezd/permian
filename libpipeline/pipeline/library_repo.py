@@ -13,7 +13,7 @@ def define_branchname_strategy(name):
     """
     Register branchname strategy function under given ``name``.
     Branchname strategy function is a function which iterates over possible
-    branch names where the possible names are derived from event and config.
+    branch names where the possible names are derived from event and settings.
     The branchname stratedy function is used to provide flexibility in naming
     of branches in library repository and allow the best branch to be used for
     given event.
@@ -38,26 +38,26 @@ def branchname_strategy(name):
     return BRANCHNAME_STRATEGIES[name]
 
 @define_branchname_strategy('exact-match')
-def exact_match(event, config):
+def exact_match(event, settings):
     """
     Branchname strategy function providing only one possible branch name
-    based on ``library.branchNameFormat`` config option.
+    based on ``library.branchNameFormat`` settings option.
     """
-    branchNameFormat = config.get('library', 'branchNameFormat')
+    branchNameFormat = settings.get('library', 'branchNameFormat')
     yield event.format_branch_spec(branchNameFormat)
 
 @define_branchname_strategy('drop-least-significant')
-def drop_least_significant(event, config):
+def drop_least_significant(event, settings):
     """
     Branchname strategy function providing possible branches dropping least
     significant part of the version specification from name based on
-    ``library.branchNameFormat`` config option.
+    ``library.branchNameFormat`` settings option.
 
     If the original name was ``"Foo-1.2-3"`` the iterated items would be::
       "Foo-1.2-3", "Foo-1.2", "Foo-1", "Foo"
     """
     remain_re = re.compile('^(.*)[-.][^-.]+$')
-    branchNameFormat = config.get('library', 'branchNameFormat')
+    branchNameFormat = settings.get('library', 'branchNameFormat')
     branchName = event.format_branch_spec(branchNameFormat)
     while branchName:
         yield branchName
@@ -66,35 +66,35 @@ def drop_least_significant(event, config):
             return
         branchName = mo.group(1)
 
-def possibleBranches(event, config):
+def possibleBranches(event, settings):
     """
     :param event: Event based on which the possible branches should be provided.
     :type event: libpipeline.event.base.Event
-    :param config: Pipeline config.
-    :type config: libpipeline.config.Config
+    :param settings: Pipeline settings.
+    :type settings: libpipeline.settings.Settings
     :return: Iterator of possible branch names provided by branchname strategy function configured by ``library.branchNameStrategy``
     :rtype: iterator
     """
-    branchNameStrategy = config.get('library', 'branchNameStrategy')
-    return branchname_strategy(branchNameStrategy)(event, config)
+    branchNameStrategy = settings.get('library', 'branchNameStrategy')
+    return branchname_strategy(branchNameStrategy)(event, settings)
 
-def clone(target_directory, event, config):
+def clone(target_directory, event, settings):
     """
     :param target_directory: Desired directory where the library should be cloned to. When ``None``, temporary directory will be created and the caller is responsible for cleanup.
     :type target_directory: str or None
     :param event: Event based on which the branch will be selected.
     :type event:  libpipeline.events.base.Event
-    :param config: Pipeline config.
-    :type config: libpipeline.config.Config
+    :param settings: Pipeline settings.
+    :type settings: libpipeline.settings.Settings
     :return: Path where the library is cloned
     :rtype: str
     :raises LibraryNotFound: When the git repository cannot be found or none of the tried branches exist.
     """
-    repoURL = config.get('library', 'repoURL')
+    repoURL = settings.get('library', 'repoURL')
     tmpdir = None
     if target_directory is None:
         target_directory = tempfile.mkdtemp()
-    possible_branches = list(possibleBranches(event, config))
+    possible_branches = list(possibleBranches(event, settings))
     for branchName in possible_branches:
         try:
             LOGGER.info(f'Attempting to clone branch: "{branchName}" from: "{repoURL}"')

@@ -34,7 +34,7 @@ class ReportSenderFactory():
         return decorator
 
     @classmethod
-    def assign(cls, testPlan, caseRunConfigurations, config):
+    def assign(cls, testPlan, caseRunConfigurations, settings):
         """
         Assign instance of reportSender to all reporting structures in
         the provided testPlan.
@@ -43,12 +43,12 @@ class ReportSenderFactory():
         :type testPlan: tclib.structures.testplan.TestPlan
         :param caseRunConfigurations: case-run-configurations belonging to this test run
         :type caseRunConfigurations: list
-        :param config: TBD
-        :type config: TBD
+        :param settings: TBD
+        :type settings: TBD
         """
         for reporting in testPlan.reporting:
             reportSenderClass = cls._get_fallback(reporting.type, None, None)
-            reporting.instance = reportSenderClass(reporting, caseRunConfigurations, config)
+            reporting.instance = reportSenderClass(reporting, caseRunConfigurations, settings)
 
     @classmethod
     def _get_fallback(cls, *args):

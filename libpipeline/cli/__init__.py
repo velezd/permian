@@ -34,7 +34,7 @@ def main(*raw_args):
     command_name, *args = raw_args
     filename = os.path.basename(command_name)
     options, event_spec = CliFactory.parse(filename, args)
-    # TODO: Move logging_level to config where --debug|--quiet would set override
+    # TODO: Move logging_level to settings where --debug|--quiet would set override
     logging_level = logging.INFO
     if options.debug:
         logging_level = logging.DEBUG
@@ -44,5 +44,5 @@ def main(*raw_args):
     logging.getLogger().setLevel(logging.ERROR)
     logging.getLogger('libpipeline').setLevel(logging_level)
     # the whole logging setup stuff should be probably moved elsewhere
-    result = run_pipeline(event_spec, options.config, options.override)
+    result = run_pipeline(event_spec, options.settings, options.override)
     sys.exit(result)

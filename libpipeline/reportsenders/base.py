@@ -14,14 +14,14 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
 
     :param reporting_structure: The whole Test Plan reporting item associated with this ReportSender.
     :type reporting_structure: tclib.DataObject
-    :param config: Pipeline config object
-    :type config: TODO
+    :param settings: Pipeline settings object
+    :type settings: TODO
     """
-    def __init__(self, reporting_structure, caseRunConfigurations, config):
+    def __init__(self, reporting_structure, caseRunConfigurations, settings):
         super().__init__(self)
         self.reporting = reporting_structure
         self.caseRunConfigurations = caseRunConfigurations
-        self.config = config
+        self.settings = settings
         self.processQueue = queue.Queue()
 
     def run(self):
