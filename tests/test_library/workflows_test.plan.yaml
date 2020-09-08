@@ -1,0 +1,27 @@
+name: workflows test
+description: Third test plan
+point_person: zveleba@redhat.com
+tags:
+  - foo_tag
+  - bar_tag
+artifact_type: test
+execute_on:
+  - filter: "'test_workflows' in event.other_data"
+parent_plan:
+verified_by:
+  test_cases:
+    direct_list:
+      - test_isolated 1
+      - test_isolated 2
+      - test_grouped 1
+      - test_grouped 2
+      - test_grouped 3
+      - testcase 1
+      - testcase 2
+reporting:
+  - type: email
+    condition:
+    data:
+      template: |
+        email template
+document: just testplan

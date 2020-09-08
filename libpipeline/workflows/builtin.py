@@ -21,3 +21,18 @@ class UnknownWorkflow(IsolatedWorkflow):
 
     def displayStatus(self):
         return 'Unknown workflow!'
+
+@WorkflowFactory.register('manual')
+class ManualWorkflow(IsolatedWorkflow):
+    """
+    This workflow is used for manual testcases, it doesn't do anything
+    """
+    def terminate(self):
+        return False
+
+    def execute(self):
+        # TODO: set status
+        pass
+
+    def displayStatus(self):
+        return 'Nothing to do'

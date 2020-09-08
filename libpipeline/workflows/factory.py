@@ -46,8 +46,15 @@ class WorkflowFactory():
         :param TestRuns:
         :type TestRuns:
         """
-        # TODO: make groups based on workflow and on each of the group call
-        # cls._assignWorkflows
+        groups_by_workflow = dict()
+        for caserun in TestRuns.caseRunConfigurations:
+            try:
+                groups_by_workflow[caserun.testcase.execution['type']].append(caserun)
+            except KeyError:
+                groups_by_workflow[caserun.testcase.execution['type']] = [caserun]
+
+        for workflow_name, caseruns in groups_by_workflow.items():
+            cls._assignWorkflows(workflow_name, caseruns)
 
     @classmethod
     def _assignWorkflows(cls, workflow_name, caseRunConfigurations):

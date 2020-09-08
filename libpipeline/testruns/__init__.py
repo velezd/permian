@@ -1,4 +1,5 @@
 from ..exceptions import UnexpectedState, NotReady, StateChangeError, UnknownTestConfigurationMergeMethod
+from ..workflows.factory import WorkflowFactory
 
 UNSET = object()
 
@@ -70,6 +71,7 @@ class TestRuns():
         :return: None
         :rtype: None
         """
+        WorkflowFactory.assign(self)
 
     def start(self):
         """
