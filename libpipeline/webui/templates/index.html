@@ -1,2 +1,46 @@
 {% extends 'base.html' %}
-{% block body %}<h1>Hello world!</h1>{% endblock %}
+{% block title %}
+RTT-Pipeline WebUI
+{% endblock %}
+
+{% block body %}
+<h1>RTT-Pipeline WebUI</h1>
+
+<h2>All TestCases</h2>
+<table id="caseruns_table">
+    <tr><th>Testcase</th><th>Configuration</th><th>Running for</th><th>Workflow</th><th>Result</th><th>State</th><th>Active</th></tr>
+    {% for caserun in pipeline.testRuns.caseRunConfigurations %}
+        <tr class="caserun-{{ caserun.id }}">
+            <td class="caserun_name"></td>
+            <td class="caserun_configuration"></td>
+            <td class="caserun_runningfor"></td>
+            <td class="caserun_workflow"></td>
+            <td class="caserun_result"></td>
+            <td class="caserun_state"></td>
+            <td class="caserun_active"></td>
+        </tr>
+    {% endfor %}
+</table>
+
+<h2>TestCases by TestPlan</h2>
+{% for testplan_name, testplan in pipeline.testRuns.testPlansMapping.items() %}
+<div>
+    <h3>{{ testplan_name }}</h3>
+    <table id="caseruns_table">
+        <tr><th>Testcase</th><th>Configuration</th><th>Running for</th><th>Workflow</th><th>Result</th><th>State</th><th>Active</th></tr>
+        {% for caserun in testplan %}
+            <tr class="caserun-{{ caserun.id }}">
+                <td class="caserun_name"></td>
+                <td class="caserun_configuration"></td>
+                <td class="caserun_runningfor"></td>
+                <td class="caserun_workflow"></td>
+                <td class="caserun_result"></td>
+                <td class="caserun_state"></td>
+                <td class="caserun_active"></td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endfor %}
+
+{% endblock %}

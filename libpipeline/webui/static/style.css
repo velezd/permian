@@ -1,3 +1,18 @@
 h1 {
     color: red;
 }
+
+#caseruns_table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 100%;
+}
+#caseruns_table th {
+    border: 1px solid black;
+}
+#caseruns_table td {
+    border: 1px solid black;
+}
+#caseruns_table tr:nth-child(even) {
+    background: #f6f6f7;
+}

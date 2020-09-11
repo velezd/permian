@@ -3,6 +3,7 @@ from flask import Flask
 import threading
 import socket
 import logging
+import socket
 
 from . import hooks
 
@@ -121,10 +122,17 @@ def get_port(port_spec):
 
 def get_random_free_port():
     """
+    Finds free port, There is possibility for a race condition,
+    since another process may grab that port before it is used by Flask.
+
     :return: Port number of random available (currently unused) port
     :rtype: int
     """
-    return 1234
+    tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    tcp.bind(('', 0))
+    port = tcp.getsockname()[1]
+    tcp.close()
+    return port
 
 def get_ip():
     """
