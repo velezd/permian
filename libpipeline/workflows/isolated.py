@@ -71,7 +71,7 @@ class IsolatedWorkflow(GroupedWorkflow):
         Shortcut method for groupReportResult. The caseRunConfigurations
         is not needed when this method is used.
         """
-        super().groupReportResult([self.caseRunConfigurations], result)
+        super().groupReportResult([self.caseRunConfiguration], result)
 
     def groupDisplayStatus(self, caseRunConfiguration):
         """
