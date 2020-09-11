@@ -89,10 +89,10 @@ class Settings():
         Get value of option in section taking in account priority order of
         settings sources.
 
-        :param section:
-        :type section:
-        :param option:
-        :type option:
+        :param section: name of the section
+        :type section: str
+        :param option: name of the option
+        :type option: str
         :return: value of option in section
         :rtype: str
         """
@@ -100,6 +100,26 @@ class Settings():
             try:
                 return settings_source[section][option]
             except KeyError:
+                pass
+        raise KeyError("No option '%s' defined in section '%s'" % (option, section))
+
+    def getboolean(self, section, option):
+        """
+        Get value of option in section using self.get and convert it into a boolean
+
+        :param section: name of the section
+        :type section: str
+        :param option: name of the option
+        :type option: str
+        :return: value of option in section
+        :rtype: bool
+        """
+        for settings_source in self.settings.values():
+            try:
+                return settings_source.getboolean(section, option)
+            except ValueError:
+                raise TypeError("'Setting %s.%s=%s' is not a valid boolean - see ConfigParser.getboolean." % (section, option, settings_source[section][option]))
+            except configparser.Error:
                 pass
         raise KeyError("No option '%s' defined in section '%s'" % (option, section))
 
