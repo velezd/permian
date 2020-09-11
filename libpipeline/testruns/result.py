@@ -1,18 +1,19 @@
 UNSET = object()
 
 STATES = {
-    'queued' : '',
-    'started' : '',
-    'running' : '',
-    'canceled' : '',
-    'complete' : '',
-    'DNF' : '',
+    'queued' : "The execution haven't started yet, but execution is in queue.",
+    'started' : "The execution has started and is performing setup activities.",
+    'running' : "The execution has started and is running the test now.",
+    'cleaning' : "The test has ended and cleanup activities are being done now.",
+    'canceled' : "The execution was terminated prematurely.",
+    'complete' : "The execution ended and should provide valid data.",
+    'DNF' : "The execution was not able complete.",
 }
 
 RESULTS = {
-    None : '',
-    'PASS' : '',
-    'FAIL' : '',
+    None : 'No valid result is available.',
+    'PASS' : 'The test has passed.',
+    'FAIL' : 'The test has failed.',
 }
 
 class Result():
