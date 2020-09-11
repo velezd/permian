@@ -1,5 +1,6 @@
 from .isolated import IsolatedWorkflow
 from .factory import WorkflowFactory
+from ..testruns.result import Result
 from ..exceptions import UnexpectedState
 
 @WorkflowFactory.register(None)
@@ -31,8 +32,9 @@ class ManualWorkflow(IsolatedWorkflow):
         return False
 
     def execute(self):
-        # TODO: set status
-        pass
+        self.reportResult(
+            Result(self.caseRunConfiguration, 'DNF', None, True)
+        )
 
     def displayStatus(self):
         return 'Nothing to do'
