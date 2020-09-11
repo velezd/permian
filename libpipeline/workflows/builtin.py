@@ -12,7 +12,7 @@ class UnknownWorkflow(IsolatedWorkflow):
     The purpose of this workflow is to report error during execution.
     """
     def run(self):
-        self.reportResult(...) # TODO: report error signaling unknown workflow
+        self.reportResult(Result(self.caseRunConfiguration, 'DNF', 'ERROR', True))
 
     def terminate(self):
         raise UnexpectedState("It shouldn't be possible to terminate this workflow as it should never run")
