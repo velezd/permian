@@ -46,18 +46,3 @@ def webUIStartedMsg(webUI):
     Log URL of available webUI.
     """
     LOGGER.info(f'WebUI started at: {webUI.baseurl}')
-
-# TODO: Remove this and possibly move to plugin
-@run_on(hooks.WebUI_started)
-def waitAWhile(webUI):
-    """
-    This is hook callback reacting on hooks.WebUI_started.
-
-    Wait some time after webUI is started effectively blocking the pipeline to
-    be finished for this time as the pipeline is waiting for all hooks to be
-    finished.
-
-    This callback should be removed and moved to plugin and also the waiting
-    should not be enabled by default.
-    """
-    time.sleep(30)

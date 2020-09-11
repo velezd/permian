@@ -80,7 +80,7 @@ class TestSettingsListing(unittest.TestCase):
                           environment={},
                           settings_locations=[],
                           default_settings_location='./tests/test_default.ini')
-        self.assertEqual(settings.sections(), {'TestSection'})
+        self.assertTrue('TestSection' in settings.sections())
 
     def test_options(self):
         settings = Settings(cmdline_overrides={},
