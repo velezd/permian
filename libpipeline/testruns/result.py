@@ -29,3 +29,13 @@ class Result():
         pass
 
     # TODO: define copy interface
+
+    def __eq__(self, other):
+        if not isinstance(other, Result):
+            raise NotImplementedError()
+        return (
+            self.caseRunConfiguration == other.caseRunConfiguration and
+            self.state == other.state and
+            self.result == other.result and
+            self.final == other.final
+        )
