@@ -10,6 +10,9 @@ from ..reportsenders.base import BaseReportSender
 from ..reportsenders.builtin import UnknownReportSender
 from ..resultsrouter import ResultsRouter
 
+class DummyTestCase():
+    name = 'test'
+
 class TestReportSender(BaseReportSender):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -68,7 +71,7 @@ class TestResultsRouter(unittest.TestCase):
                 )
 
     def testRouteResultOnePlan(self):
-        caseRunConfiguration = CaseRunConfiguration(object(), {}, [self.library.testplans['testplan 1']])
+        caseRunConfiguration = CaseRunConfiguration(DummyTestCase(), {}, [self.library.testplans['testplan 1']])
         result = Result(caseRunConfiguration)
         resultsRouter = ResultsRouter(self.testruns, self.library, self.event, self.settings)
         resultsRouter.routeResult(result)
@@ -76,7 +79,7 @@ class TestResultsRouter(unittest.TestCase):
         self.assertTrue(resultsRouter.reportSenders['testplan 2'][0].resultsQueue.empty())
 
     def testRouteResultMultiplePlans(self):
-        caseRunConfiguration = CaseRunConfiguration(object(), {}, [self.library.testplans['testplan 1'], self.library.testplans['testplan 2']])
+        caseRunConfiguration = CaseRunConfiguration(DummyTestCase(), {}, [self.library.testplans['testplan 1'], self.library.testplans['testplan 2']])
         result = Result(caseRunConfiguration)
         resultsRouter = ResultsRouter(self.testruns, self.library, self.event, self.settings)
         resultsRouter.routeResult(result)

@@ -4,6 +4,9 @@ from libpipeline.workflows.isolated import IsolatedWorkflow
 from libpipeline.workflows.builtin import UnknownWorkflow
 from libpipeline.testruns import CaseRunConfiguration
 
+class DummyTestCase():
+    name = 'test'
+
 class TestWorkflow(IsolatedWorkflow):
     def execute(self):
         pass
@@ -30,6 +33,6 @@ class TestWorkflowFactory(unittest.TestCase):
         self.assertIs(TestWorkflow, WorkflowFactory.workflow_classes['test'])
 
     def test_unknown(self):
-        caserunconf = CaseRunConfiguration('test', {}, [])
+        caserunconf = CaseRunConfiguration(DummyTestCase(), {}, [])
         WorkflowFactory._assignWorkflows('unknown', [caserunconf])
         self.assertIsInstance(caserunconf.workflow, UnknownWorkflow)

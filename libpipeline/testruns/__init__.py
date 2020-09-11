@@ -2,6 +2,9 @@ from ..exceptions import UnexpectedState, NotReady, StateChangeError, UnknownTes
 from ..workflows.factory import WorkflowFactory
 from ..resultsrouter import ResultsRouter
 from .result import UNSET, STATES, RESULTS
+from hashlib import sha1
+from functools import lru_cache
+
 
 class TestRuns():
     """Collection of case-run-configurations based on the Test Plans, Requirements and Test Cases from tclib provided library.
@@ -125,6 +128,12 @@ class CaseRunConfiguration():
         self.result = None
         """Result of the execution. Must be None or one of RESULTS"""
 
+    @property
+    @lru_cache(maxsize=None)
+    def id(self):
+        """ Return string ID made from hash """
+        return sha1(str(self.__hash__()).encode()).hexdigest()
+
     def cancel(self, reason, testplan_id=None):
         """
         Attempt to cancel this case-run-configuration either for all testplans
@@ -238,6 +247,10 @@ class CaseRunConfiguration():
         if not isinstance(other, CaseRunConfiguration):
             raise NotImplementedError()
         return (self.testcase, self.configuration) == (other.testcase, other.configuration)
+
+    def __hash__(self):
+        """ Returns hash of the CaseRunConfiguration made from testcase and configuration """
+        return hash((self.testcase, tuple(sorted(self.configuration.items()))))
 
 class CaseRunConfigurationsList(list):
     """ Special list object with modified behaviour of append method for use with CaseRunConfigurations """
