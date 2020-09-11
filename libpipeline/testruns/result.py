@@ -14,6 +14,7 @@ RESULTS = {
     None : 'No valid result is available.',
     'PASS' : 'The test has passed.',
     'FAIL' : 'The test has failed.',
+    'ERROR' : 'There was an error during the execution.',
 }
 
 class Result():
