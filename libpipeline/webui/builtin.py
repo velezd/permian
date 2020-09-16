@@ -26,9 +26,9 @@ def pipeline_data():
                         'configuration': caserun.configuration,
                         'workflow': caserun.testcase.execution['type'],
                         'running_for': [ tp_id for tp_id, tp_bool in caserun.running_for.items() if tp_bool ],
-                        'result': caserun.result,
-                        'state': caserun.state,
-                        'active': caserun.active
+                        'result': caserun.result.result,
+                        'state' : caserun.result.state,
+                        'active' : not caserun.result.final,
                        }
 
         caseRuns.append(caserun_data)

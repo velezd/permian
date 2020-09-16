@@ -7,7 +7,7 @@ from tclib import library
 from .server import WebUI
 from ..events.base import Event
 from ..settings import Settings
-from ..testruns import TestRuns
+from ..testruns import TestRuns, result
 
 
 test_blueprint = Blueprint('test', __name__)
@@ -46,7 +46,7 @@ class TestWebUIData(unittest.TestCase):
 
         pipeline_data['caseRuns'][0]['state'] = 'started'
         pipeline_data['testPlans']['testplan 1'][0]['state'] = 'started'
-        self.testRuns.caseRunConfigurations[0].state = 'started'
+        self.testRuns.caseRunConfigurations[0].result.update(result.Result('started'))
 
         with urllib.request.urlopen(self.webUI.baseurl + 'pipeline_data') as response:
             self.assertEqual(pipeline_data, json.loads(response.read()))

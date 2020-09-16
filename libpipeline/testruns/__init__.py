@@ -118,15 +118,9 @@ class CaseRunConfiguration():
         """Mapping of plans for which this configuration shoud be executed"""
         self.workflow = None
         """Workflow instance handling execution of this configuration"""
-        self.result = None
+        from .result import Result # TODO, remove this ugly import during refactoring
+        self.result = Result('not started')
         """TODO"""
-        # TODO: drop code below and use single result
-        self.active = None
-        """If None, there's no active workflow assigned. When True, changes of state and result are allowed."""
-        self.state = None
-        """State of the execution. Must be None or one of STATES"""
-        self.result = None
-        """Result of the execution. Must be None or one of RESULTS"""
 
     @property
     @lru_cache(maxsize=None)
@@ -154,7 +148,8 @@ class CaseRunConfiguration():
                 return False
             self.workflow.cancel(self)
             # TODO: record reason
-            self.updateState('canceled', None, True)
+            from .result import Result # TODO, remove this ugly import during refactoring
+            self.updateResult(Result('canceled', None, True))
             return True
         else:
             for testplan_id in self.running_for:
@@ -162,7 +157,7 @@ class CaseRunConfiguration():
                     return True
         raise UnexpectedState()
 
-    def updateState(self, state, result=UNSET, final=False):
+    def updateResult(self, result):
         """
         Update state of this case-run-configuration optionally setting result
         as well. This method is also used to mark the state as final effectively
@@ -179,21 +174,12 @@ class CaseRunConfiguration():
         :return: None
         :rtype: None
         """
+        result = result.copy()
+        result.caseRunConfiguration = self
         # TODO: lock when changing status
-        self.result.update(state, result, final)
+        self.result.update(result)
+        # TODO: unlock
         # TODO: provide self.result.copy() to TestRun/ResultsCollector
-        # TODO: move code below to Result
-        if self.active is not None and self.active:
-            raise StateChangeError('Cannot update status of already ended instance.')
-        if state not in STATES:
-            raise ValueError('Unknown state: "%s"' % state)
-        self.state = state
-        if result != UNSET:
-            if result not in RESULTS:
-                raise ValueError('Unknown result: "%s"' % result)
-            self.result = result
-        if final:
-            self.active = False
 
     def assignWorkflow(self, workflow):
         """
