@@ -1,0 +1,20 @@
+name: test workflow 1
+description: Testplan made for "test" workflow
+point_person: zveleba@redhat.com
+artifact_type: test
+execute_on:
+  - filter: "tp.name in event.selected_testplans"
+verified_by:
+  test_cases:
+    direct_list:
+      - test workflow case 1
+reporting:
+  - type: test
+    condition:
+    data:
+      template: |
+        email template
+acceptance_criteria:
+  test_cases:
+    direct_list:
+      - test workflow case 1

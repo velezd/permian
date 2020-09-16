@@ -49,9 +49,9 @@ class WorkflowFactory():
         groups_by_workflow = dict()
         for caserun in TestRuns.caseRunConfigurations:
             try:
-                groups_by_workflow[caserun.testcase.execution['type']].append(caserun)
+                groups_by_workflow[caserun.testcase.execution.type].append(caserun)
             except KeyError:
-                groups_by_workflow[caserun.testcase.execution['type']] = [caserun]
+                groups_by_workflow[caserun.testcase.execution.type] = [caserun]
 
         for workflow_name, caseruns in groups_by_workflow.items():
             cls._assignWorkflows(workflow_name, caseruns, event, settings)
