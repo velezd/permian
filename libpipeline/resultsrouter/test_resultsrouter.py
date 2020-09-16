@@ -72,7 +72,7 @@ class TestResultsRouter(unittest.TestCase):
 
     def testRouteResultOnePlan(self):
         caseRunConfiguration = CaseRunConfiguration(DummyTestCase(), {}, [self.library.testplans['testplan 1']])
-        result = Result(caseRunConfiguration)
+        result = Result(caseRunConfiguration=caseRunConfiguration)
         resultsRouter = ResultsRouter(self.testruns, self.library, self.event, self.settings)
         resultsRouter.routeResult(result)
         self.assertListEqual([result], resultsRouter.reportSenders['testplan 1'][0].results)
@@ -80,7 +80,7 @@ class TestResultsRouter(unittest.TestCase):
 
     def testRouteResultMultiplePlans(self):
         caseRunConfiguration = CaseRunConfiguration(DummyTestCase(), {}, [self.library.testplans['testplan 1'], self.library.testplans['testplan 2']])
-        result = Result(caseRunConfiguration)
+        result = Result(caseRunConfiguration=caseRunConfiguration)
         resultsRouter = ResultsRouter(self.testruns, self.library, self.event, self.settings)
         resultsRouter.routeResult(result)
         self.assertListEqual([result], resultsRouter.reportSenders['testplan 1'][0].results)

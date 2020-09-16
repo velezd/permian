@@ -10,7 +10,9 @@ class FakeCaseRunConfiguration():
         self.results = []
 
     def updateResult(self, result):
-        self.results.append(result)
+        resultcopy = result.copy()
+        resultcopy.caseRunConfiguration = self
+        self.results.append(resultcopy)
 
 class TestWorkflowsRegistered(unittest.TestCase):
     def test_manual(self):
@@ -27,7 +29,7 @@ class TestManual(unittest.TestCase):
         workflow.join()
         self.assertEqual(
             caseRunConfiguration.results,
-            [Result(caseRunConfiguration, 'DNF', None, True)]
+            [Result('DNF', None, True, caseRunConfiguration)]
         )
 
 class TestUnknown(unittest.TestCase):
@@ -38,5 +40,5 @@ class TestUnknown(unittest.TestCase):
         workflow.join()
         self.assertEqual(
             caseRunConfiguration.results,
-            [Result(caseRunConfiguration, 'DNF', 'ERROR', True)]
+            [Result('DNF', 'ERROR', True, caseRunConfiguration)]
         )

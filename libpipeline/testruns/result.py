@@ -18,7 +18,7 @@ RESULTS = {
 }
 
 class Result():
-    def __init__(self, caseRunConfiguration, state=None, result=None, final=False):
+    def __init__(self, state=None, result=None, final=False, caseRunConfiguration=None):
         self.caseRunConfiguration = caseRunConfiguration
         self.state = state
         self.result = result
@@ -28,7 +28,10 @@ class Result():
         # TODO: Move code from CaseRunConfiguration.updateState here
         pass
 
-    # TODO: define copy interface
+    def copy(self):
+        return Result(
+            self.state, self.result, self.final, self.caseRunConfiguration
+        )
 
     def __eq__(self, other):
         if not isinstance(other, Result):
@@ -39,3 +42,6 @@ class Result():
             self.result == other.result and
             self.final == other.final
         )
+
+    def __repr__(self):
+        return f'<Result({self.state}, {self.result}, {self.final}, {self.caseRunConfiguration}>'

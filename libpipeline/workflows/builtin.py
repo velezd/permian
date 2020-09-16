@@ -12,7 +12,7 @@ class UnknownWorkflow(IsolatedWorkflow):
     The purpose of this workflow is to report error during execution.
     """
     def run(self):
-        self.reportResult(Result(self.caseRunConfiguration, 'DNF', 'ERROR', True))
+        self.reportResult(Result('DNF', 'ERROR', True))
 
     def terminate(self):
         raise UnexpectedState("It shouldn't be possible to terminate this workflow as it should never run")
@@ -32,9 +32,7 @@ class ManualWorkflow(IsolatedWorkflow):
         return False
 
     def execute(self):
-        self.reportResult(
-            Result(self.caseRunConfiguration, 'DNF', None, True)
-        )
+        self.reportResult(Result('DNF', None, True))
 
     def displayStatus(self):
         return 'Nothing to do'
