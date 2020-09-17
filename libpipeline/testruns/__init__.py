@@ -32,6 +32,8 @@ class TestRuns():
         of the Test plans the case-run-configurations belong to.
         """
         self.caseRunConfigurations = event.generate_caseRunConfigurations(library, settings)
+        for caserun in self.caseRunConfigurations:
+            caserun.testrun = self
 
     def assignWorkflows(self, event, settings):
         """
@@ -65,6 +67,8 @@ class TestRuns():
         :rtype: None
         """
         self.resultsRouter.start()
+        for caserun in self.caseRunConfigurations:
+            caserun.workflow.start()
         # TODO: notify ResultsCollector
         # TODO: start workflows
 
@@ -110,6 +114,7 @@ class CaseRunConfiguration():
     :type testplans: list
     """
     def __init__(self, testcase, configuration, testplans):
+        self.testrun = None
         self.testcase = testcase
         """TestCase handled by this run"""
         self.configuration = configuration
@@ -178,6 +183,7 @@ class CaseRunConfiguration():
         result.caseRunConfiguration = self
         # TODO: lock when changing status
         self.result.update(result)
+        self.testrun.resultsRouter.routeResult(result)
         # TODO: unlock
         # TODO: provide self.result.copy() to TestRun/ResultsCollector
 

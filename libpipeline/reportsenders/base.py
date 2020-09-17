@@ -53,7 +53,6 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
                 self.resultsQueue.task_done()
             # TODO: catch finished test case here
             # TODO: catch end of test run here
-            self.resultsQueue.task_done()
         LOGGER.debug("'%s' finished processing items (test run should be complete)", self)
         self.processTestRunFinished()
         self.checkEmptyQueue()

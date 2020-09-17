@@ -145,7 +145,7 @@ class Pipeline():
         Note: This method calls hook which signals the pipeline has started the
         execution.
         """
-        pass
+        self.testRuns.start()
 
     def _waitForWorkflows(self):
         """
@@ -154,7 +154,7 @@ class Pipeline():
         Note: This method calls hook which signals the pipeline has finished the
         execution.
         """
-        pass
+        self.testRuns.wait()
 
     def _waitForThreads(self):
         current_thread = threading.current_thread()
