@@ -13,7 +13,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
     """
     @classmethod
     @abc.abstractmethod
-    def factory(cls, caseRunConfigurations):
+    def factory(cls, caseRunConfigurations, event, settings):
         """
         Make instances of this workflow for given caseRunConfigurations and
         assign them accordingly.
@@ -28,7 +28,9 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         :rtype: None
         """
 
-    def __init__(self, caseRunConfigurations):
+    def __init__(self, caseRunConfigurations, event, settings):
+        self.event = event
+        self.settings = settings
         self.dryRun = False
         self.caseRunConfigurations = caseRunConfigurations
         for caseRunConfiguration in caseRunConfigurations:

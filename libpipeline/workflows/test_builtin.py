@@ -24,7 +24,7 @@ class TestWorkflowsRegistered(unittest.TestCase):
 class TestManual(unittest.TestCase):
     def test_run(self):
         caseRunConfiguration = FakeCaseRunConfiguration()
-        workflow = ManualWorkflow(caseRunConfiguration)
+        workflow = ManualWorkflow(caseRunConfiguration, None, None)
         workflow.start()
         workflow.join()
         self.assertEqual(
@@ -35,7 +35,7 @@ class TestManual(unittest.TestCase):
 class TestUnknown(unittest.TestCase):
     def test_run(self):
         caseRunConfiguration = FakeCaseRunConfiguration()
-        workflow = UnknownWorkflow(caseRunConfiguration)
+        workflow = UnknownWorkflow(caseRunConfiguration, None, None)
         workflow.start()
         workflow.join()
         self.assertEqual(

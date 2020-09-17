@@ -34,7 +34,7 @@ class WorkflowFactory():
         return decorator
 
     @classmethod
-    def assign(cls, TestRuns):
+    def assign(cls, TestRuns, event, settings):
         """
         Aggregate CaseRunConfiguration objects based on their workflows and
         call Workflows factory function which then takes care of creating
@@ -54,10 +54,10 @@ class WorkflowFactory():
                 groups_by_workflow[caserun.testcase.execution['type']] = [caserun]
 
         for workflow_name, caseruns in groups_by_workflow.items():
-            cls._assignWorkflows(workflow_name, caseruns)
+            cls._assignWorkflows(workflow_name, caseruns, event, settings)
 
     @classmethod
-    def _assignWorkflows(cls, workflow_name, caseRunConfigurations):
+    def _assignWorkflows(cls, workflow_name, caseRunConfigurations, event, settings):
         """
         Call factory method of workflow corresponding to workflow_name. If no
         such corresponding workflow can be found, fallback to the default
@@ -67,4 +67,4 @@ class WorkflowFactory():
         workflow_class = cls.workflow_classes.get(workflow_name)
         if workflow_class is None:
             workflow_class = cls.workflow_classes.get(None)
-        workflow_class.factory(caseRunConfigurations)
+        workflow_class.factory(caseRunConfigurations, event, settings)

@@ -14,7 +14,7 @@ class IsolatedWorkflow(GroupedWorkflow):
     which should handle creation of the workflow instances.
     """
     @classmethod
-    def factory(cls, caseRunConfigurations):
+    def factory(cls, caseRunConfigurations, event, settings):
         """
         Make instances of this workflow for given caseRunConfigurations and
         assign them accordingly.
@@ -29,11 +29,11 @@ class IsolatedWorkflow(GroupedWorkflow):
         :rtype: None
         """
         for caseRunConfiguration in caseRunConfigurations:
-            cls(caseRunConfiguration)
+            cls(caseRunConfiguration, event, settings)
 
-    def __init__(self, caseRunConfiguration):
+    def __init__(self, caseRunConfiguration, event, settings):
         self.caseRunConfiguration = caseRunConfiguration
-        super().__init__([caseRunConfiguration])
+        super().__init__([caseRunConfiguration], event, settings)
 
     def _check_caseConfigurations(self, caseRunConfigurations):
         """

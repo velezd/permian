@@ -32,8 +32,8 @@ class TestWorkflowGroupedAll(GroupedWorkflow):
         return 'Test'
 
     @classmethod
-    def factory(cls, caseRunConfigurations):
-        cls(caseRunConfigurations)
+    def factory(cls, caseRunConfigurations, event, settings):
+        cls(caseRunConfigurations, event, settings)
 
 
 class TestWorkflowGrouped(GroupedWorkflow):
@@ -47,7 +47,7 @@ class TestWorkflowGrouped(GroupedWorkflow):
         return 'Test'
 
     @classmethod
-    def factory(cls, caseRunConfigurations):
+    def factory(cls, caseRunConfigurations, event, settings):
         # Split caseruns into groups by architecture
         groups_by_config = dict()
         for caserun in caseRunConfigurations:
@@ -57,7 +57,7 @@ class TestWorkflowGrouped(GroupedWorkflow):
                 groups_by_config[caserun.configuration['arch']] = [caserun]
 
         for caseruns in groups_by_config.values():
-            cls(caseruns)
+            cls(caseruns, event, settings)
 
 
 def testruns_init():

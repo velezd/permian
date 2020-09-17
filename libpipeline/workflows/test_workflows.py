@@ -34,5 +34,5 @@ class TestWorkflowFactory(unittest.TestCase):
 
     def test_unknown(self):
         caserunconf = CaseRunConfiguration(DummyTestCase(), {}, [])
-        WorkflowFactory._assignWorkflows('unknown', [caserunconf])
+        WorkflowFactory._assignWorkflows('unknown', [caserunconf], None, None)
         self.assertIsInstance(caserunconf.workflow, UnknownWorkflow)

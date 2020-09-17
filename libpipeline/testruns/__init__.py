@@ -16,7 +16,7 @@ class TestRuns():
         self.caseRunConfigurations = []
         """List of CaseRunConfigurations taking part in this execution"""
         self.populateCaseRunConfigurations(library, event, settings)
-        self.assignWorkflows()
+        self.assignWorkflows(event, settings)
         self.resultsRouter = ResultsRouter(self, library, event, settings)
 
     def populateCaseRunConfigurations(self, library, event, settings):
@@ -33,7 +33,7 @@ class TestRuns():
         """
         self.caseRunConfigurations = event.generate_caseRunConfigurations(library, settings)
 
-    def assignWorkflows(self):
+    def assignWorkflows(self, event, settings):
         """
         Aggregate CaseRunConfiguration objects based on their workflows
         and call Workflows factory function which then takes care of creating
@@ -46,7 +46,7 @@ class TestRuns():
         :return: None
         :rtype: None
         """
-        WorkflowFactory.assign(self)
+        WorkflowFactory.assign(self, event, settings)
 
     def start(self):
         """
