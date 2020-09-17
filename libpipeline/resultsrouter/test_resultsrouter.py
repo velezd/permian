@@ -56,7 +56,6 @@ class TestResultsRouter(unittest.TestCase):
         pass
 
     def testAssignment(self):
-        print(self.testruns.caseRunConfigurations)
         resultsRouter = ResultsRouter(self.testruns, self.library, self.event, self.settings)
         result = {
             'testplan 1': (TestReportSender,),
