@@ -96,6 +96,9 @@ class ComposeEvent(Event):
         except urllib.error.HTTPError as excp:
             raise Exception('Could not find compose with ID %s via %s, error %s' % (self.payload['id'], self.settings.get('compose', 'location'), excp.code))
 
+    def __str__(self):
+        return f"Compose {self.compose_id}"
+
 
 @api.cli.register_command_parser('compose')
 def compose_command(base_parser, args):
