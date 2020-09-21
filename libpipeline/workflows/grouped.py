@@ -31,7 +31,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
     def __init__(self, caseRunConfigurations, event, settings):
         self.event = event
         self.settings = settings
-        self.dryRun = False
+        self.dryRun = self.settings.getboolean('workflows', 'dry_run')
         self.caseRunConfigurations = caseRunConfigurations
         for caseRunConfiguration in caseRunConfigurations:
             caseRunConfiguration.workflow = self

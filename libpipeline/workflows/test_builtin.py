@@ -1,5 +1,6 @@
 import unittest
 
+from ..settings import Settings
 from ..testruns.result import Result
 from .factory import WorkflowFactory
 from .builtin import UnknownWorkflow, ManualWorkflow
@@ -24,7 +25,7 @@ class TestWorkflowsRegistered(unittest.TestCase):
 class TestManual(unittest.TestCase):
     def test_run(self):
         caseRunConfiguration = FakeCaseRunConfiguration()
-        workflow = ManualWorkflow(caseRunConfiguration, None, None)
+        workflow = ManualWorkflow(caseRunConfiguration, None, Settings({}, {}, []))
         workflow.start()
         workflow.join()
         self.assertEqual(
@@ -35,7 +36,7 @@ class TestManual(unittest.TestCase):
 class TestUnknown(unittest.TestCase):
     def test_run(self):
         caseRunConfiguration = FakeCaseRunConfiguration()
-        workflow = UnknownWorkflow(caseRunConfiguration, None, None)
+        workflow = UnknownWorkflow(caseRunConfiguration, None, Settings({}, {}, []))
         workflow.start()
         workflow.join()
         self.assertEqual(

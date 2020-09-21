@@ -1,4 +1,5 @@
 import unittest
+from libpipeline.settings import Settings
 from libpipeline.workflows.factory import WorkflowFactory
 from libpipeline.workflows.isolated import IsolatedWorkflow
 from libpipeline.workflows.builtin import UnknownWorkflow
@@ -32,5 +33,5 @@ class TestWorkflowFactory(unittest.TestCase):
 
     def test_unknown(self):
         caserunconf = CaseRunConfiguration(DummyTestCase(), {}, [])
-        WorkflowFactory._assignWorkflows('unknown', [caserunconf], None, None)
+        WorkflowFactory._assignWorkflows('unknown', [caserunconf], None, Settings({}, {}, []))
         self.assertIsInstance(caserunconf.workflow, UnknownWorkflow)
