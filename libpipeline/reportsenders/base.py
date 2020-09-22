@@ -80,6 +80,9 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         """
         if result.final:
             self.processFinalResult(result)
+            # Catch end of test case
+            if all([crc.result.final for crc in self.caseRunConfigurations]):
+                self.processCaseRunFinished(self.caseRunConfigurations[0].testcase.name)
             return True
         self.processPartialResult(result)
         return False

@@ -36,6 +36,7 @@ class Result():
     def update(self, result):
         if self.final:
             raise StateChangeError('Cannot update status of already ended instance.')
+        self.final = result.final
         if list(STATES).index(result.state) < list(STATES).index(self.state):
             raise StateChangeError(f'Cannot change state from "{self.state}" to "{result.state}".')
         self.state = result.state

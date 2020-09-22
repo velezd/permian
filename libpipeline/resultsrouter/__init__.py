@@ -57,4 +57,4 @@ class ResultsRouter():
     def wait(self):
         for senderInstances in self.reportSenders.values():
             for senderInstance in senderInstances:
-                senderInstance.wait()
+                senderInstance.join()
