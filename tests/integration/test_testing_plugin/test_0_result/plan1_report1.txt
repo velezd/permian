@@ -1,0 +1,9 @@
+reporter 1 - testrun "testing plugin plan 1" started
+reporter 1 - result partial testing plugin case 1-1 - queued, None, False
+reporter 1 - result partial testing plugin case 1-1 - running, None, False
+reporter 1 - result partial testing plugin case 1-1 - running, PASS, False
+reporter 1 - result partial testing plugin case 1-1 - running, FAIL, False
+reporter 1 - result partial testing plugin case 1-1 - running, PASS, False
+reporter 1 - result final testing plugin case 1-1 - complete, FAIL, True
+reporter 1 - finished testcase "testing plugin case 1" in "testing plugin plan 1"
+reporter 1 - testrun "testing plugin plan 1" finished

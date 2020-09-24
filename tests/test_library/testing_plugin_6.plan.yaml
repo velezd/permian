@@ -1,0 +1,31 @@
+name: testing plugin plan 6
+description: |
+  Testplan made testing plugin - including testing workflow and ReportSender
+  Used for testing of overlapping testplans and multiple ReportSenders,
+  multiple testcases, configurations, difference in verified_by and acceptance criteria
+point_person: zveleba@redhat.com
+artifact_type: test
+execute_on:
+  - filter: "tp.name in event.selected_testplans"
+verified_by:
+  test_cases:
+    direct_list:
+      - testing plugin case 4
+      - testing plugin case 5
+reporting:
+  - type: test
+    data:
+      reporter: 6
+      filename: 'plan6_report1.txt'
+  - type: test
+    data:
+      reporter: 7
+      filename: 'plan6_report2.txt'
+configurations:
+  - test: 4
+  - test: 5
+acceptance_criteria:
+  test_cases:
+    direct_list:
+      - testing plugin case 4
+      - testing plugin case 5

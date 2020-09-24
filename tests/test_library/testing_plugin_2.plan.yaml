@@ -1,0 +1,26 @@
+name: testing plugin plan 2
+description: |
+  Testplan made testing plugin - including testing workflow and ReportSender
+  Used for testing of overlapping testplans, multiple testcases and configurations,
+  difference in verified_by and acceptance criteria
+point_person: zveleba@redhat.com
+artifact_type: test
+execute_on:
+  - filter: "tp.name in event.selected_testplans"
+verified_by:
+  test_cases:
+    direct_list:
+      - testing plugin case 2
+      - testing plugin case 3
+reporting:
+  - type: test
+    data:
+      reporter: 2
+      filename: 'plan2_report1.txt'
+configurations:
+  - test: 1
+  - test: 2
+acceptance_criteria:
+  test_cases:
+    direct_list:
+      - testing plugin case 2

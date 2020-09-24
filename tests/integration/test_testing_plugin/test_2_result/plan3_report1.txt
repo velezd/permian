@@ -1,0 +1,20 @@
+reporter 3 - testrun "testing plugin plan 3" started
+reporter 3 - result partial testing plugin case 2-1 - queued, None, False
+reporter 3 - result partial testing plugin case 2-2 - queued, None, False
+reporter 3 - result partial testing plugin case 3-1 - queued, None, False
+reporter 3 - result partial testing plugin case 3-2 - queued, None, False
+reporter 3 - result partial testing plugin case 2-1 - running, None, False
+reporter 3 - result partial testing plugin case 2-2 - running, None, False
+reporter 3 - result partial testing plugin case 3-1 - running, None, False
+reporter 3 - result partial testing plugin case 3-2 - running, None, False
+reporter 3 - result partial testing plugin case 2-1 - running, PASS, False
+reporter 3 - result final testing plugin case 2-1 - complete, PASS, True
+reporter 3 - result partial testing plugin case 2-2 - running, PASS, False
+reporter 3 - result final testing plugin case 2-2 - complete, PASS, True
+reporter 3 - finished testcase "testing plugin case 2" in "testing plugin plan 3"
+reporter 3 - result partial testing plugin case 3-1 - running, FAIL, False
+reporter 3 - result final testing plugin case 3-1 - complete, PASS, True
+reporter 3 - result partial testing plugin case 3-2 - running, FAIL, False
+reporter 3 - result final testing plugin case 3-2 - complete, PASS, True
+reporter 3 - finished testcase "testing plugin case 3" in "testing plugin plan 3"
+reporter 3 - testrun "testing plugin plan 3" finished

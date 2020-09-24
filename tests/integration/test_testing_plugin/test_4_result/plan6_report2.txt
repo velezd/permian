@@ -1,0 +1,20 @@
+reporter 7 - testrun "testing plugin plan 6" started
+reporter 7 - result partial testing plugin case 4-4 - queued, None, False
+reporter 7 - result partial testing plugin case 4-5 - queued, None, False
+reporter 7 - result partial testing plugin case 5-4 - queued, None, False
+reporter 7 - result partial testing plugin case 5-5 - queued, None, False
+reporter 7 - result partial testing plugin case 4-4 - running, None, False
+reporter 7 - result partial testing plugin case 4-5 - running, None, False
+reporter 7 - result partial testing plugin case 5-4 - running, None, False
+reporter 7 - result partial testing plugin case 5-5 - running, None, False
+reporter 7 - result partial testing plugin case 4-4 - running, FAIL, False
+reporter 7 - result final testing plugin case 4-4 - complete, FAIL, True
+reporter 7 - result partial testing plugin case 4-5 - running, FAIL, False
+reporter 7 - result final testing plugin case 4-5 - complete, FAIL, True
+reporter 7 - finished testcase "testing plugin case 4" in "testing plugin plan 6"
+reporter 7 - result partial testing plugin case 5-4 - running, PASS, False
+reporter 7 - result final testing plugin case 5-4 - complete, FAIL, True
+reporter 7 - result partial testing plugin case 5-5 - running, PASS, False
+reporter 7 - result final testing plugin case 5-5 - complete, FAIL, True
+reporter 7 - finished testcase "testing plugin case 5" in "testing plugin plan 6"
+reporter 7 - testrun "testing plugin plan 6" finished

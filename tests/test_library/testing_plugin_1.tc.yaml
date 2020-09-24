@@ -1,0 +1,30 @@
+name: testing plugin case 1
+description: Testing testcase for "test" workflow
+author: zveleba@redhat.com
+priority: 1
+execution:
+  type: test
+  automation_data:
+    - state: queued
+    - sleep: 5
+    - state: running
+    - sleep: 2
+    - state: running
+      result: PASS
+    - state: running
+      result: FAIL
+    - state: running
+      result: PASS
+    - sleep: 4
+    - state: complete
+      result: FAIL
+      final: true
+configurations:
+  - initial_delay: 0.1
+instructions:
+  setup:
+    - Test
+  steps:
+    - Test
+  teardown:
+    - Test
