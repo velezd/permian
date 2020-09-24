@@ -35,7 +35,8 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         super().__init__()
         self.testplan = testplan
         self.reporting = reporting_structure
-        self.caseRunConfigurations = caseRunConfigurations
+        # Create local copy of caseRunConfiguration, to prevent unwanted interaction between different ReportSenders
+        self.caseRunConfigurations = [ crc.copy() for crc in caseRunConfigurations ]
         self.event = event
         self.settings = settings
         self.resultsQueue = queue.Queue()
@@ -51,10 +52,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
                     self.resultsQueue.task_done()
                     break
                 self.resultsQueue.task_done()
-            # TODO: catch finished test case here
-            # TODO: catch end of test run here
         LOGGER.debug("'%s' finished processing items (test run should be complete)", self)
-        self.processTestRunFinished()
         self.checkEmptyQueue()
 
     def resultUpdate(self, result):
@@ -78,13 +76,21 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         :return: True if the processed result is expected to be the last one. False otherwise.
         :rtype: bool
         """
+        localCaseRunConfiguration = self.caseRunConfigurations[self.caseRunConfigurations.index(result.caseRunConfiguration)]
+        # Update result of local copy of caseRunConfiguration
+        localCaseRunConfiguration.result.update(result)
+
         if result.final:
             self.processFinalResult(result)
             # Catch end of test case
+            if all([crc.result.final for crc in self.caseRunConfigurations if result.caseRunConfiguration.testcase == crc.testcase]):
+                self.processCaseRunFinished(localCaseRunConfiguration.testcase.name)
+            # Catch end of testun
             if all([crc.result.final for crc in self.caseRunConfigurations]):
-                self.processCaseRunFinished(self.caseRunConfigurations[0].testcase.name)
-            return True
-        self.processPartialResult(result)
+                self.processTestRunFinished()
+                return True
+        else:
+            self.processPartialResult(result)
         return False
 
     def checkEmptyQueue(self):

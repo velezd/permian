@@ -133,6 +133,13 @@ class CaseRunConfiguration():
         """ Return string ID made from hash """
         return sha1(str(self.__hash__()).encode()).hexdigest()
 
+    def copy(self):
+        caserun = CaseRunConfiguration(self.testcase, self.configuration, [])
+        caserun.running_for = self.running_for
+        caserun.workflow = self.workflow
+        caserun.result = self.result.copy()
+        return caserun
+
     def cancel(self, reason, testplan_id=None):
         """
         Attempt to cancel this case-run-configuration either for all testplans
