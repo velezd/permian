@@ -1,5 +1,6 @@
 class WorkflowFactory():
     workflow_classes = {}
+    original_workflow_classes = {}
 
     @classmethod
     def register(cls, name, workflow_class=None):
@@ -68,3 +69,21 @@ class WorkflowFactory():
         if workflow_class is None:
             workflow_class = cls.workflow_classes.get(None)
         workflow_class.factory(caseRunConfigurations, event, settings)
+
+    @classmethod
+    def clear_workflow_classes(cls):
+        """
+        Saves currently registered workflow_classes and replaces it with only builtin classes
+        This method should be used only for testing
+        """
+        cls.original_workflow_classes = cls.workflow_classes
+        cls.workflow_classes = {None: cls.original_workflow_classes[None],
+                                'manual': cls.original_workflow_classes['manual']}
+
+    @classmethod
+    def restore_workflow_classes(cls):
+        """
+        Restores workflow_classes saved by clear_workflow_classes, must be used after clear_workflow_classes
+        This method should be used only for testing
+        """
+        cls.workflow_classes = cls.original_workflow_classes

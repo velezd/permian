@@ -39,12 +39,12 @@ class TestReportSender(BaseReportSender):
 class TestResultsRouter(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.original_reportsenders = ReportSenderFactory.reportSender_classes.copy()
+        ReportSenderFactory.clear_reportSender_classes()
         ReportSenderFactory.register('test', TestReportSender)
 
     @classmethod
     def tearDownClass(cls):
-        ReportSenderFactory.reportSender_classes = cls.original_reportsenders
+        ReportSenderFactory.restore_reportSender_classes()
 
     def setUp(self):
         self.settings = Settings({}, {}, [])

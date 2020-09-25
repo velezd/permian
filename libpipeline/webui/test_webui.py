@@ -8,6 +8,8 @@ from .server import WebUI
 from ..events.base import Event
 from ..settings import Settings
 from ..testruns import TestRuns, result
+from ..reportsenders.factory import ReportSenderFactory
+from ..workflows.factory import WorkflowFactory
 
 
 test_blueprint = Blueprint('test', __name__)
@@ -31,10 +33,17 @@ class TestWebUI(unittest.TestCase):
 class TestWebUIData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        ReportSenderFactory.clear_reportSender_classes()
+        WorkflowFactory.clear_workflow_classes()
         cls.library = library.Library('tests/test_library')
         cls.settings = Settings(cmdline_overrides={'library': {'defaultCaseConfigMergeMethod': 'extension'}}, environment={}, settings_locations=[])
         cls.event = Event('test', {}, ['test1'])
         cls.testRuns = TestRuns(cls.library, cls.event, cls.settings)
+
+    @classmethod
+    def tearDownClass(cls):
+        ReportSenderFactory.restore_reportSender_classes()
+        WorkflowFactory.restore_workflow_classes()
 
     def test_webui_data(self):
         self.webUI = WebUI(self)

@@ -1,5 +1,6 @@
 class ReportSenderFactory():
     reportSender_classes = {}
+    original_reportSender_classes = {}
 
     @classmethod
     def register(cls, name, reportSender_class=None):
@@ -69,3 +70,20 @@ class ReportSenderFactory():
             except KeyError:
                 continue
         return default
+
+    @classmethod
+    def clear_reportSender_classes(cls):
+        """
+        Saves currently registered reportSender_classes and replaces it with only builtin classes
+        This method should be used only for testing
+        """
+        cls.original_reportSender_classes = cls.reportSender_classes
+        cls.reportSender_classes = {None: cls.original_reportSender_classes[None]}
+
+    @classmethod
+    def restore_reportSender_classes(cls):
+        """
+        Restores reportSender_classes saved by clear_reportSender_classes, must be used after clear_reportSender_classes
+        This method should be used only for testing
+        """
+        cls.reportSender_classes = cls.original_reportSender_classes

@@ -81,14 +81,14 @@ class TestCaseRunConfigurationsList(unittest.TestCase):
 class TestAssignWorkflows1(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.old_workflow_classes = WorkflowFactory.workflow_classes.copy()
+        WorkflowFactory.clear_workflow_classes()
         WorkflowFactory.register('test_isolated')(TestWorkflowIsolated)
         WorkflowFactory.register('test_grouped')(TestWorkflowGroupedAll)
         cls.testruns = testruns_init()
 
     @classmethod
     def tearDownClass(cls):
-        WorkflowFactory.workflow_classes = cls.old_workflow_classes
+        WorkflowFactory.restore_workflow_classes()
 
     def test_isolated(self):
         for caserun in self.testruns.caseRunConfigurations:
@@ -134,9 +134,13 @@ class TestAssignWorkflows1(unittest.TestCase):
 class TestAssignWorkflows2(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.old_workflow_classes = WorkflowFactory.workflow_classes.copy()
+        WorkflowFactory.clear_workflow_classes()
         WorkflowFactory.register('test_grouped')(TestWorkflowGrouped)
         cls.testruns = testruns_init()
+
+    @classmethod
+    def tearDownClass(cls):
+        WorkflowFactory.restore_workflow_classes()
 
     def test_grouped_by_config(self):
         for caserun in self.testruns.caseRunConfigurations:

@@ -18,16 +18,14 @@ class TestWorkflow(IsolatedWorkflow):
         return 'Test'
 
 class TestWorkflowFactory(unittest.TestCase):
-    old_workflow_classes = []
-
     @classmethod
     def setUpClass(cls):
-        cls.old_workflow_classes = WorkflowFactory.workflow_classes.copy()
+        WorkflowFactory.clear_workflow_classes()
         WorkflowFactory.register('test')(TestWorkflow)
 
     @classmethod
     def tearDownClass(cls):
-        WorkflowFactory.workflow_classes = cls.old_workflow_classes
+        WorkflowFactory.restore_workflow_classes()
 
     def test_registered(self):
         self.assertIs(TestWorkflow, WorkflowFactory.workflow_classes['test'])
