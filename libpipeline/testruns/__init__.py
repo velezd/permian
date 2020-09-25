@@ -251,6 +251,9 @@ class CaseRunConfiguration():
         """ Returns hash of the CaseRunConfiguration made from testcase and configuration """
         return hash((self.testcase, tuple(sorted(self.configuration.items()))))
 
+    def __repr__(self):
+        return f"<CaseRunConfiguration({self.testcase.name}:{self.configuration})>"
+
 class CaseRunConfigurationsList(list):
     """ Special list object with modified behaviour of append method for use with CaseRunConfigurations """
     def append(self, other_caserun):
