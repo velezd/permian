@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<testsuites>
+    <properties>
+        {%- for prop_name, prop_value in properties.get(None, {}).items() %}
+        <property name="{{ prop_name }}" value="{{ prop_value }}"/>
+        {%- endfor %}
+    </properties>
+    <testsuite name="{{ reportsender.testplan.name }}">
+        {%- for tc_name, testcase in testcases.items() %}
+        <testcase name="{{ tc_name }}" classname="{{ reportsender.testplan.name }}">
+            <properties>
+                <property name="workflow" value="{{ testcase.workflow }}"/>
+                {%- for prop_name, prop_value in properties.get(tc_name, {}).items() %}
+                <property name="{{ prop_name }}" value="{{ prop_value }}"/>
+                {%- endfor %}
+            </properties>
+            <system-out>
+            {%- for caserun in testcase.caseRunConfigurations %}
+                Configuration: {{ caserun.configuration }} - Result: {{ caserun.result.state }}, {{ caserun.result.result }} - Links:{% for link in caserun.result.extra_fields.beaker_links %} {{ link }}{% endfor %}
+            {%- endfor %}
+            </system-out>
+            {%- if testcase.result.result == None %}
+            <skipped type="{{ testcase.result.state }}"/>
+            {%- elif testcase.result.result == 'FAIL' %}
+            <failure/>
+            {%- elif testcase.result.result == 'ERROR' %}
+            <error/>
+            {%- endif %}
+        </testcase>
+        {%- endfor %}
+    </testsuite>
+</testsuites>

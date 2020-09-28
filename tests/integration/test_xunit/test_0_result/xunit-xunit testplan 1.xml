@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<testsuites>
+    <properties>
+    </properties>
+    <testsuite name="xunit testplan 1">
+        <testcase name="testing plugin case 1" classname="xunit testplan 1">
+            <properties>
+                <property name="workflow" value="test"/>
+            </properties>
+            <system-out>
+                Configuration: {&#39;initial_delay&#39;: 0.1, &#39;conf&#39;: 1} - Result: complete, FAIL - Links:
+                Configuration: {&#39;initial_delay&#39;: 0.1, &#39;conf&#39;: 2} - Result: complete, FAIL - Links:
+            </system-out>
+            <failure/>
+        </testcase>
+    </testsuite>
+</testsuites>
