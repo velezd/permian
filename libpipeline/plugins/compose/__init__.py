@@ -8,7 +8,7 @@ import json
 
 from .. import api
 from ...events.base import Event, payload_override
-from ...cli.parser import bool_argument, ToPayload
+from ...cli.parser import bool_argument, ToPayload, AppendToPayload
 
 
 @api.events.register('compose')
@@ -99,6 +99,10 @@ class ComposeEvent(Event):
     def __str__(self):
         return f"Compose {self.compose_id}"
 
+    @property
+    @payload_override('available_in')
+    def compose_available_in(self):
+        return []
 
 @api.cli.register_command_parser('compose')
 def compose_command(base_parser, args):
@@ -125,6 +129,10 @@ def compose_command(base_parser, args):
                         help='Name of parent product, for layered compose')
     parser.add_argument('--parent-version', action=ToPayload,
                         help='Version of parent product, for layered compose')
+    # this is required mostly for legacy_puzzle_merger and is subject of
+    # discussion in team once legacy_puzzle_merger workflow is decommisioned
+    parser.add_argument('--available-in', action=AppendToPayload, default=[],
+                        help='Systems in which the compose is expected to be available.')
     options = parser.parse_args(args)
 
     return options, json.dumps({'type': 'compose', 'payload': options.payload})

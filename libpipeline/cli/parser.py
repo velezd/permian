@@ -72,6 +72,22 @@ class ToPayload(argparse.Action):
             namespace.payload = {}
         namespace.payload[self.payload_dest] = values
 
+class AppendToPayload(argparse.Action):
+    """
+    Collects arguments into payload dict with dest as the key appending the
+    value the same way as 'append' action would do.
+    """
+    def __init__(self, option_strings, dest, **kwargs):
+        self.payload_dest = dest
+        super().__init__(option_strings, "payload", **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string):
+        if namespace.payload is None:
+            namespace.payload = {}
+        if self.payload_dest not in namespace.payload:
+            namespace.payload[self.payload_dest] = []
+        namespace.payload.append(values)
+
 def bool_argument(value):
     """
     Custom argparse type that translates human readable booleans into True or False
