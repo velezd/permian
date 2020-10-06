@@ -1,10 +1,13 @@
+from hashlib import sha1
+from functools import lru_cache
+import logging
+
 from ..exceptions import UnexpectedState, NotReady, StateChangeError, UnknownTestConfigurationMergeMethod
 from ..workflows.factory import WorkflowFactory
 from ..resultsrouter import ResultsRouter
 from .result import UNSET, STATES, RESULTS
-from hashlib import sha1
-from functools import lru_cache
 
+LOGGER = logging.getLogger(__name__)
 
 class TestRuns():
     """Collection of case-run-configurations based on the Test Plans, Requirements and Test Cases from tclib provided library.
@@ -181,7 +184,6 @@ class CaseRunConfiguration():
         :type result: str, optional
         :param final: Mark the state as final preventing any future changes.
         :type final: bool
-        :raises StateChangeError: When attempting to change state after final state was set.
         :raises ValueError: When unknown state or result is provided.
         :return: None
         :rtype: None
@@ -189,8 +191,11 @@ class CaseRunConfiguration():
         result = result.copy()
         result.caseRunConfiguration = self
         # TODO: lock when changing status
-        self.result.update(result)
-        self.testrun.resultsRouter.routeResult(result)
+        try:
+            self.result.update(result)
+            self.testrun.resultsRouter.routeResult(result)
+        except StateChangeError as e:
+            LOGGER.error('Cannot change state of result: %s', e)
         # TODO: unlock
         # TODO: provide self.result.copy() to TestRun/ResultsCollector
 
