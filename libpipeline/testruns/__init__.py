@@ -134,7 +134,7 @@ class CaseRunConfiguration():
     @lru_cache(maxsize=None)
     def id(self):
         """ Return string ID made from hash """
-        return sha1(str(self.__hash__()).encode()).hexdigest()
+        return sha1(f'{self.testcase.id}:{sorted(self.configuration.items())}'.encode()).hexdigest()
 
     def copy(self):
         caserun = CaseRunConfiguration(self.testcase, self.configuration, [])
