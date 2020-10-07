@@ -191,6 +191,7 @@ class CaseRunConfiguration():
         result = result.copy()
         result.caseRunConfiguration = self
         # TODO: lock when changing status
+        LOGGER.debug('Attempting to change result of "%s" from %s to %s', self.id, self.result, result)
         try:
             self.result.update(result)
             self.testrun.resultsRouter.routeResult(result)
