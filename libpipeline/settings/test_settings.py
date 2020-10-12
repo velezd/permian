@@ -88,4 +88,36 @@ class TestSettingsListing(unittest.TestCase):
                           environment={},
                           settings_locations=[],
                           default_settings_location='./tests/test_default.ini')
-        self.assertEqual(settings.options('TestSection'), {'source'})
+        self.assertEqual(settings.options('TestSection'), {'source', 'optionA'})
+
+class TestSettingsMerge(unittest.TestCase):
+    def test_sections(self):
+        settings = Settings(cmdline_overrides={},
+                          environment={},
+                          settings_locations=['./tests/test_settings.ini'],
+                          default_settings_location='./tests/test_default.ini')
+        self.assertTrue('TestSection' in settings.sections())
+
+    def test_options(self):
+        settings = Settings(cmdline_overrides={},
+                          environment={},
+                          settings_locations=['./tests/test_settings.ini'],
+                          default_settings_location='./tests/test_default.ini')
+        self.assertEqual(settings.options('TestSection'), {'source', 'optionA', 'optionB'})
+
+    def test_values(self):
+        settings = Settings(cmdline_overrides={},
+                          environment={},
+                          settings_locations=['./tests/test_settings.ini'],
+                          default_settings_location='./tests/test_default.ini')
+        self.assertCountEqual(
+            [
+                (option, settings.get('TestSection', option))
+                for option in settings.options('TestSection')
+            ],
+            [
+                ('source', 'custom'),
+                ('optionA', 'defaultA'),
+                ('optionB', 'settingsB'),
+            ]
+        )
