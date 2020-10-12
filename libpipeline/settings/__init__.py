@@ -43,6 +43,7 @@ class Settings():
         ))
         for key in self.settings:
             self.settings[key] = configparser.ConfigParser()
+            self.settings[key].optionxform = str # preserve case for option names
 
         self.settings['overrides'].read_dict(cmdline_overrides)
         self.settings['custom'].read(settings_locations)

@@ -66,6 +66,7 @@ class TestSettingsDefault(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.test_parser = configparser.ConfigParser()
+        cls.test_parser.optionxform = str # preserve case for option names
         cls.test_parser.read('./libpipeline/default.ini')
 
     def test_real_default(self):
