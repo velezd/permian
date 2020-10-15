@@ -44,5 +44,8 @@ def main(*raw_args):
     logging.getLogger().setLevel(logging.ERROR)
     logging.getLogger('libpipeline').setLevel(logging_level)
     # the whole logging setup stuff should be probably moved elsewhere
+    if options.generate_event:
+        print(event_spec)
+        sys.exit(0)
     result = run_pipeline(event_spec, options.settings, options.override)
     sys.exit(result)

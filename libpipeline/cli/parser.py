@@ -15,6 +15,11 @@ def base_argparser():
         default=[],
         help='',
     )
+    parser.add_argument(
+        '--generate-event',
+        action='store_true',
+        help="Don't run the pipeline but generate event specification string for the event used.",
+    )
     verbosity = parser.add_mutually_exclusive_group()
     verbosity.add_argument(
         '--debug', '-d',
