@@ -71,8 +71,11 @@ class TestRuns():
         :rtype: None
         """
         self.resultsRouter.start()
+        started_workflows = set()
         for caserun in self.caseRunConfigurations:
-            caserun.workflow.start()
+            if id(caserun.workflow) not in started_workflows:
+                caserun.workflow.start()
+                started_workflows.add(id(caserun.workflow))
         # TODO: notify ResultsCollector
         # TODO: start workflows
 
