@@ -86,13 +86,21 @@ class Pipeline():
         self._startWebUI()
         LOGGER.debug('WebUI started')
         self._cloneLibrary()
+        LOGGER.debug('Making test runs')
         self._makeTestRuns()
+        LOGGER.debug('Preparing reporting')
         self._prepareReporting()
+        LOGGER.debug('Preparing workflows')
         self._prepareWorkflows()
+        LOGGER.debug('Running workflows')
         self._runWorkflows()
+        LOGGER.debug('Waiting for workflows to finish')
         self._waitForWorkflows()
+        LOGGER.debug('Waiting for other threads to finish')
         self._waitForThreads()
+        LOGGER.debug('Running pipeline_ended handlers')
         hooks.builtin.pipeline_ended(self)
+        LOGGER.debug('Waiting for other (post) threads to finish')
         self._waitForThreads() # wait for any possible threads started by the final hook
 
     def _startWebUI(self):

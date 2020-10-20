@@ -34,6 +34,7 @@ class TestRuns():
         configuration, they are merged into one object keeping records
         of the Test plans the case-run-configurations belong to.
         """
+        LOGGER.debug("Getting caseRunConfigurations from event")
         self.caseRunConfigurations = event.generate_caseRunConfigurations(library, settings)
         for caserun in self.caseRunConfigurations:
             caserun.testrun = self
