@@ -26,7 +26,7 @@ class WebUI(threading.Thread):
     blueprints=[]
 
     @classmethod
-    def registerBlueprint(cls, blueprint):
+    def registerBlueprint(cls, blueprint, url_prefix=None):
         """
         Extend the webUI by providing flask Blueprint. There's no way to provide
         url_prefix at this point and it should be set in the Blueprint itself.
@@ -38,14 +38,14 @@ class WebUI(threading.Thread):
         :param blueprint: Flask Blueprint instance extending the webUI flask app
         :type blueprint: flask.Blueprint
         """
-        cls.blueprints.append(blueprint)
+        cls.blueprints.append((blueprint, url_prefix))
         return blueprint
 
     def __init__(self, pipeline):
         super().__init__(daemon=True)
         self.app = Flask(__name__)
-        for blueprint in self.blueprints:
-            self.app.register_blueprint(blueprint)
+        for blueprint, url_prefix in self.blueprints:
+            self.app.register_blueprint(blueprint, url_prefix=url_prefix)
         self.pipeline = pipeline
         self.listen_ip = self.config('listen_ip')
         self.port = None # delay obtaining the port until the very moment before the flask app is started to limit potential random port collision
