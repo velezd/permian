@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}
+RTT-Pipeline Debug
+{% endblock %}
+
+{% block body %}
+<h1>RTT-Pipeline Debug</h1>
+<ul>
+  <li><a href="{{ url_for('debug.threads') }}">threads</a></li>
+</ul>
+{% endblock %}
