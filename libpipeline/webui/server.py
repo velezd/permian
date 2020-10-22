@@ -64,7 +64,7 @@ class WebUI(threading.Thread):
         :py:meth:`~WebUI.start` method instead of this one.
         For more info see python :py:class:`threading.Thread`.
         """
-        self.port = get_port(self.config('port'))
+        self.port = get_port(self.config('listen_port'))
         hooks.WebUI_starting(self)
         self.app.run(self.listen_ip, self.port)
 
@@ -72,10 +72,6 @@ class WebUI(threading.Thread):
         """
 
         """
-        if option == 'listen_ip': # TODO: Remove me
-            return '0.0.0.0'
-        if option == 'port': # TODO: Remove me
-            return 'random'
         return self.pipeline.settings.get('WebUI', option)
 
     @property
@@ -114,6 +110,10 @@ def get_port(port_spec):
     :return: port number
     :rtype: int
     """
+    try: # try first to convert the string to number
+        port_spec = int(port_spec)
+    except ValueError:
+        pass
     if isinstance(port_spec, int):
         return port_spec
     if port_spec == 'random':

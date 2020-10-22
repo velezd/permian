@@ -21,8 +21,12 @@ def page_unittest():
 
 
 class TestWebUI(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.settings = Settings(cmdline_overrides={}, environment={}, settings_locations=[])
+
     def test_webui(self):
-        self.webUI = WebUI(None)
+        self.webUI = WebUI(self)
         self.webUI.start()
         self.webUI.waitUntilStarted()
         
