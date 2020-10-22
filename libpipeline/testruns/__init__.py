@@ -89,7 +89,11 @@ class TestRuns():
         :return: None
         :rtype: None
         """
-        # TODO: wait for workflows
+        from .result import Result # TODO, remove this ugly import during refactoring
+        for caserun in self.caseRunConfigurations:
+            caserun.workflow.join()
+            if not caserun.result.final:
+                caserun.updateResult(Result('DNF', 'ERROR', True))
         self.resultsRouter.wait()
 
     # TODO: consider using functools.lru_cache or functools.cached_property
