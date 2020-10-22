@@ -1,3 +1,10 @@
 #!/bin/bash
 
-podman run --rm -it -v `pwd`:/root/rtt-pipeline:Z -w /root/rtt-pipeline -e PYTHONPATH=/root/tclib pipeline "$@"
+if [[ -v PIPELINE_WebUI_listen_port ]]; then
+    webui_port=${PIPELINE_WebUI_listen_port}
+else
+    # copied from https://unix.stackexchange.com/a/423052
+    webui_port=$(comm -23 <(seq 49152 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1)
+fi
+
+podman run --rm -it --publish 127.0.0.1:${webui_port}:${webui_port} -e PIPELINE_WebUI_listen_port=${webui_port} -v `pwd`:/root/rtt-pipeline:Z -w /root/rtt-pipeline -e PYTHONPATH=/root/tclib pipeline "$@"
