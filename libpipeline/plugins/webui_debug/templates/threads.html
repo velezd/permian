@@ -18,7 +18,7 @@ RTT-Pipeline Debug threads
 <h2>Daemon threads</h2>
 <ul>
 {% for thread in threads %}
-{% if not thread.daemon %}
+{% if thread.daemon %}
   <li>{{ thread }}</li>
 {% endif %}
 {% endfor %}
