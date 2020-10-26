@@ -47,7 +47,7 @@ class Result():
 
     def copy(self):
         return Result(
-            self.state, self.result, self.final, self.caseRunConfiguration
+            self.state, self.result, self.final, self.caseRunConfiguration, **self.extra_fields
         )
 
     def __eq__(self, other):
