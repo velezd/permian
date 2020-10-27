@@ -6,7 +6,7 @@ from libpipeline.workflows.factory import WorkflowFactory
 from libpipeline.workflows.isolated import IsolatedWorkflow, GroupedWorkflow
 from libpipeline.workflows.builtin import UnknownWorkflow, ManualWorkflow
 from libpipeline.testruns import CaseRunConfiguration, CaseRunConfigurationsList, TestRuns, merge_testcase_configurations
-from libpipeline.testruns.result import Result
+from libpipeline.result import Result
 
 
 class TestWorkflowIsolated(IsolatedWorkflow):

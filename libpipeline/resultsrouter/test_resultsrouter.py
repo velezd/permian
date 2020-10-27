@@ -4,7 +4,7 @@ import tclib.library
 from ..settings import Settings
 from ..events.base import Event
 from ..testruns import TestRuns, CaseRunConfiguration
-from ..testruns.result import Result
+from ..result import Result
 from ..reportsenders.factory import ReportSenderFactory
 from ..reportsenders.base import BaseReportSender
 from ..reportsenders.builtin import UnknownReportSender

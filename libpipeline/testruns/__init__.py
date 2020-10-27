@@ -5,7 +5,7 @@ import logging
 from ..exceptions import UnexpectedState, NotReady, StateChangeError, UnknownTestConfigurationMergeMethod
 from ..workflows.factory import WorkflowFactory
 from ..resultsrouter import ResultsRouter
-from .result import UNSET, STATES, RESULTS
+from ..result import Result, UNSET, STATES, RESULTS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -89,7 +89,6 @@ class TestRuns():
         :return: None
         :rtype: None
         """
-        from .result import Result # TODO, remove this ugly import during refactoring
         for caserun in self.caseRunConfigurations:
             caserun.workflow.join()
             if not caserun.result.final:
@@ -143,7 +142,6 @@ class CaseRunConfiguration():
         """Mapping of plans for which this configuration shoud be executed"""
         self.workflow = None
         """Workflow instance handling execution of this configuration"""
-        from .result import Result # TODO, remove this ugly import during refactoring
         self.result = Result('not started')
         """TODO"""
 
@@ -180,7 +178,6 @@ class CaseRunConfiguration():
                 return False
             self.workflow.cancel(self)
             # TODO: record reason
-            from .result import Result # TODO, remove this ugly import during refactoring
             self.updateResult(Result('canceled', None, True))
             return True
         else:
@@ -393,7 +390,6 @@ def merge_testcase_configurations(caseRunConfigurations):
             testcase['result'] = caserun.result.copy()
             continue
 
-        from .result import STATES, RESULTS # TODO, remove this ugly import during refactoring
         if list(STATES).index(testcase['result'].state) > list(STATES).index(caserun.result.state):
             testcase['result'].state = caserun.result.state
         if list(RESULTS).index(testcase['result'].result) < list(RESULTS).index(caserun.result.result):

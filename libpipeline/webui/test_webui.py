@@ -7,7 +7,8 @@ from tclib import library
 from .server import WebUI
 from ..events.base import Event
 from ..settings import Settings
-from ..testruns import TestRuns, result
+from ..testruns import TestRuns
+from ..result import Result
 from ..reportsenders.factory import ReportSenderFactory
 from ..workflows.factory import WorkflowFactory
 
@@ -59,7 +60,7 @@ class TestWebUIData(unittest.TestCase):
 
         pipeline_data['caseRuns'][0]['state'] = 'started'
         pipeline_data['testPlans']['testplan 1'][0]['state'] = 'started'
-        self.testRuns.caseRunConfigurations[0].result.update(result.Result('started'))
+        self.testRuns.caseRunConfigurations[0].result.update(Result('started'))
 
         with urllib.request.urlopen(self.webUI.baseurl + 'pipeline_data') as response:
             self.assertEqual(pipeline_data, json.loads(response.read()))

@@ -1,7 +1,7 @@
 import unittest
 
 from ..settings import Settings
-from ..testruns.result import Result
+from ..result import Result
 from .factory import WorkflowFactory
 from .builtin import UnknownWorkflow, ManualWorkflow
 

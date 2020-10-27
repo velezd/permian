@@ -5,7 +5,7 @@ from os import path
 from time import sleep
 from .. import api
 from ...workflows.isolated import IsolatedWorkflow
-from ...testruns.result import Result, STATES, RESULTS, UNSET
+from ...result import Result, STATES, RESULTS, UNSET
 from ...events.base import Event 
 from ...reportsenders.base import BaseReportSender
 

@@ -1,6 +1,6 @@
 from .isolated import IsolatedWorkflow
 from .factory import WorkflowFactory
-from ..testruns.result import Result
+from ..result import Result
 from ..exceptions import UnexpectedState
 
 @WorkflowFactory.register(None)
