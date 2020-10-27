@@ -31,17 +31,18 @@ class TestEvent(Event):
 
 @api.workflows.register("test")
 class TestWorkflow(IsolatedWorkflow):
-    def __init__(self, caseRunConfiguration, event, settings):
-        super().__init__(caseRunConfiguration, event, settings)
+    def __init__(self, testRuns, crcId):
+        super().__init__(testRuns, crcId)
         self.status_step_counter = 0
         self.terminated = False
 
     def execute(self):
         last_state = None
+        crc = self.testRuns[self.crcId]
         # initial delay - to ensure specific order of results in reporting
-        sleep(self.caseRunConfiguration.configuration.get('initial_delay', 0) + (self.caseRunConfiguration.configuration.get('test', 0) * 0.01))
+        sleep(crc.configuration.get('initial_delay', 0) + (crc.configuration.get('test', 0) * 0.01))
 
-        for num, step in enumerate(self.caseRunConfiguration.testcase.execution.automation_data, start=1):
+        for num, step in enumerate(crc.testcase.execution.automation_data, start=1):
             if self.terminated: break
             self.status_step_counter = num
             state = step.get('state', last_state)

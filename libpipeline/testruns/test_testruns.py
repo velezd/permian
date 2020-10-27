@@ -31,8 +31,8 @@ class TestWorkflowGroupedAll(GroupedWorkflow):
         return 'Test'
 
     @classmethod
-    def factory(cls, caseRunConfigurations, event, settings):
-        cls(caseRunConfigurations, event, settings)
+    def factory(cls, testRuns, crcIds):
+        cls(testRuns, crcIds)
 
 
 class TestWorkflowGrouped(GroupedWorkflow):
@@ -46,17 +46,18 @@ class TestWorkflowGrouped(GroupedWorkflow):
         return 'Test'
 
     @classmethod
-    def factory(cls, caseRunConfigurations, event, settings):
+    def factory(cls, testRuns, crcIds):
         # Split caseruns into groups by architecture
         groups_by_config = dict()
-        for caserun in caseRunConfigurations:
+        for crcId in crcIds:
+            caserun = testRuns[crcId]
             try:
-                groups_by_config[caserun.configuration['arch']].append(caserun)
+                groups_by_config[caserun.configuration['arch']].append(crcId)
             except KeyError:
-                groups_by_config[caserun.configuration['arch']] = [caserun]
+                groups_by_config[caserun.configuration['arch']] = [crcId]
 
-        for caseruns in groups_by_config.values():
-            cls(caseruns, event, settings)
+        for crcIds in groups_by_config.values():
+            cls(testRuns, crcIds)
 
 
 def testruns_init():

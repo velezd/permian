@@ -13,7 +13,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
     """
     @classmethod
     @abc.abstractmethod
-    def factory(cls, caseRunConfigurations, event, settings):
+    def factory(cls, testRuns, crcIds):
         """
         Make instances of this workflow for given caseRunConfigurations and
         assign them accordingly.
@@ -22,19 +22,20 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         caseRunConfigurations. The way how the instances are assigned to
         individual caseRunConfiguration objects is up to the workflow.
 
-        :param caseRunConfigurations: List of CaseRunConfiguration which belong to this workflow.
-        :type caseRunConfigurations: list
+        :param crcIds: List of CaseRunConfiguration which belong to this workflow.
+        :type crcIds: list
         :return: None
         :rtype: None
         """
 
-    def __init__(self, caseRunConfigurations, event, settings):
-        self.event = event
-        self.settings = settings
+    def __init__(self, testRuns, crcIds):
+        self.testRuns = testRuns
+        self.crcIds = crcIds
+        self.event = testRuns.event
+        self.settings = testRuns.settings
         self.dryRun = self.settings.getboolean('workflows', 'dry_run')
-        self.caseRunConfigurations = caseRunConfigurations
-        for caseRunConfiguration in caseRunConfigurations:
-            caseRunConfiguration.workflow = self
+        for crcId in crcIds:
+            testRuns[crcId].workflow = self
         super().__init__()
 
     def run(self):
@@ -92,38 +93,38 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         # do some afteractions and logging
 
     @abc.abstractmethod
-    def groupTerminate(self, caseRunConfigurations):
+    def groupTerminate(self, crcIds):
         """
-        Terminate execution of specific caseRunConfigurations handled by the
+        Terminate execution of specific crcIds handled by the
         workflow.
 
-        :param caseRunConfigurations: Configurations to be terminated
-        :type caseRunConfigurations: list
+        :param crcIds: Configurations to be terminated
+        :type crcIds: list
         :return: TODO
         :rtype: TODO
         """
 
-    def groupReportResult(self, caseRunConfigurations, result):
+    def groupReportResult(self, crcIds, result):
         """
-        Provide partial or final result for the caseRunConfiguration. For more
+        Provide partial or final result for the crcId. For more
         information see TODO:Result.
 
-        :param caseRunConfigurations: TODO
-        :type caseRunConfigurations: list
+        :param crcIds: TODO
+        :type crcIds: list
         :param result: TODO
         :type result: TODO
         :return: None
         :rtype: None
         """
-        for caseRunConfiguration in caseRunConfigurations:
-            caseRunConfiguration.updateResult(result)
+        for crcId in crcIds:
+            self.testRuns.updateResult(crcId, result)
 
-    def groupGetLog(self, caseRunConfiguration, log_type):
+    def groupGetLog(self, crcId, log_type):
         """
-        Return log of the log_type associated to the caseRunConfiguration.
+        Return log of the log_type associated to the crcId.
 
-        :param caseRunConfiguration: TODO
-        :type caseRunConfiguration: caseRunConfiguration
+        :param crcId: TODO
+        :type crcId: str
         :param log_type: TODO
         :type log_type: str or None
         :return: Content of the log
@@ -131,7 +132,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def groupDisplayStatus(self, caseRunConfiguration):
+    def groupDisplayStatus(self, crcId):
         """
         Provides more comprehensive (and possibly graphically formatted) status
         of the workflow for the end user. This is meant as channel where more
@@ -140,8 +141,8 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
 
         Note: Output of this method should never be parsed.
 
-        :param caseRunConfiguration:
-        :type caseRunConfiguration:
+        :param crcIds:
+        :type crcIds:
         :return: Markdown formatted text provided for human processing
         :rtype: str
         """

@@ -7,6 +7,7 @@ from libpipeline.testruns import CaseRunConfiguration
 
 class DummyTestCase():
     name = 'test'
+    id = name
 
 class TestWorkflow(IsolatedWorkflow):
     def execute(self):
@@ -31,7 +32,13 @@ class TestWorkflowFactory(unittest.TestCase):
     def test_registered(self):
         self.assertIs(TestWorkflow, WorkflowFactory.workflow_classes['test'])
 
-    def test_unknown(self):
-        caserunconf = CaseRunConfiguration(DummyTestCase(), {}, [])
-        WorkflowFactory._assignWorkflows('unknown', [caserunconf], None, Settings({}, {}, []))
-        self.assertIsInstance(caserunconf.workflow, UnknownWorkflow)
+    @unittest.mock.patch('libpipeline.testruns.TestRuns', autospec=True)
+    def test_unknown(self, MockTestRuns):
+        caseRunConfiguration = CaseRunConfiguration(DummyTestCase(), {}, [])
+        testRuns = MockTestRuns(None, None, None)
+        testRuns.caseRunConfigurations = [caseRunConfiguration]
+        testRuns.__getitem__ = lambda instance, key: caseRunConfiguration if key == caseRunConfiguration.id else None
+        testRuns.event = None
+        testRuns.settings = Settings({}, {}, [])
+        WorkflowFactory._assignWorkflows('unknown', testRuns, [caseRunConfiguration.id])
+        self.assertIsInstance(caseRunConfiguration.workflow, UnknownWorkflow)

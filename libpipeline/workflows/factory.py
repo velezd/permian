@@ -35,7 +35,7 @@ class WorkflowFactory():
         return decorator
 
     @classmethod
-    def assign(cls, TestRuns, event, settings):
+    def assign(cls, TestRuns):
         """
         Aggregate CaseRunConfiguration objects based on their workflows and
         call Workflows factory function which then takes care of creating
@@ -48,17 +48,18 @@ class WorkflowFactory():
         :type TestRuns:
         """
         groups_by_workflow = dict()
-        for caserun in TestRuns.caseRunConfigurations:
+        for crcId in TestRuns:
+            workflow_name = TestRuns[crcId].testcase.execution.type
             try:
-                groups_by_workflow[caserun.testcase.execution.type].append(caserun)
+                groups_by_workflow[workflow_name].append(crcId)
             except KeyError:
-                groups_by_workflow[caserun.testcase.execution.type] = [caserun]
+                groups_by_workflow[workflow_name] = [crcId]
 
-        for workflow_name, caseruns in groups_by_workflow.items():
-            cls._assignWorkflows(workflow_name, caseruns, event, settings)
+        for workflow_name, crcIds in groups_by_workflow.items():
+            cls._assignWorkflows(workflow_name, TestRuns, crcIds)
 
     @classmethod
-    def _assignWorkflows(cls, workflow_name, caseRunConfigurations, event, settings):
+    def _assignWorkflows(cls, workflow_name, testRuns, crcIds):
         """
         Call factory method of workflow corresponding to workflow_name. If no
         such corresponding workflow can be found, fallback to the default
@@ -68,7 +69,7 @@ class WorkflowFactory():
         workflow_class = cls.workflow_classes.get(workflow_name)
         if workflow_class is None:
             workflow_class = cls.workflow_classes.get(None)
-        workflow_class.factory(caseRunConfigurations, event, settings)
+        workflow_class.factory(testRuns, crcIds)
 
     @classmethod
     def clear_workflow_classes(cls):

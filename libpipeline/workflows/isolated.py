@@ -14,47 +14,47 @@ class IsolatedWorkflow(GroupedWorkflow):
     which should handle creation of the workflow instances.
     """
     @classmethod
-    def factory(cls, caseRunConfigurations, event, settings):
+    def factory(cls, testRuns, crcIds):
         """
-        Make instances of this workflow for given caseRunConfigurations and
+        Make instances of this workflow for given crcIds and
         assign them accordingly.
 
         The IsolatedWorkflow implementation of this factory makes separate
         instance for each caseRunConfiguration object where each of the
         instances is handling exactly one caseRunConfiguration object.
 
-        :param caseRunConfigurations: List of CaseRunConfiguration which belong to this workflow.
-        :type caseRunConfigurations: list
+        :param crcIds: List of CaseRunConfiguration which belong to this workflow.
+        :type crcIds: list
         :return: None
         :rtype: None
         """
-        for caseRunConfiguration in caseRunConfigurations:
-            cls(caseRunConfiguration, event, settings)
+        for crcId in crcIds:
+            cls(testRuns, crcId)
 
-    def __init__(self, caseRunConfiguration, event, settings):
-        self.caseRunConfiguration = caseRunConfiguration
-        super().__init__([caseRunConfiguration], event, settings)
+    def __init__(self, testRuns, crcId):
+        self.crcId = crcId
+        super().__init__(testRuns, [crcId])
 
-    def _check_caseConfigurations(self, caseRunConfigurations):
+    def _check_caseConfigurations(self, crcIds):
         """
-        Function helping to decide if provided caseRunConfigurations are
+        Function helping to decide if provided crcIds are
         valid for this workflow.
         """
-        if [self.caseRunConfiguration] != caseRunConfigurations:
+        if [self.crcId] != crcIds:
             raise ValueError('Unknown configuration provided')
 
-    def groupTerminate(self, caseRunConfigurations):
+    def groupTerminate(self, crcIds):
         """
-        Terminate all matching caseRunConfigurations which in case of
+        Terminate all matching crcIds which in case of
         Isolated workflow is the only one it's handling. If the
-        caseRunConfigurations doesn't contain just the one valid for this
+        crcIds doesn't contain just the one valid for this
         workflow, throw exception.
 
-        :raises ValueError: If invalid caseRunConfigurations is provided
+        :raises ValueError: If invalid crcIds is provided
         :return: True if the workflow was terminated False otherwise
         :rtype: bool
         """
-        self._check_caseConfigurations(caseRunConfigurations)
+        self._check_caseConfigurations(crcIds)
         return self.terminate()
 
     @abc.abstractmethod
@@ -68,23 +68,23 @@ class IsolatedWorkflow(GroupedWorkflow):
 
     def reportResult(self, result):
         """
-        Shortcut method for groupReportResult. The caseRunConfigurations
+        Shortcut method for groupReportResult. The crcIds
         is not needed when this method is used.
         """
-        super().groupReportResult([self.caseRunConfiguration], result)
+        super().groupReportResult([self.crcId], result)
 
-    def groupDisplayStatus(self, caseRunConfiguration):
+    def groupDisplayStatus(self, crcId):
         """
-        Provide displayStatus of the given caseRunConfiguration which in case
+        Provide displayStatus of the given crcId which in case
         of Isolated workflow is the only one it's handling. If the
-        caseRunConfiguration doesn't match the one valid for this workflow,
+        crcId doesn't match the one valid for this workflow,
         throw exception.
 
-        :raises ValueError: If invalid caseRunConfiguration is provided
+        :raises ValueError: If invalid crcId is provided
         :return: Markdown formatted string to be displayed for user
         :rtype: str
         """
-        self._check_caseConfigurations([caseRunConfiguration])
+        self._check_caseConfigurations([crcId])
         return self.displayStatus()
 
     @abc.abstractmethod

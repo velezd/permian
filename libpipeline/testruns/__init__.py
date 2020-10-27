@@ -16,6 +16,9 @@ class TestRuns():
     execution.
     """
     def __init__(self, library, event, settings):
+        self.library = library
+        self.event = event
+        self.settings = settings
         self.caseRunConfigurations = []
         """List of CaseRunConfigurations taking part in this execution"""
         self.populateCaseRunConfigurations(library, event, settings)
@@ -52,7 +55,7 @@ class TestRuns():
         :return: None
         :rtype: None
         """
-        WorkflowFactory.assign(self, event, settings)
+        WorkflowFactory.assign(self)
 
     def start(self):
         """
@@ -92,8 +95,12 @@ class TestRuns():
         for caserun in self.caseRunConfigurations:
             caserun.workflow.join()
             if not caserun.result.final:
-                caserun.updateResult(Result('DNF', 'ERROR', True))
+                self.updateResult(caserun.id, Result('DNF', 'ERROR', True))
         self.resultsRouter.wait()
+
+    def updateResult(self, crcId, result):
+        self[crcId].updateResult(result)
+        # More code will appear during refactoring here
 
     # TODO: consider using functools.lru_cache or functools.cached_property
     @property
@@ -118,7 +125,12 @@ class TestRuns():
         raise KeyError(f'No caseRunConfiguration of id "{crcId}" found.')
 
     def __iter__(self):
-        return iter(self.caseRunConfigurations)
+        for crc in self.caseRunConfigurations:
+            yield crc.id
+
+    def items(self):
+        for crc in self.caseRunConfigurations:
+            yield crc.id, crc
 
 class CaseRunConfiguration():
     """Representation of case-run-configuration containing logic for state and
