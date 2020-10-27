@@ -2,6 +2,7 @@
 
 import logging
 import unittest
+import sys
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, filename="test_debug.log")
@@ -9,4 +10,6 @@ if __name__ == "__main__":
     # just use default discover values for pattern and start_dir
     tests = loader.discover(pattern="test*.py", start_dir=".")
     runner = unittest.runner.TextTestRunner(verbosity=2)
-    runner.run(tests)
+    result = runner.run(tests)
+    if not result.wasSuccessful():
+        sys.exit(2)
