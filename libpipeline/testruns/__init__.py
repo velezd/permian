@@ -112,6 +112,15 @@ class TestRuns():
                     result[testplan] = [caserunconfiguration]
         return result
 
+    def __getitem__(self, crcId):
+        for crc in self.caseRunConfigurations:
+            if crc.id == crcId:
+                return crc
+        raise KeyError(f'No caseRunConfiguration of id "{crcId}" found.')
+
+    def __iter__(self):
+        return iter(self.caseRunConfigurations)
+
 class CaseRunConfiguration():
     """Representation of case-run-configuration containing logic for state and
     result management as well as information about workflow responsible for
