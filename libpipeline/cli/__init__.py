@@ -40,7 +40,10 @@ def main(*raw_args):
         logging_level = logging.DEBUG
     if options.quiet:
         logging_level = logging.WARN
-    logging.basicConfig(level=logging_level)
+    logging.basicConfig(
+        level=logging_level,
+        format="%(levelname)s:%(name)s(%(threadName)s):%(message)s",
+    )
     logging.getLogger().setLevel(logging.ERROR)
     logging.getLogger('libpipeline').setLevel(logging_level)
     # the whole logging setup stuff should be probably moved elsewhere
