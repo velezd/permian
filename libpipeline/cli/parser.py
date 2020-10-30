@@ -20,6 +20,11 @@ def base_argparser():
         action='store_true',
         help="Don't run the pipeline but generate event specification string for the event used.",
     )
+    parser.add_argument(
+        '--debug-log',
+        type=argparse.FileType('w'),
+        help="Name of file where debug logs should be stored.",
+    )
     verbosity = parser.add_mutually_exclusive_group()
     verbosity.add_argument(
         '--debug', '-d',

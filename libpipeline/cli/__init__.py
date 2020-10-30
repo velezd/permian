@@ -40,12 +40,21 @@ def main(*raw_args):
         logging_level = logging.DEBUG
     if options.quiet:
         logging_level = logging.WARN
+    # set up handlers
+    stderr_handler = logging.StreamHandler()
+    stderr_handler.setLevel(logging_level)
+    handlers=[stderr_handler]
+    if options.debug_log:
+        debug_log_handler = logging.StreamHandler(options.debug_log)
+        debug_log_handler.setLevel(logging.DEBUG)
+        handlers.append(debug_log_handler)
+    # configure logging using the handlers
     logging.basicConfig(
-        level=logging_level,
+        level=logging.ERROR, # Set everything (non-pipeline) to error
         format="%(levelname)s:%(name)s(%(threadName)s):%(message)s",
+        handlers=handlers,
     )
-    logging.getLogger().setLevel(logging.ERROR)
-    logging.getLogger('libpipeline').setLevel(logging_level)
+    logging.getLogger('libpipeline').setLevel(logging.DEBUG)
     # the whole logging setup stuff should be probably moved elsewhere
     if options.generate_event:
         print(event_spec)
