@@ -35,25 +35,22 @@ class ReportSenderFactory():
         return decorator
 
     @classmethod
-    def assign(cls, testPlan, caseRunConfigurations, event, settings):
+    def assign(cls, testRuns):
         """
-        Create ReportSender instances based on reporting structure in the
-        `testPlan` and based on the `settings` and `event` arguments.
+        Create ReportSender instances based on testplans associated to
+        caseRunConfigurations in testRuns and based on the reporting structures
+        present in the testplans which cover the caseRunConfigurations.
 
-        :param testPlan: Test Plan for which the ReportSender instances should be created
-        :type testPlan: tclib.structures.testplan.TestPlan
-        :param caseRunConfigurations: case-run-configurations belonging to this test run
-        :type caseRunConfigurations: list[:class:`libpipeline.testrun.CaseRunConfiguration`]
-        :param event: Event which will be passed to created ReportSender instances.
-        :type event: libpipeline.events.base.Event
-        :param settings: Settings which will be passed to created ReportSender instances.
-        :type settings: libpipeline.settings.Settings
+        :param testRuns: TestRuns instance containing settings, event and caseRunConfigurations
+        :typer testRuns: libpipeline.testruns.TestRuns
         :return: Iterator of created ReportSender instances
         :rtype: Iterator[:class:`BaseReportSender`]
         """
-        for reporting in testPlan.reporting:
-            reportSenderClass = cls._get_fallback(reporting.type, None, None)
-            yield reportSenderClass(testPlan, reporting, caseRunConfigurations, event, settings)
+        for testPlanId, caseRunConfigurations in testRuns.testPlansMapping.items():
+            testPlan = testRuns.library.testplans[testPlanId]
+            for reporting in testPlan.reporting:
+                reportSenderClass = cls._get_fallback(reporting.type, None, None)
+                yield reportSenderClass(testPlan, reporting, caseRunConfigurations, testRuns.event, testRuns.settings)
 
     @classmethod
     def _get_fallback(cls, *args):

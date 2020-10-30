@@ -61,10 +61,18 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         from outside of the ReportSender and should not contain processing
         of the result itself.
 
-        Default implementation just puts the result to a queue which is later
-        processed by the ReportSender in its thread.
+        Default implementation just puts the relevant result to a queue which
+        is later processed by the ReportSender in its thread.
+
+        :param result:
+        :typer result: libpipeline.testrun.result.Result
+        :return: True if the result was relevant to the ReportSender instance. False otherwise.
+        :rtype: bool
         """
+        if result.caseRunConfiguration not in self.caseRunConfigurations:
+            return False
         self.resultsQueue.put(result)
+        return True
 
     def processResult(self, result):
         """

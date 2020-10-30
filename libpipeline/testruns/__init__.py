@@ -4,7 +4,7 @@ import logging
 
 from ..exceptions import UnexpectedState, NotReady, StateChangeError, UnknownTestConfigurationMergeMethod
 from ..workflows.factory import WorkflowFactory
-from ..resultsrouter import ResultsRouter
+from ..reportsenders.factory import ReportSenderFactory
 from ..result import Result, UNSET, STATES, RESULTS
 
 LOGGER = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class TestRuns():
         """List of CaseRunConfigurations taking part in this execution"""
         self.populateCaseRunConfigurations(library, event, settings)
         self.assignWorkflows(event, settings)
-        self.resultsRouter = ResultsRouter(self, library, event, settings)
+        self.reportSenders = list(ReportSenderFactory.assign(self))
 
     def populateCaseRunConfigurations(self, library, event, settings):
         """
@@ -73,14 +73,13 @@ class TestRuns():
         :return: None
         :rtype: None
         """
-        self.resultsRouter.start()
+        for reportSender in self.reportSenders:
+            reportSender.start()
         started_workflows = set()
         for caserun in self.caseRunConfigurations:
             if id(caserun.workflow) not in started_workflows:
                 caserun.workflow.start()
                 started_workflows.add(id(caserun.workflow))
-        # TODO: notify ResultsCollector
-        # TODO: start workflows
 
     def wait(self):
         """
@@ -96,10 +95,13 @@ class TestRuns():
             caserun.workflow.join()
             if not caserun.result.final:
                 self.updateResult(caserun.id, Result('DNF', 'ERROR', True))
-        self.resultsRouter.wait()
+        for reportSender in self.reportSenders:
+            reportSender.join()
 
     def updateResult(self, crcId, result):
-        self[crcId].updateResult(result)
+        result = self[crcId].updateResult(result)
+        for reportSender in self.reportSenders:
+            reportSender.resultUpdate(result)
         # More code will appear during refactoring here
 
     # TODO: consider using functools.lru_cache or functools.cached_property
@@ -211,20 +213,17 @@ class CaseRunConfiguration():
         :param final: Mark the state as final preventing any future changes.
         :type final: bool
         :raises ValueError: When unknown state or result is provided.
-        :return: None
-        :rtype: None
+        :return: Copy of given result with this caseRunConfiguration added
+        :rtype: libpipeline.result.Result
         """
         result = result.copy()
         result.caseRunConfiguration = self
-        # TODO: lock when changing status
         LOGGER.debug('Attempting to change result of "%s" from %s to %s', self.id, self.result, result)
         try:
             self.result.update(result)
-            self.testrun.resultsRouter.routeResult(result)
         except StateChangeError as e:
             LOGGER.error('Cannot change state of result: %s', e)
-        # TODO: unlock
-        # TODO: provide self.result.copy() to TestRun/ResultsCollector
+        return result
 
     def assignWorkflow(self, workflow):
         """
