@@ -294,6 +294,64 @@ class CaseRunConfigurationsList(list):
         else:
             super().append(other_caserun)
 
+    def copy(self):
+        """
+        Provide new CaseRunConfigurationsList containing copies of
+        CaseRunConfigurations from this list.
+        """
+        return CaseRunConfigurationsList([crc.copy() for crc in self])
+
+    def by_key(self, key_func):
+        """
+        Group caseRunConfigurations based on result of key_func.
+
+        :param key_func:
+        :type key_func: callable
+        :return:
+        :rtype dict:
+        """
+        result = {}
+        for crc in self:
+            key = key_func(crc)
+            try:
+                result[key].append(crc)
+            except KeyError:
+                result[key] = CaseRunConfigurationsList([crc])
+        return result
+
+    def by_testcase(self):
+        return self.by_key(lambda crc: crc.testcase.id)
+
+    def by_workflowType(self):
+        return self.by_key(lambda crc: crc.testcase.execution.type)
+
+    def by_configuration(self, *keys):
+        return self.by_key(
+            lambda crc: tuple([crc.configuration.get(key) for key in keys])
+        )
+
+    def by_testplan(self):
+        result = {}
+        for crc in self:
+            for testplan in crc.running_for:
+                try:
+                    result[testplan].append(crc)
+                except KeyError:
+                    result[testplan] = CaseRunConfigurationsList([crc])
+        return result
+
+    @property
+    def status(self):
+        """Return highest result present in the caseRunConfigurations"""
+        states = { state:i for i, state in enumerate(STATES) }
+        return list(STATES)[min([states[crc.result.state] for crc in self])]
+
+    @property
+    def result(self):
+        """Return lowest state present in the caseRunConfigurations"""
+        results = { result:i for i, result in enumerate(RESULTS) }
+        return list(RESULTS)[max([results[crc.result.result] for crc in self])]
+
 
 class ConfigurationDictHybrid(dict):
     """ Configuration dict that tries to combine configurations while respecting limitations """
@@ -393,9 +451,9 @@ def merge_testcase_configurations(caseRunConfigurations):
         testcase['caseRunConfigurations'].append(caserun)
             
         # set workflow
-        if testcase['workflow'] is not None and testcase['workflow'] != caserun.testcase.execution['type']:
+        if testcase['workflow'] is not None and testcase['workflow'] != caserun.testcase.execution.type:
             raise RuntimeError('CaseRunConfigurations for one tescase have different workflows')
-        testcase['workflow'] = caserun.testcase.execution['type']
+        testcase['workflow'] = caserun.testcase.execution.type
             
         if testcase['result'] is None:
             testcase['result'] = caserun.result.copy()
