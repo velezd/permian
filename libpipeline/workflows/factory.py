@@ -48,15 +48,12 @@ class WorkflowFactory():
         :type TestRuns:
         """
         groups_by_workflow = dict()
-        for crcId in TestRuns:
-            workflow_name = TestRuns[crcId].testcase.execution.type
-            try:
-                groups_by_workflow[workflow_name].append(crcId)
-            except KeyError:
-                groups_by_workflow[workflow_name] = [crcId]
-
-        for workflow_name, crcIds in groups_by_workflow.items():
-            cls._assignWorkflows(workflow_name, TestRuns, crcIds)
+        for workflow_name, crcList in TestRuns.caseRunConfigurations.by_workflowType().items():
+            cls._assignWorkflows(
+                workflow_name,
+                TestRuns,
+                [ crc.id for crc in crcList]
+            )
 
     @classmethod
     def _assignWorkflows(cls, workflow_name, testRuns, crcIds):

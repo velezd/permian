@@ -46,11 +46,11 @@ class ReportSenderFactory():
         :return: Iterator of created ReportSender instances
         :rtype: Iterator[:class:`BaseReportSender`]
         """
-        for testPlanId, caseRunConfigurations in testRuns.testPlansMapping.items():
+        for testPlanId, crcList in testRuns.caseRunConfigurations.by_testplan().items():
             testPlan = testRuns.library.testplans[testPlanId]
             for reporting in testPlan.reporting:
                 reportSenderClass = cls._get_fallback(reporting.type, None, None)
-                yield reportSenderClass(testPlan, reporting, caseRunConfigurations, testRuns.event, testRuns.settings)
+                yield reportSenderClass(testPlan, reporting, crcList.copy(), testRuns.event, testRuns.settings)
 
     @classmethod
     def _get_fallback(cls, *args):

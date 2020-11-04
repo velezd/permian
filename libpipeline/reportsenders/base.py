@@ -36,7 +36,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         self.testplan = testplan
         self.reporting = reporting_structure
         # Create local copy of caseRunConfiguration, to prevent unwanted interaction between different ReportSenders
-        self.caseRunConfigurations = [ crc.copy() for crc in caseRunConfigurations ]
+        self.caseRunConfigurations = caseRunConfigurations
         self.event = event
         self.settings = settings
         self.resultsQueue = queue.Queue()

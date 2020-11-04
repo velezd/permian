@@ -111,14 +111,7 @@ class TestRuns():
         Mapping of testPlans to caseRunConfigurations. The keys are TestPlan
         ids and values are caseRunConfigurations which belong to the TestPlan.
         """
-        result = {}
-        for caserunconfiguration in self.caseRunConfigurations:
-            for testplan in caserunconfiguration.running_for:
-                try:
-                    result[testplan].append(caserunconfiguration)
-                except KeyError:
-                    result[testplan] = [caserunconfiguration]
-        return result
+        return self.caseRunConfigurations.by_testplan()
 
     def __getitem__(self, crcId):
         for crc in self.caseRunConfigurations:
