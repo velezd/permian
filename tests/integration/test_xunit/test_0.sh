@@ -9,7 +9,7 @@ test() {
                                                 --tp 'xunit testplan 1'
 
     #cp -r $TEST_REPORT_DIR $(dirname ${BASH_SOURCE[0]})/test_0_result   # update expected result
-    diff -r $TEST_REPORT_DIR $(dirname ${BASH_SOURCE[0]})/test_0_result
+    diff -Naur $(dirname ${BASH_SOURCE[0]})/test_0_result $TEST_REPORT_DIR
 }
 
 cleanup() {

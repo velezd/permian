@@ -11,7 +11,7 @@ test() {
                                                 --tp 'testing plugin plan 4'
     
     #cp -r $TEST_REPORT_DIR $(dirname ${BASH_SOURCE[0]})/test_2_result   # update expected result
-    diff -r $TEST_REPORT_DIR $(dirname ${BASH_SOURCE[0]})/test_2_result
+    diff -Naur $(dirname ${BASH_SOURCE[0]})/test_2_result $TEST_REPORT_DIR
 }
 
 cleanup() {
