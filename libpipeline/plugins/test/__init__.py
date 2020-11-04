@@ -73,6 +73,8 @@ class TestReportSender(BaseReportSender):
         super().__init__(*args, **kwargs)
         self.processing_log_filename = path.join(self.settings.get('testingPlugin', 'reportSenderDirectory'),
                                                  self.reporting.data.get('filename', re.sub(r'[^\w\d-]', '_', self.testplan.name)))
+        if self.group is not None:
+            self.processing_log_filename += f'-{self.group!r}'
         self.processing_log_file = None
 
     def processPartialResult(self, result):

@@ -31,7 +31,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
     :param settings: Pipeline settings object
     :type settings: libpipeline.settings.Settings
     """
-    def __init__(self, testplan, reporting_structure, caseRunConfigurations, event, settings):
+    def __init__(self, testplan, reporting_structure, caseRunConfigurations, event, settings, group=None):
         super().__init__()
         self.testplan = testplan
         self.reporting = reporting_structure
@@ -39,6 +39,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         self.caseRunConfigurations = caseRunConfigurations
         self.event = event
         self.settings = settings
+        self.group=group
         self.resultsQueue = queue.Queue()
 
     def run(self):

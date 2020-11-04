@@ -50,7 +50,11 @@ class ReportSenderFactory():
             testPlan = testRuns.library.testplans[testPlanId]
             for reporting in testPlan.reporting:
                 reportSenderClass = cls._get_fallback(reporting.type, None, None)
-                yield reportSenderClass(testPlan, reporting, crcList.copy(), testRuns.event, testRuns.settings)
+                if reporting.group_by:
+                    for values, crcList in crcList.by_configuration(*reporting.group_by).items():
+                        yield reportSenderClass(testPlan, reporting, crcList.copy(), testRuns.event, testRuns.settings, dict(zip(reporting.group_by, values)))
+                else:
+                    yield reportSenderClass(testPlan, reporting, crcList.copy(), testRuns.event, testRuns.settings)
 
     @classmethod
     def _get_fallback(cls, *args):
