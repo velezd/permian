@@ -72,31 +72,31 @@ class TestReportSender(BaseReportSender):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.processing_log_filename = path.join(self.settings.get('testingPlugin', 'reportSenderDirectory'),
-                                                 self.reporting.data['data'].get('filename', re.sub(r'[^\w\d-]', '_', self.testplan.name)))
+                                                 self.reporting.data.get('filename', re.sub(r'[^\w\d-]', '_', self.testplan.name)))
         self.processing_log_file = None
 
     def processPartialResult(self, result):
-        self.processing_log_file.write('reporter %s - result partial %s-%s - %s, %s, %s\n' % (self.reporting.data['data'].get('reporter', 0),
+        self.processing_log_file.write('reporter %s - result partial %s-%s - %s, %s, %s\n' % (self.reporting.data.get('reporter', 0),
             result.caseRunConfiguration.testcase.name,
             result.caseRunConfiguration.configuration.get('test', 0),
             result.state, result.result, result.final))
 
     def processFinalResult(self, result):
-        self.processing_log_file.write('reporter %s - result final %s-%s - %s, %s, %s\n' % (self.reporting.data['data'].get('reporter', 0),
+        self.processing_log_file.write('reporter %s - result final %s-%s - %s, %s, %s\n' % (self.reporting.data.get('reporter', 0),
             result.caseRunConfiguration.testcase.name,
             result.caseRunConfiguration.configuration.get('test', 0),
             result.state, result.result, result.final))
 
     def processTestRunStarted(self):
         self.processing_log_file = open(self.processing_log_filename, 'w')
-        self.processing_log_file.write('reporter %s - testrun "%s" started\n' % (self.reporting.data['data'].get('reporter', 0),
+        self.processing_log_file.write('reporter %s - testrun "%s" started\n' % (self.reporting.data.get('reporter', 0),
             self.testplan.name))
 
     def processTestRunFinished(self):
-        self.processing_log_file.write('reporter %s - testrun "%s" finished\n' % (self.reporting.data['data'].get('reporter', 0),
+        self.processing_log_file.write('reporter %s - testrun "%s" finished\n' % (self.reporting.data.get('reporter', 0),
             self.testplan.name))
         self.processing_log_file.close()
 
     def processCaseRunFinished(self, testCaseID):
-        self.processing_log_file.write('reporter %s - finished testcase "%s" in "%s"\n' % (self.reporting.data['data'].get('reporter', 0),
+        self.processing_log_file.write('reporter %s - finished testcase "%s" in "%s"\n' % (self.reporting.data.get('reporter', 0),
             testCaseID, self.testplan.name))
