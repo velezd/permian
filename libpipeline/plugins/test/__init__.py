@@ -77,17 +77,17 @@ class TestReportSender(BaseReportSender):
             self.processing_log_filename += f'-{self.group!r}'
         self.processing_log_file = None
 
-    def processPartialResult(self, result):
+    def processPartialResult(self, crc):
         self.processing_log_file.write('reporter %s - result partial %s-%s - %s, %s, %s\n' % (self.reporting.data.get('reporter', 0),
-            result.caseRunConfiguration.testcase.name,
-            result.caseRunConfiguration.configuration.get('test', 0),
-            result.state, result.result, result.final))
+            crc.testcase.name,
+            crc.configuration.get('test', 0),
+            crc.result.state, crc.result.result, crc.result.final))
 
-    def processFinalResult(self, result):
+    def processFinalResult(self, crc):
         self.processing_log_file.write('reporter %s - result final %s-%s - %s, %s, %s\n' % (self.reporting.data.get('reporter', 0),
-            result.caseRunConfiguration.testcase.name,
-            result.caseRunConfiguration.configuration.get('test', 0),
-            result.state, result.result, result.final))
+            crc.testcase.name,
+            crc.configuration.get('test', 0),
+            crc.result.state, crc.result.result, crc.result.final))
 
     def processTestRunStarted(self):
         self.processing_log_file = open(self.processing_log_filename, 'w')

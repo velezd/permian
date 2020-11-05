@@ -10,10 +10,10 @@ class XunitReportSender(BaseXunitReportSender):
         super().__init__(*args, **kwargs)
         self.xunit_filename = 'xunit-%s.xml' % re.sub(r'/', '_', self.testplan.name)
 
-    def processPartialResult(self, result):
+    def processPartialResult(self, crc):
         pass
 
-    def processFinalResult(self, result):
+    def processFinalResult(self, crc):
         pass
 
     def processTestRunStarted(self):

@@ -46,18 +46,10 @@ class TestWorkflowGrouped(GroupedWorkflow):
         return 'Test'
 
     @classmethod
-    def factory(cls, testRuns, crcIds):
+    def factory(cls, testRuns, crcList):
         # Split caseruns into groups by architecture
-        groups_by_config = dict()
-        for crcId in crcIds:
-            caserun = testRuns[crcId]
-            try:
-                groups_by_config[caserun.configuration['arch']].append(crcId)
-            except KeyError:
-                groups_by_config[caserun.configuration['arch']] = [crcId]
-
-        for crcIds in groups_by_config.values():
-            cls(testRuns, crcIds)
+        for crcList in crcList.by_configuration('arch').values():
+            cls(testRuns, crcList)
 
 
 def testruns_init():
@@ -165,16 +157,16 @@ class TestCaseRunConfigurationsList(unittest.TestCase):
         planB = DummyTestPlan('B')
 
         self.crc11 = CaseRunConfiguration(DummyTestCase('testcase1'), {'conf': 1, 'a': 0}, [planA])
-        self.crc11.result = Result('running', 'PASS', False, self.crc11)
+        self.crc11.result = Result('running', 'PASS', False)
 
         self.crc12 = CaseRunConfiguration(DummyTestCase('testcase1'), {'conf': 2, 'a': 0}, [planA, planB])
-        self.crc12.result = Result('complete', 'FAIL', False, self.crc12)
+        self.crc12.result = Result('complete', 'FAIL', False)
 
         self.crc21 = CaseRunConfiguration(DummyTestCase('testcase2'), {'conf': 1, 'a': 1}, [planB])
-        self.crc21.result = Result('DNF', None, False, self.crc21)
+        self.crc21.result = Result('DNF', None, False)
 
         self.crc23 = CaseRunConfiguration(DummyTestCase('testcase2'), {'conf': 3, 'a': 1}, [planB])
-        self.crc23.result = Result('DNF', 'ERROR', False, self.crc23)
+        self.crc23.result = Result('DNF', 'ERROR', False)
 
         self.crcList = CaseRunConfigurationsList([
             self.crc11, self.crc12,

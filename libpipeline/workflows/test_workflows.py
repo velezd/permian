@@ -3,7 +3,7 @@ from libpipeline.settings import Settings
 from libpipeline.workflows.factory import WorkflowFactory
 from libpipeline.workflows.isolated import IsolatedWorkflow
 from libpipeline.workflows.builtin import UnknownWorkflow
-from libpipeline.testruns import CaseRunConfiguration
+from libpipeline.testruns import CaseRunConfiguration, CaseRunConfigurationsList
 
 class DummyTestCase():
     name = 'test'
@@ -36,9 +36,11 @@ class TestWorkflowFactory(unittest.TestCase):
     def test_unknown(self, MockTestRuns):
         caseRunConfiguration = CaseRunConfiguration(DummyTestCase(), {}, [])
         testRuns = MockTestRuns(None, None, None)
-        testRuns.caseRunConfigurations = [caseRunConfiguration]
+        testRuns.caseRunConfigurations = CaseRunConfigurationsList(
+            [caseRunConfiguration]
+        )
         testRuns.__getitem__ = lambda instance, key: caseRunConfiguration if key == caseRunConfiguration.id else None
         testRuns.event = None
         testRuns.settings = Settings({}, {}, [])
-        WorkflowFactory._assignWorkflows('unknown', testRuns, [caseRunConfiguration.id])
+        WorkflowFactory._assignWorkflows('unknown', testRuns, testRuns.caseRunConfigurations)
         self.assertIsInstance(caseRunConfiguration.workflow, UnknownWorkflow)

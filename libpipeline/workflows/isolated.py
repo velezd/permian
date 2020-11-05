@@ -14,7 +14,7 @@ class IsolatedWorkflow(GroupedWorkflow):
     which should handle creation of the workflow instances.
     """
     @classmethod
-    def factory(cls, testRuns, crcIds):
+    def factory(cls, testRuns, crcList):
         """
         Make instances of this workflow for given crcIds and
         assign them accordingly.
@@ -28,19 +28,21 @@ class IsolatedWorkflow(GroupedWorkflow):
         :return: None
         :rtype: None
         """
-        for crcId in crcIds:
-            cls(testRuns, crcId)
+        for singleCrcList in crcList.by_key(lambda x: x.id).values():
+            cls(testRuns, singleCrcList)
 
-    def __init__(self, testRuns, crcId):
-        self.crcId = crcId
-        super().__init__(testRuns, [crcId])
+    def __init__(self, testRuns, crcList):
+        assert len(crcList) == 1 # make sure that only one crc was actually passed
+        self.crc = crcList[0]
+        self.crcId = self.crc.id # TODO: remove me later while refactoring
+        super().__init__(testRuns, crcList)
 
     def _check_caseConfigurations(self, crcIds):
         """
         Function helping to decide if provided crcIds are
         valid for this workflow.
         """
-        if [self.crcId] != crcIds:
+        if [crc.id for crc in self.crcList] != crcIds:
             raise ValueError('Unknown configuration provided')
 
     def groupTerminate(self, crcIds):
@@ -71,7 +73,7 @@ class IsolatedWorkflow(GroupedWorkflow):
         Shortcut method for groupReportResult. The crcIds
         is not needed when this method is used.
         """
-        super().groupReportResult([self.crcId], result)
+        super().groupReportResult(self.crcIds, result)
 
     def groupDisplayStatus(self, crcId):
         """

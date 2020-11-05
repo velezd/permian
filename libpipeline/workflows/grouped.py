@@ -13,7 +13,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
     """
     @classmethod
     @abc.abstractmethod
-    def factory(cls, testRuns, crcIds):
+    def factory(cls, testRuns, crcList):
         """
         Make instances of this workflow for given caseRunConfigurations and
         assign them accordingly.
@@ -28,14 +28,15 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         :rtype: None
         """
 
-    def __init__(self, testRuns, crcIds):
+    def __init__(self, testRuns, crcList):
         self.testRuns = testRuns
-        self.crcIds = crcIds
         self.event = testRuns.event
         self.settings = testRuns.settings
         self.dryRun = self.settings.getboolean('workflows', 'dry_run')
-        for crcId in crcIds:
-            testRuns[crcId].workflow = self
+        for crc in crcList:
+            crc.workflow = self
+        self.crcList = crcList.copy()
+        self.crcIds = [crc.id for crc in crcList] # TODO: remove me later while refactoring
         super().__init__()
 
     def run(self):
@@ -117,7 +118,8 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         :rtype: None
         """
         for crcId in crcIds:
-            self.testRuns.updateResult(crcId, result)
+            self.crcList[crcId].updateResult(result)
+            self.testRuns.update(self.crcList[crcId])
 
     def groupGetLog(self, crcId, log_type):
         """

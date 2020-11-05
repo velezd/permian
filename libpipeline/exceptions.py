@@ -37,3 +37,9 @@ class UnknownTestConfigurationMergeMethod(Exception):
     """
     def __init__(self, method):
         super().__init__('Unknown testcase configurations merge method: %s' % method)
+
+class ReadOnlyChangeError(Exception):
+    """
+    Raised when some read-only object is attempted to be updated/changed.
+    """
+    pass

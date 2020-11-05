@@ -2,7 +2,7 @@ from hashlib import sha1
 from functools import lru_cache
 import logging
 
-from ..exceptions import UnexpectedState, NotReady, StateChangeError, UnknownTestConfigurationMergeMethod
+from ..exceptions import UnexpectedState, NotReady, StateChangeError, UnknownTestConfigurationMergeMethod, ReadOnlyChangeError
 from ..workflows.factory import WorkflowFactory
 from ..reportsenders.factory import ReportSenderFactory
 from ..result import Result, UNSET, STATES, RESULTS
@@ -94,19 +94,24 @@ class TestRuns():
         for caserun in self.caseRunConfigurations:
             caserun.workflow.join()
             if not caserun.result.final:
-                self.updateResult(caserun.id, Result('DNF', 'ERROR', True))
+                # copy is needed here, so that the final result is not stored
+                # in the crc before self.update is called.
+                self.update(caserun.copy().updateResult(Result('DNF', 'ERROR', True)))
         for reportSender in self.reportSenders:
             reportSender.join()
 
-    def updateResult(self, crcId, result):
+    def update(self, crc):
+        """
+        Register update in crc provided by workflow and if the update is valid,
+        provide it to ReportSenders.
+        """
         try:
-            result = self[crcId].updateResult(result)
+            crcUpdate = self.caseRunConfigurations[crc.id].updateResult(crc.result).readOnlyCopy()
         except StateChangeError as e:
             LOGGER.error('Cannot change state of result: %s', e)
             return
         for reportSender in self.reportSenders:
-            reportSender.resultUpdate(result)
-        # More code will appear during refactoring here
+            reportSender.resultUpdate(crcUpdate)
 
     # TODO: consider using functools.lru_cache or functools.cached_property
     @property
@@ -155,6 +160,8 @@ class CaseRunConfiguration():
         """Workflow instance handling execution of this configuration"""
         self.result = Result('not started')
         """TODO"""
+        self.readOnly = False
+        """If set to true, the object is meant to be used as read-only copy and some methods which have side effects are forbidden and raise exception."""
 
     @property
     @lru_cache(maxsize=None)
@@ -167,6 +174,19 @@ class CaseRunConfiguration():
         caserun.running_for = self.running_for
         caserun.workflow = self.workflow
         caserun.result = self.result.copy()
+        return caserun
+
+    def readOnlyCopy(self):
+        """
+        Provide read-only copy of this instance. This is meant to be used when
+        one copy is provided to multiple destinations and the destinations
+        should not have ability to change state of the shared instance.
+        """
+        caserun = CaseRunConfiguration(self.testcase, self.configuration, [])
+        caserun.running_for = self.running_for
+        caserun.workflow = self.workflow
+        caserun.result = self.result.copy()
+        caserun.readOnly = True
         return caserun
 
     def cancel(self, reason, testplan_id=None):
@@ -183,6 +203,8 @@ class CaseRunConfiguration():
         :return: True if the workflow cancel was invoked
         :rtype: bool
         """
+        if self.readOnly:
+            raise ReadOnlyChangeError(f'Cannot change state of read-only result: {self}')
         if testplan_id is not None:
             self.running_for[testplan_id] = False
             if any(self.running_for.values()):
@@ -213,11 +235,28 @@ class CaseRunConfiguration():
         :return: Copy of given result with this caseRunConfiguration added
         :rtype: libpipeline.result.Result
         """
-        result = result.copy()
-        result.caseRunConfiguration = self
+        # At this moment, no locking is required as there should not be
+        # multiple threads running the updateResult on the same
+        # caseRunConfiguration instance as the only threads that should invoke
+        # updateResult are workflows (it should not happen that multiple
+        # workflow instances would be working on the same caseRunConfiguration)
+        # and main thread setting DNF, ERROR result if the responsible workflow
+        # thread is ended.
+        # It's still worth noting, that this method may be cause of possible
+        # race-condition issues in the future.
         LOGGER.debug('Attempting to change result of "%s" from %s to %s', self.id, self.result, result)
-        self.result.update(result)
-        return result
+        if self.readOnly:
+            raise ReadOnlyChangeError(f'Cannot change state of read-only result: {self}')
+        try:
+            self.result.update(result)
+        except StateChangeError as e:
+            LOGGER.error('Cannot change state of result: %s', e)
+        return self
+
+    def withResult(self, result):
+        crcCopy = self.copy()
+        crcCopy.result = result
+        return crcCopy
 
     def assignWorkflow(self, workflow):
         """
@@ -251,6 +290,8 @@ class CaseRunConfiguration():
             raise NotImplementedError()
         if self != other:
             raise ValueError("Cannot merge different CaseRunConfigurations")
+        if self.readOnly:
+            raise ReadOnlyChangeError(f'Cannot change state of read-only result: {self}')
         self.running_for.update(other.running_for)
         return self
 
@@ -345,6 +386,15 @@ class CaseRunConfigurationsList(list):
         """Return lowest state present in the caseRunConfigurations"""
         results = { result:i for i, result in enumerate(RESULTS) }
         return list(RESULTS)[max([results[crc.result.result] for crc in self])]
+
+    def __getitem__(self, index):
+        if isinstance(index, int):
+            return super().__getitem__(index)
+        crcId = index
+        for crc in self:
+            if crc.id == crcId:
+                return crc
+        raise KeyError(f'No caseRunConfiguration of id "{crcId}" found.')
 
 
 class ConfigurationDictHybrid(dict):

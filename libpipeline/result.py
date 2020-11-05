@@ -23,12 +23,11 @@ RESULTS = OrderedDict((
 ))
 
 class Result():
-    def __init__(self, state=None, result=None, final=False, caseRunConfiguration=None, **kwargs):
+    def __init__(self, state=None, result=None, final=False, **kwargs):
         if state not in STATES:
             raise ValueError('Unknown state: "%s"' % state)
         if result not in RESULTS:
             raise ValueError('Unknown result: "%s"' % result)
-        self.caseRunConfiguration = caseRunConfiguration
         self.state = state
         self.result = result
         self.final = final
@@ -47,18 +46,17 @@ class Result():
 
     def copy(self):
         return Result(
-            self.state, self.result, self.final, self.caseRunConfiguration, **self.extra_fields
+            self.state, self.result, self.final, **self.extra_fields
         )
 
     def __eq__(self, other):
         if not isinstance(other, Result):
             raise NotImplementedError()
         return (
-            self.caseRunConfiguration == other.caseRunConfiguration and
             self.state == other.state and
             self.result == other.result and
             self.final == other.final
         )
 
     def __repr__(self):
-        return f'<Result({self.state}, {self.result}, {self.final}, {self.caseRunConfiguration}>'
+        return f'<Result({self.state}, {self.result}, {self.final}>'

@@ -13,11 +13,11 @@ class UnknownReportSender(BaseReportSender):
             'No reportSender was found for "%s". Falling back to UnknownReportSender, fix this please.', reporting_structure.type
         )
 
-    def processPartialResult(self, result):
-        LOGGER.info('%s reporting partial result: %s', self, result)
+    def processPartialResult(self, crc):
+        LOGGER.info('%s reporting partial result: %s', self, crc)
 
-    def processFinalResult(self, result):
-        LOGGER.info('%s reporting final result %s', self, result)
+    def processFinalResult(self, crc):
+        LOGGER.info('%s reporting final result %s', self, crc)
 
     def processTestRunStarted(self):
         LOGGER.info('%s reporting Test Run started', self)

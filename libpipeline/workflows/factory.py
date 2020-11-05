@@ -49,14 +49,10 @@ class WorkflowFactory():
         """
         groups_by_workflow = dict()
         for workflow_name, crcList in TestRuns.caseRunConfigurations.by_workflowType().items():
-            cls._assignWorkflows(
-                workflow_name,
-                TestRuns,
-                [ crc.id for crc in crcList]
-            )
+            cls._assignWorkflows(workflow_name, TestRuns, crcList)
 
     @classmethod
-    def _assignWorkflows(cls, workflow_name, testRuns, crcIds):
+    def _assignWorkflows(cls, workflow_name, testRuns, crcList):
         """
         Call factory method of workflow corresponding to workflow_name. If no
         such corresponding workflow can be found, fallback to the default
@@ -66,7 +62,7 @@ class WorkflowFactory():
         workflow_class = cls.workflow_classes.get(workflow_name)
         if workflow_class is None:
             workflow_class = cls.workflow_classes.get(None)
-        workflow_class.factory(testRuns, crcIds)
+        workflow_class.factory(testRuns, crcList)
 
     @classmethod
     def clear_workflow_classes(cls):

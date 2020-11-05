@@ -3,7 +3,6 @@ import queue
 import abc
 import logging
 
-from ..result import Result
 from ..exceptions import UnexpectedState
 
 LOGGER = logging.getLogger(__name__)
@@ -43,12 +42,13 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         self.resultsQueue = queue.Queue()
 
     def run(self):
+        from ..testruns import CaseRunConfiguration # TODO: remove during refactoring
         LOGGER.debug("ReportSender started: '%s'", self)
         self.processTestRunStarted()
         while True:
             item = self.resultsQueue.get()
             LOGGER.debug("'%s' processing: '%s'", self, item)
-            if isinstance(item, Result):
+            if isinstance(item, CaseRunConfiguration):
                 if self.processResult(item):
                     self.resultsQueue.task_done()
                     break
@@ -56,7 +56,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         LOGGER.debug("'%s' finished processing items (test run should be complete)", self)
         self.checkEmptyQueue()
 
-    def resultUpdate(self, result):
+    def resultUpdate(self, crc):
         """
         Notify ReportSender about new result. This method is meant to be used
         from outside of the ReportSender and should not contain processing
@@ -70,12 +70,12 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         :return: True if the result was relevant to the ReportSender instance. False otherwise.
         :rtype: bool
         """
-        if result.caseRunConfiguration not in self.caseRunConfigurations:
+        if crc not in self.caseRunConfigurations:
             return False
-        self.resultsQueue.put(result)
+        self.resultsQueue.put(crc)
         return True
 
-    def processResult(self, result):
+    def processResult(self, crcUpdate):
         """
         This method is called in the loop processing results queue and signals
         if the result was the last one and reportsender should end.
@@ -85,21 +85,21 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         :return: True if the processed result is expected to be the last one. False otherwise.
         :rtype: bool
         """
-        localCaseRunConfiguration = self.caseRunConfigurations[self.caseRunConfigurations.index(result.caseRunConfiguration)]
+        localCaseRunConfiguration = self.caseRunConfigurations[crcUpdate.id]
         # Update result of local copy of caseRunConfiguration
-        localCaseRunConfiguration.result.update(result)
+        localCaseRunConfiguration.updateResult(crcUpdate.result)
 
-        if result.final:
-            self.processFinalResult(result)
+        if crcUpdate.result.final:
+            self.processFinalResult(crcUpdate)
             # Catch end of test case
-            if all([crc.result.final for crc in self.caseRunConfigurations if result.caseRunConfiguration.testcase == crc.testcase]):
-                self.processCaseRunFinished(localCaseRunConfiguration.testcase.name)
+            if all([crc.result.final for crc in self.caseRunConfigurations if crcUpdate.testcase == crc.testcase]):
+                self.processCaseRunFinished(crcUpdate.testcase.name)
             # Catch end of testun
             if all([crc.result.final for crc in self.caseRunConfigurations]):
                 self.processTestRunFinished()
                 return True
         else:
-            self.processPartialResult(result)
+            self.processPartialResult(crcUpdate)
         return False
 
     def checkEmptyQueue(self):
@@ -112,7 +112,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
             raise UnexpectedState("The reportSender queue isn't empty.")
 
     @abc.abstractmethod
-    def processPartialResult(self, result):
+    def processPartialResult(self, crc):
         """
         This method is called when a caseRunResult updates it's state or result.
 
@@ -124,7 +124,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def processFinalResult(self, result):
+    def processFinalResult(self, crc):
         """
         This method is called when a caseRunResult performs final change of
         state or result.
