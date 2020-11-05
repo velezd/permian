@@ -99,7 +99,11 @@ class TestRuns():
             reportSender.join()
 
     def updateResult(self, crcId, result):
-        result = self[crcId].updateResult(result)
+        try:
+            result = self[crcId].updateResult(result)
+        except StateChangeError as e:
+            LOGGER.error('Cannot change state of result: %s', e)
+            return
         for reportSender in self.reportSenders:
             reportSender.resultUpdate(result)
         # More code will appear during refactoring here
@@ -212,10 +216,7 @@ class CaseRunConfiguration():
         result = result.copy()
         result.caseRunConfiguration = self
         LOGGER.debug('Attempting to change result of "%s" from %s to %s', self.id, self.result, result)
-        try:
-            self.result.update(result)
-        except StateChangeError as e:
-            LOGGER.error('Cannot change state of result: %s', e)
+        self.result.update(result)
         return result
 
     def assignWorkflow(self, workflow):

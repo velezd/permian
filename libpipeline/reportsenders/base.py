@@ -4,7 +4,7 @@ import abc
 import logging
 
 from ..result import Result
-from ..exceptions import UnexpectedState, StateChangeError
+from ..exceptions import UnexpectedState
 
 LOGGER = logging.getLogger(__name__)
 
@@ -87,10 +87,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         """
         localCaseRunConfiguration = self.caseRunConfigurations[self.caseRunConfigurations.index(result.caseRunConfiguration)]
         # Update result of local copy of caseRunConfiguration
-        try:
-            localCaseRunConfiguration.result.update(result)
-        except StateChangeError as e:
-            LOGGER.error('Cannot change state of result: %s', e)
+        localCaseRunConfiguration.result.update(result)
 
         if result.final:
             self.processFinalResult(result)
