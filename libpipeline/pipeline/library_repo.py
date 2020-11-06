@@ -106,3 +106,17 @@ def clone(target_directory, event, settings):
     else:
         raise LibraryNotFound(repoURL, possible_branches)
     return target_directory
+
+def get_branch(directory):
+    """ Try to get current branch of a git repo
+
+    :param directory: Path to directory with git repo
+    :type directory: str
+    :return: branch name
+    :rtype: str
+    """
+    try:
+        process = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], cwd=directory)
+        return process.decode('UTF-8').strip()
+    except subprocess.CalledProcessError:
+        raise Exception('Can\'t get library repo branch name.')
