@@ -100,6 +100,11 @@ class ComposeEvent(Event):
         return f"Compose {self.compose_id}"
 
     @property
+    @payload_override('location_http')
+    def compose_location_http(self):
+        return ''
+
+    @property
     @payload_override('available_in')
     def compose_available_in(self):
         return []
