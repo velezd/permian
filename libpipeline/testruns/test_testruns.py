@@ -5,7 +5,7 @@ from libpipeline.events.base import Event
 from libpipeline.workflows.factory import WorkflowFactory
 from libpipeline.workflows.isolated import IsolatedWorkflow, GroupedWorkflow
 from libpipeline.workflows.builtin import UnknownWorkflow, ManualWorkflow
-from libpipeline.testruns import CaseRunConfiguration, CaseRunConfigurationsList, TestRuns, merge_testcase_configurations
+from libpipeline.testruns import CaseRunConfiguration, CaseRunConfigurationsList, TestRuns
 from libpipeline.result import Result
 
 
@@ -287,35 +287,3 @@ class TestCaseRunConfigurationsList(unittest.TestCase):
                 'testcase2' : 'DNF',
             }
         )
-
-
-class TestMerge_testcase_configurations(unittest.TestCase):
-    def setUp(self):
-        self.caseRunConfigurations = [CaseRunConfiguration(DummyTestCase('testcase1'), {'conf': 1}, []),
-                                      CaseRunConfiguration(DummyTestCase('testcase1'), {'conf': 2}, []),
-                                      CaseRunConfiguration(DummyTestCase('testcase2'), {'conf': 3}, []),
-                                      CaseRunConfiguration(DummyTestCase('testcase2'), {'conf': 4}, [])]
-
-    def test_common_result(self):
-        self.caseRunConfigurations[0].result = Result('running', 'PASS', False, self.caseRunConfigurations[0])
-        self.caseRunConfigurations[1].result = Result('complete', 'FAIL', False, self.caseRunConfigurations[1])
-        testcases = merge_testcase_configurations(self.caseRunConfigurations)
-
-        self.assertEqual(testcases['testcase1']['result'].state, 'running')
-        self.assertEqual(testcases['testcase1']['result'].result, 'FAIL')
-        self.assertEqual(testcases['testcase2']['result'].state, 'not started')
-        self.assertEqual(testcases['testcase2']['result'].result, None)
-        #print()
-
-    def test_common_workflow(self):
-        testcases = merge_testcase_configurations(self.caseRunConfigurations)
-        self.assertEqual(testcases['testcase1']['workflow'], 'test')
-
-    def test_configurations(self):
-        testcases = merge_testcase_configurations(self.caseRunConfigurations)
-        self.assertEqual(len(testcases['testcase1']['caseRunConfigurations']), 2)
-        self.assertEqual(testcases['testcase1']['caseRunConfigurations'][0].configuration['conf'], 1)
-        self.assertEqual(testcases['testcase1']['caseRunConfigurations'][1].configuration['conf'], 2)
-        self.assertEqual(len(testcases['testcase2']['caseRunConfigurations']), 2)
-        self.assertEqual(testcases['testcase2']['caseRunConfigurations'][0].configuration['conf'], 3)
-        self.assertEqual(testcases['testcase2']['caseRunConfigurations'][1].configuration['conf'], 4)

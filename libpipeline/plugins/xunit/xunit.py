@@ -1,7 +1,24 @@
 import abc
 import jinja2
-from ...testruns import merge_testcase_configurations
 from ...reportsenders.base import BaseReportSender
+
+
+def filter_results_string(crcs_list):
+    """ Jijna2 filter - takes individual results of configurations and creates one human readable string from them.
+
+    :param crcs_list: list of CaseRunConfiguration
+    :type crcs_list: list
+    :return: String with results
+    :rtype: str
+    """
+    string = ''
+    base_string = 'Configuration: %s - Result: %s, %s - Links: %s; '
+    for caserun in crcs_list:
+        string += base_string % (str(caserun.configuration),
+                                 str(caserun.result.state),
+                                 str(caserun.result.result),
+                                 ', '.join([ link for link in caserun.result.extra_fields.get('beaker_links', ['None']) ]))
+    return string
 
 
 class BaseXunitReportSender(BaseReportSender):
@@ -10,7 +27,13 @@ class BaseXunitReportSender(BaseReportSender):
         super().__init__(*args, **kwargs)
         self.env = jinja2.Environment(loader=jinja2.PackageLoader('libpipeline.plugins.xunit', '.'),
                                       autoescape=True)
+        self.env.filters.update({'results_string': filter_results_string})
         self.template = self.env.get_template('xunit.xml.j2')
+
+        # Maps testcase result to a result reported in xunit
+        self.results_map = {None: 'skipped',
+                            'FAIL': 'failure',
+                            'ERROR': 'error'}
 
     def generate(self, properties={}):
         """ Generates xunit xml from caseRunConfigurations, xunit template and optional properties
@@ -20,6 +43,6 @@ class BaseXunitReportSender(BaseReportSender):
         :return: xunit xml
         :rtype: str
         """
-        return self.template.render(testcases=merge_testcase_configurations(self.caseRunConfigurations),
+        return self.template.render(testcases=self.caseRunConfigurations.by_testcase(),
                                     reportsender=self,
                                     properties=properties)

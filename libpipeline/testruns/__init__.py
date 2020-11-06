@@ -424,38 +424,3 @@ class ConfigurationsList(list):
                     configs.append(self_config.merge(other_config))
 
         return configs
-
-def merge_testcase_configurations(caseRunConfigurations):
-    """ Converts list of CaseRunConfiguration objects into a dict with testcase name as key
-    and adds common result and workflow
-
-    :param caseRunConfigurations: List of CaseRunConfiguration objects
-    :type caseRunConfigurations: list
-    :raises RuntimeError: When workflow is not common for all configurations of a testcase
-    :return: {'testcase_name': {caseRunConfigurations: list, result: Result, workflow: str}, ...}
-    :rtype: dict
-    """
-    testcases = {}
-    for caserun in caseRunConfigurations:
-        if caserun.testcase.name not in testcases:
-            testcases[caserun.testcase.name] = {'caseRunConfigurations': [], 'result': None, 'workflow': None}
-        testcase = testcases[caserun.testcase.name]
-
-        # add caserun
-        testcase['caseRunConfigurations'].append(caserun)
-            
-        # set workflow
-        if testcase['workflow'] is not None and testcase['workflow'] != caserun.testcase.execution.type:
-            raise RuntimeError('CaseRunConfigurations for one tescase have different workflows')
-        testcase['workflow'] = caserun.testcase.execution.type
-            
-        if testcase['result'] is None:
-            testcase['result'] = caserun.result.copy()
-            continue
-
-        if list(STATES).index(testcase['result'].state) > list(STATES).index(caserun.result.state):
-            testcase['result'].state = caserun.result.state
-        if list(RESULTS).index(testcase['result'].result) < list(RESULTS).index(caserun.result.result):
-            testcase['result'].result = caserun.result.result
-
-    return testcases
