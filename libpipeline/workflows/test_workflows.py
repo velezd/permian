@@ -3,7 +3,7 @@ from libpipeline.settings import Settings
 from libpipeline.workflows.factory import WorkflowFactory
 from libpipeline.workflows.isolated import IsolatedWorkflow
 from libpipeline.workflows.builtin import UnknownWorkflow
-from libpipeline.testruns import CaseRunConfiguration, CaseRunConfigurationsList
+from libpipeline.caserunconfiguration import CaseRunConfiguration, CaseRunConfigurationsList
 
 class DummyTestCase():
     name = 'test'

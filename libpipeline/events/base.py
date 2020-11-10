@@ -1,5 +1,5 @@
 import functools
-from ..testruns import CaseRunConfiguration, ConfigurationsList, CaseRunConfigurationsList
+from ..caserunconfiguration import CaseRunConfiguration, ConfigurationsList, CaseRunConfigurationsList
 from tclib.expressions import eval_bool
 #from ..exceptions import UnknownEventSubTypeExpression
 

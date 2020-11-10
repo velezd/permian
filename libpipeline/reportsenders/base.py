@@ -3,6 +3,7 @@ import queue
 import abc
 import logging
 
+from ..caserunconfiguration import CaseRunConfiguration
 from ..exceptions import UnexpectedState
 
 LOGGER = logging.getLogger(__name__)
@@ -42,7 +43,6 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         self.resultsQueue = queue.Queue()
 
     def run(self):
-        from ..testruns import CaseRunConfiguration # TODO: remove during refactoring
         LOGGER.debug("ReportSender started: '%s'", self)
         self.processTestRunStarted()
         while True:

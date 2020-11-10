@@ -1,7 +1,8 @@
 import unittest
 
 from ..settings import Settings
-from ..testruns import TestRuns, CaseRunConfiguration, CaseRunConfigurationsList
+from ..testruns import TestRuns
+from ..caserunconfiguration import CaseRunConfiguration, CaseRunConfigurationsList
 from ..result import Result
 from .factory import WorkflowFactory
 from .builtin import UnknownWorkflow, ManualWorkflow
