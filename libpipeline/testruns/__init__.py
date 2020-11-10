@@ -387,6 +387,10 @@ class CaseRunConfigurationsList(list):
         results = { result:i for i, result in enumerate(RESULTS) }
         return list(RESULTS)[max([results[crc.result.result] for crc in self])]
 
+    @property
+    def ids(self):
+        return [crc.id for crc in self]
+
     def __getitem__(self, index):
         if isinstance(index, int):
             return super().__getitem__(index)

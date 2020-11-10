@@ -279,3 +279,31 @@ class TestCaseRunConfigurationsList(unittest.TestCase):
                 'testcase2' : 'DNF',
             }
         )
+
+    def test_ids(self):
+        self.assertEqual(
+            self.crcList.ids,
+            [
+                'a0a2e5ffb7b6b59a151fa60678401b3d9472e0ae',
+                '09fb918ce6c546f144fd1fee520bc21f92c9a40f',
+                '544d65aafd33895bc707a774ac99f49582e3e3d3',
+                'a438f41d447d2c887cba21d0b2f2b704ec89c89a'
+            ]
+        )
+        self.assertEqual(
+            {
+                testcase: crcList.ids
+                for testcase, crcList
+                in self.crcList.by_testcase().items()
+            },
+            {
+                'testcase1' : [
+                    'a0a2e5ffb7b6b59a151fa60678401b3d9472e0ae',
+                    '09fb918ce6c546f144fd1fee520bc21f92c9a40f'
+                ],
+                'testcase2' : [
+                    '544d65aafd33895bc707a774ac99f49582e3e3d3',
+                    'a438f41d447d2c887cba21d0b2f2b704ec89c89a'
+                ],
+            }
+        )
