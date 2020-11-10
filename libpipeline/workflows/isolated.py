@@ -34,7 +34,6 @@ class IsolatedWorkflow(GroupedWorkflow):
     def __init__(self, testRuns, crcList):
         assert len(crcList) == 1 # make sure that only one crc was actually passed
         self.crc = crcList[0]
-        self.crcId = self.crc.id # TODO: remove me later while refactoring
         super().__init__(testRuns, crcList)
 
     def _check_caseConfigurations(self, crcIds):
@@ -42,7 +41,7 @@ class IsolatedWorkflow(GroupedWorkflow):
         Function helping to decide if provided crcIds are
         valid for this workflow.
         """
-        if [crc.id for crc in self.crcList] != crcIds:
+        if self.crcList.ids != crcIds:
             raise ValueError('Unknown configuration provided')
 
     def groupTerminate(self, crcIds):
@@ -73,7 +72,7 @@ class IsolatedWorkflow(GroupedWorkflow):
         Shortcut method for groupReportResult. The crcIds
         is not needed when this method is used.
         """
-        super().groupReportResult(self.crcIds, result)
+        super().groupReportResult(self.crcList, result)
 
     def groupDisplayStatus(self, crcId):
         """

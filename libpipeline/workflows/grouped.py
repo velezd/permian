@@ -36,7 +36,6 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         for crc in crcList:
             crc.workflow = self
         self.crcList = crcList.copy()
-        self.crcIds = [crc.id for crc in crcList] # TODO: remove me later while refactoring
         super().__init__()
 
     def run(self):
@@ -105,7 +104,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         :rtype: TODO
         """
 
-    def groupReportResult(self, crcIds, result):
+    def groupReportResult(self, crcList, result):
         """
         Provide partial or final result for the crcId. For more
         information see TODO:Result.
@@ -117,9 +116,9 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         :return: None
         :rtype: None
         """
-        for crcId in crcIds:
-            self.crcList[crcId].updateResult(result)
-            self.testRuns.update(self.crcList[crcId])
+        for crc in crcList:
+            crc.updateResult(result)
+            self.testRuns.update(crc)
 
     def groupGetLog(self, crcId, log_type):
         """
