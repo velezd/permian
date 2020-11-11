@@ -1,3 +1,8 @@
+import yaml
+from os import path
+from tclib.structures.testplan import Reporting
+
+
 class ReportSenderFactory():
     reportSender_classes = {}
     original_reportSender_classes = {}
@@ -46,8 +51,11 @@ class ReportSenderFactory():
         :return: Iterator of created ReportSender instances
         :rtype: Iterator[:class:`BaseReportSender`]
         """
+        additional_reporting = cls._get_additional(testRuns.settings.get('reportSenders', 'additional_reporting'), testRuns.library)
+
         for testPlanId, crcList in testRuns.caseRunConfigurations.by_testplan().items():
             testPlan = testRuns.library.testplans[testPlanId]
+            testPlan.reporting._data += additional_reporting
             for reporting in testPlan.reporting:
                 reportSenderClass = cls._get_fallback(reporting.type, None, None)
                 if reporting.group_by:
@@ -55,6 +63,28 @@ class ReportSenderFactory():
                         yield reportSenderClass(testPlan, reporting, crcList.copy(), testRuns.event, testRuns.settings, dict(zip(reporting.group_by, values)))
                 else:
                     yield reportSenderClass(testPlan, reporting, crcList.copy(), testRuns.event, testRuns.settings)
+
+    @classmethod
+    def _get_additional(cls, additional_file, library):
+        """ Loads reporters that apply to all testplans
+
+        :param additional_file: path to file with additional reporters
+        :type additional_file: string
+        :param library: test data library
+        :type library: tclib.Library
+        :return: list of tclib.testplan.Reporting objects
+        :rtype: list
+        """
+        if additional_file == '':
+            return []
+
+        if additional_file.startswith('library://'):
+            additional_file = path.join(library.directory, additional_file.replace('library://', '', 1))
+
+        with open(additional_file) as fo:
+            data = yaml.safe_load(fo)
+
+        return [ Reporting(rs, library=library, document=None) for rs in data ]
 
     @classmethod
     def _get_fallback(cls, *args):
