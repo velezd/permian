@@ -39,11 +39,21 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         self.caseRunConfigurations = caseRunConfigurations
         self.event = event
         self.settings = settings
+        self.dry_run = self.settings.getboolean('reportSenders', 'dry_run')
         self.group=group
         self.resultsQueue = queue.Queue()
 
+    def setUp(self):
+        """ Executed just before the ReportSender starts """
+        pass
+
+    def tearDown(self):
+        """ Executed after the ReportSender has finished """
+        pass
+
     def run(self):
         LOGGER.debug("ReportSender started: '%s'", self)
+        self.setUp()
         self.processTestRunStarted()
         while True:
             item = self.resultsQueue.get()
@@ -53,6 +63,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
                     self.resultsQueue.task_done()
                     break
                 self.resultsQueue.task_done()
+        self.tearDown()
         LOGGER.debug("'%s' finished processing items (test run should be complete)", self)
         self.checkEmptyQueue()
 
