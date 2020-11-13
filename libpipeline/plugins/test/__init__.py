@@ -19,14 +19,19 @@ def test_command(base_parser, args):
     parser.add_argument('--tp', action='append', required=True,
                         help='Name of testplan to execute - can be used multiple times')
     options = parser.parse_args(args)
-    return options, json.dumps({'type': 'test', 'payload': {'testplans': options.tp}})
+    return options, json.dumps({'type': 'test', 'test': {'testplans': options.tp}})
 
+
+@api.events.register_structure('test')
+class TestStructure():
+    def __init__(self, testplans):
+        self.testplans = testplans
 
 @api.events.register('test')
 class TestEvent(Event):
-    def __init__(self, event_type, payload, other_data):
-        super().__init__(event_type, payload, other_data)
-        self.selected_testplans = payload['testplans']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.selected_testplans = self.test.testplans
 
 
 @api.workflows.register("test")

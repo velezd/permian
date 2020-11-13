@@ -13,101 +13,80 @@ from ...cli.parser import bool_argument, ToPayload, AppendToPayload
 
 @api.events.register('compose')
 class ComposeEvent(Event):
-    id_regex = re.compile(r'(?P<product>\w+)-(?P<version>(?P<major>\d)(\.(?P<minor>\d))?(\.(?P<qr>\d))?)(-(?P<parent>\w+)-\d)?-(?P<date>\d+)(.(?P<nightly>n))?\.(?P<spin>\d)')
+    def __init__(self, type, compose, **kwargs):
+        super().__init__(type, compose=compose, **kwargs)
 
-    def __init__(self, event_type, payload, other_data):
-        super().__init__(event_type, payload, other_data)
-        self._matches = re.match(self.id_regex, self.payload['id'])
+    def __str__(self):
+        return f"Compose {self.compose.id}"
 
-    @property
-    def compose_id(self):
-        return self.payload['id']
+@api.events.register_structure('compose')
+class ComposeStructure():
+    id_regex = re.compile(r'(?P<product>\w+)-(?P<version>(?P<major>\d+)(\.(?P<minor>\d+))?(\.(?P<qr>\d))?)(-(?P<parent>\w+)-\d)?-(?P<date>\d+)(\.(?P<flag>.))?\.(?P<spin>\d+)')
 
-    @property
-    @payload_override('version')
-    def compose_version(self):
-        return self._matches.group('version')
-
-    @property
-    @payload_override('major')
-    def compose_major(self):
-        return self.compose_version.split('.')[0]
-
-    @property
-    @payload_override('minor')
-    def compose_minor(self):
+    def __init__(self, id, product=None, version=None, major=None, minor=None, qr=None, date=None, respin=None, location=None, location_http=None, nightly=None, development=None, layered=None, parent_product=None, parent_version=None, available_in=None):
+        self.id = id
+        self._matches = re.match(self.id_regex, self.id)
+        self.product = product or self._matches.group('product')
+        self.version = version or self._matches.group('version')
+        self.major = major or self.version.split('.')[0]
+        self.minor = minor or self.version.split('.')[1]
+        self.date = date or self._matches.group('date')
+        self.spin = respin or self._matches.group('spin')
         try:
-            return self.compose_version.split('.')[1]
+            self.qr = qr or self.version.split('.')[2]
         except IndexError:
-            return None
+            self.qr = None
+        self._location = location
+        self.location_http = location_http
+        self._nightly = nightly
+        self.development = development if development is not None else self._matches.group('flag') == 'd'
+        self._layered = layered
+        self._parent_product = parent_product
+        self._parent_version = parent_version
+        self.available_in = [] if available_in is None else available_in
 
     @property
-    @payload_override('qr')
-    def compose_qr(self):
+    def location(self):
+        if self._location:
+            return self._location
         try:
-            return self.compose_version.split('.')[2]
-        except IndexError:
-            return None
+            with urllib.request.urlopen(self.settings.get('compose', 'location') % self.id) as response:
+                return response.geturl()
+        except urllib.error.HTTPError as excp:
+            raise Exception('Could not find compose with ID %s via %s, error %s' % (self.id, self.settings.get('compose', 'location'), excp.code))
 
     @property
-    def compose_spin(self):
-        return self._matches.group('spin')
-    
-    @property
-    def compose_date(self):
-        return self._matches.group('date')
-
-    @property
-    @payload_override('product')
-    def compose_product(self):
-        return self._matches.group('product')
-
-    @property
-    @payload_override('parent_product')
-    def compose_parent_product(self):
-        return self._matches.group('parent')
-
-    @property
-    @payload_override('parent_version')
-    def compose_parent_version(self):
-        if self.compose_parent_product is not None:
-            return self.compose_version
-
-    @property
-    @payload_override('nightly')
-    def is_nightly(self):
+    def nightly(self):
+        if self._nightly is not None:
+            return self._nightly
         try:
-            with urllib.request.urlopen(self.settings.get('compose', 'location_nightly_attr') % self.payload['id']) as response:
+            with urllib.request.urlopen(self.settings.get('compose', 'location_nightly_attr') % self.id) as response:
                 return json.loads(response.read())
         except urllib.error.HTTPError as excp:
-            raise Exception('Could not find compose with ID %s via %s, error %s' % (self.payload['id'], self.settings.get('compose', 'location_nightly_attr'), excp.code))
+            raise Exception('Could not find compose with ID %s via %s, error %s' % (self.id, self.settings.get('compose', 'location_nightly_attr'), excp.code))
 
     @property
-    @payload_override('layered')
-    def is_layered(self):
+    def layered(self):
+        if self._layered is not None:
+            return self._layered
         return self._matches.group('product').lower() == 'supp'
 
     @property
-    @payload_override('location')
-    def compose_location(self):
-        try:
-            with urllib.request.urlopen(self.settings.get('compose', 'location') % self.payload['id']) as response:
-                return response.geturl()
-        except urllib.error.HTTPError as excp:
-            raise Exception('Could not find compose with ID %s via %s, error %s' % (self.payload['id'], self.settings.get('compose', 'location'), excp.code))
-
-    def __str__(self):
-        return f"Compose {self.compose_id}"
+    def parent_product(self):
+        if self._parent_product:
+            return self._parent_product
+        if not self.layered:
+            return None
+        return self._matches.group('parent')
 
     @property
-    @payload_override('location_http')
-    def compose_location_http(self):
-        return ''
+    def parent_version(self):
+        if self._parent_version:
+            return self._parent_version
+        if not self.layered:
+            return None
+        return self.version
 
-    @property
-    @payload_override('available_in')
-    def compose_available_in(self):
-        return []
 
 @api.cli.register_command_parser('compose')
 def compose_command(base_parser, args):
@@ -140,4 +119,4 @@ def compose_command(base_parser, args):
                         help='Systems in which the compose is expected to be available.')
     options = parser.parse_args(args)
 
-    return options, json.dumps({'type': 'compose', 'payload': options.payload})
+    return options, json.dumps({'type': 'compose', 'compose': options.payload})

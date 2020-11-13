@@ -7,6 +7,6 @@ LOGGER = logging.getLogger(__name__)
 
 @EventFactory.register(None)
 class UnknownEvent(Event):
-    def __init__(self, event_type, payload, other_data):
-        super().__init__(event_type, payload, other_data)
-        LOGGER.error('Processing unknown event "%s", using just only provided payload: %s', event_type, payload)
+    def __init__(self, event_type, **kwargs):
+        super().__init__(event_type, **kwargs)
+        LOGGER.error('Processing unknown event "%s", using just only provided structures: %s', event_type, kwargs)

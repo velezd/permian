@@ -61,7 +61,7 @@ class TestBranchnameStrategy(unittest.TestCase):
                     'branchNameFormat': branchName,
                 })
                 self.assertEqual(
-                    list(branchname_strategy('exact-match')(Event('test', {}, None), Settings(self.overrides, {}, []))),
+                    list(branchname_strategy('exact-match')(Event('test'), Settings(self.overrides, {}, []))),
                     [branchName]
                 )
 
@@ -71,7 +71,7 @@ class TestBranchnameStrategy(unittest.TestCase):
             'branchNameFormat': 'Fo0-1.2a.3-4b-5.6c',
         })
         self.assertEqual(
-            list(branchname_strategy('drop-least-significant')(Event('test', {}, None), Settings(self.overrides, {}, []))),
+            list(branchname_strategy('drop-least-significant')(Event('test'), Settings(self.overrides, {}, []))),
             [
                 'Fo0-1.2a.3-4b-5.6c',
                 'Fo0-1.2a.3-4b-5',
@@ -115,7 +115,7 @@ class TestCloneLibrary(unittest.TestCase):
             'branchNameStrategy': 'exact-match',
             'branchNameFormat': 'PRODUCT',
         })
-        event = Event('test', {}, None)
+        event = Event('test')
         self.clone_library(None, event, Settings(self.overrides, {}, []))
         self.assertBranch("PRODUCT")
 
@@ -124,7 +124,7 @@ class TestCloneLibrary(unittest.TestCase):
             'branchNameStrategy': 'exact-match',
             'branchNameFormat': 'nonexistent',
         })
-        event = Event('test', {}, None)
+        event = Event('test')
         with self.assertRaises(LibraryNotFound):
             self.clone_library(None, event, Settings(self.overrides, {}, []))
 
@@ -134,12 +134,12 @@ class TestCloneLibrary(unittest.TestCase):
             'branchNameFormat': 'PRODUCT',
             'repoURL': '/does/not/exist',
         })
-        event = Event('test', {}, None)
+        event = Event('test')
         with self.assertRaises(LibraryNotFound):
             self.clone_library(None, event, Settings(self.overrides, {}, []))
 
     @patch('libpipeline.pipeline.library_repo.branchname_strategy', new=mocked_strategy_selector)
     def test_first_branch_is_used(self):
-        event = Event('test', {}, None)
+        event = Event('test')
         self.clone_library(None, event, Settings(self.overrides, {}, []))
         self.assertBranch("PRODUCT-MAJOR.MINOR.FOO")

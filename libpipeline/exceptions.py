@@ -43,3 +43,11 @@ class ReadOnlyChangeError(Exception):
     Raised when some read-only object is attempted to be updated/changed.
     """
     pass
+
+class UnknownStructure(Exception):
+    """
+    Raised when unknown structure is encountered
+    """
+    def __init__(self, name):
+        self.name = name
+        super().__init__(f"Unknown structure: '{name}'")

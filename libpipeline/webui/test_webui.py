@@ -42,7 +42,7 @@ class TestWebUIData(unittest.TestCase):
         WorkflowFactory.clear_workflow_classes()
         cls.library = library.Library('tests/test_library')
         cls.settings = Settings(cmdline_overrides={'library': {'defaultCaseConfigMergeMethod': 'extension'}}, environment={}, settings_locations=[])
-        cls.event = Event('test', {}, ['test1'])
+        cls.event = Event('test', other={'tests': ['test1']})
         cls.testRuns = TestRuns(cls.library, cls.event, cls.settings)
 
     @classmethod
@@ -71,7 +71,7 @@ class TestWebUIDebug(unittest.TestCase):
             self.skipTest('Enable only for debugging')
             self.library = library.Library('tests/test_library')
             self.settings = Settings(cmdline_overrides={'library': {'defaultCaseConfigMergeMethod': 'extension'}}, environment={}, settings_locations=[])
-            self.event = Event('test', {}, ['test_workflows', 'test1', 'test2'])
+            self.event = Event('test', other={'tests': ['test1']})
             self.testRuns = TestRuns(self.library, self.event, self.settings)
             self.webUI = WebUI(self)
             self.webUI.start()

@@ -51,8 +51,8 @@ class ExampleResultsProcessor():
 
 @api.events.register('example')
 class ExampleEvent(Event):
-    def __init__(self, event_type, payload, other_data):
-        super().__init__(event_type, payload, other_data)
+    def __init__(self, event_type, **kwargs):
+        super().__init__(event_type, **kwargs)
         example_hook('Hello from Event constructor')
 
 @api.hooks.make
@@ -74,7 +74,7 @@ def example_callback(msg):
 @api.cli.register_command_parser('example')
 def example_command(base_parser, args):
     options = base_parser.parse_args(args)
-    return options, json.dumps({'type': 'example', 'payload':None})
+    return options, json.dumps({'type': 'example'})
 
 @api.cli.register_command_args_extension
 def example_argparse_extension(parser):
