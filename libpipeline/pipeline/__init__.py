@@ -30,7 +30,7 @@ def run_pipeline(event, settings_paths, overrides, env=None):
     """
     pipeline = Pipeline(event, settings_paths, overrides, env)
     pipeline.run()
-    return 0 # TODO: Get result of pipeline and end with corresponding return code
+    return pipeline.return_code
 
 class Pipeline():
     """
@@ -59,6 +59,7 @@ class Pipeline():
         self.testRuns = None
         self.executed = False
         self.webUI = None
+        self.return_code = 0
 
     def _checkThreads(self):
         """
@@ -95,13 +96,17 @@ class Pipeline():
         LOGGER.debug('Running workflows')
         self._runWorkflows()
         LOGGER.debug('Waiting for workflows to finish')
-        self._waitForWorkflows()
+        self._set_return_code(self._waitForWorkflows(), 1)
         LOGGER.debug('Waiting for other threads to finish')
         self._waitForThreads()
         LOGGER.debug('Running pipeline_ended handlers')
         hooks.builtin.pipeline_ended(self)
         LOGGER.debug('Waiting for other (post) threads to finish')
         self._waitForThreads() # wait for any possible threads started by the final hook
+
+    def _set_return_code(self, succeeded, rc):
+        if not succeeded:
+            self.return_code |= rc
 
     def _startWebUI(self):
         """
@@ -162,7 +167,7 @@ class Pipeline():
         Note: This method calls hook which signals the pipeline has finished the
         execution.
         """
-        self.testRuns.wait()
+        return self.testRuns.wait()
 
     def _waitForThreads(self):
         current_thread = threading.current_thread()

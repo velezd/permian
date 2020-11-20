@@ -87,8 +87,8 @@ class TestRuns():
         blocking should occur.
 
         :raises NotReady: When start method was not invoked yet.
-        :return: None
-        :rtype: None
+        :return: True if all report senders finished without issue
+        :rtype: bool
         """
         for caserun in self.caseRunConfigurations:
             caserun.workflow.join()
@@ -96,8 +96,12 @@ class TestRuns():
                 # copy is needed here, so that the final result is not stored
                 # in the crc before self.update is called.
                 self.update(caserun.copy().updateResult(Result('DNF', 'ERROR', True)))
+        all_ok = True
         for reportSender in self.reportSenders:
             reportSender.join()
+            if reportSender.exception:
+                all_ok = False
+        return all_ok
 
     def update(self, crc):
         """

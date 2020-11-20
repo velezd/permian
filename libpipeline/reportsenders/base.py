@@ -5,6 +5,8 @@ import logging
 
 from ..caserunconfiguration import CaseRunConfiguration
 from ..exceptions import UnexpectedState
+from ..exception_dump import dump_exception
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -42,6 +44,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         self.dry_run = self.settings.getboolean('reportSenders', 'dry_run')
         self.group=group
         self.resultsQueue = queue.Queue()
+        self.exception = None
 
     def setUp(self):
         """ Executed just before the ReportSender starts """
@@ -53,19 +56,22 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
 
     def run(self):
         LOGGER.debug("ReportSender started: '%s'", self)
-        self.setUp()
-        self.processTestRunStarted()
-        while True:
-            item = self.resultsQueue.get()
-            LOGGER.debug("'%s' processing: '%s'", self, item)
-            if isinstance(item, CaseRunConfiguration):
-                if self.processResult(item):
+        try:
+            self.setUp()
+            self.processTestRunStarted()
+            while True:
+                item = self.resultsQueue.get()
+                LOGGER.debug("'%s' processing: '%s'", self, item)
+                if isinstance(item, CaseRunConfiguration):
+                    if self.processResult(item):
+                        self.resultsQueue.task_done()
+                        break
                     self.resultsQueue.task_done()
-                    break
-                self.resultsQueue.task_done()
-        self.tearDown()
-        LOGGER.debug("'%s' finished processing items (test run should be complete)", self)
-        self.checkEmptyQueue()
+            self.tearDown()
+            LOGGER.debug("'%s' finished processing items (test run should be complete)", self)
+            self.checkEmptyQueue()
+        except Exception as e:
+            self.exception = dump_exception(e, self)
 
     def resultUpdate(self, crc):
         """
