@@ -23,7 +23,7 @@ class ComposeEvent(Event):
 class ComposeStructure():
     id_regex = re.compile(r'(?P<product>\w+)-(?P<version>(?P<major>\d+)(\.(?P<minor>\d+))?(\.(?P<qr>\d))?)(-(?P<parent>\w+)-\d)?-(?P<date>\d+)(\.(?P<flag>.))?\.(?P<spin>\d+)')
 
-    def __init__(self, id, product=None, version=None, major=None, minor=None, qr=None, date=None, respin=None, location=None, location_http=None, nightly=None, development=None, layered=None, parent_product=None, parent_version=None, available_in=None):
+    def __init__(self, id, product=None, version=None, major=None, minor=None, qr=None, date=None, respin=None, location=None, location_http=None, nightly=None, development=None, tags=None, new_tag=None, layered=None, parent_product=None, parent_version=None, available_in=None):
         self.id = id
         self._matches = re.match(self.id_regex, self.id)
         self.product = product or self._matches.group('product')
@@ -40,6 +40,8 @@ class ComposeStructure():
         self.location_http = location_http
         self._nightly = nightly
         self.development = development if development is not None else self._matches.group('flag') == 'd'
+        self.tags = tags
+        self.new_tag = new_tag
         self._layered = layered
         self._parent_product = parent_product
         self._parent_version = parent_version
