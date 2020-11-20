@@ -1,6 +1,10 @@
 import abc
 import threading
 
+from ..exception_dump import dump_exception
+from ..result import Result
+
+
 class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
     """
     Abstract class for all workflows. Use this class as parent for you
@@ -33,6 +37,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         self.event = testRuns.event
         self.settings = testRuns.settings
         self.dryRun = self.settings.getboolean('workflows', 'dry_run')
+        self.exceptions = []
         for crc in crcList:
             crc.workflow = self
         self.crcList = crcList.copy()
@@ -50,9 +55,16 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         :return: None
         :rtype: None
         """
-        self.setup()
-        self.execute() if not self.dryRun else self.dry_execute()
-        self.teardown()
+        try:
+            self.setup()
+            self.execute() if not self.dryRun else self.dry_execute()
+        except Exception as e:
+            self.exceptions.append(dump_exception(e, self))
+            self.groupReportResult(self.crcList, Result('DNF', 'ERROR', True))
+        try:
+            self.teardown()
+        except Exception as e:
+            self.exceptions.append(dump_exception(e, self))
 
     def setup(self):
         """
