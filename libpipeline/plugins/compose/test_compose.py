@@ -122,3 +122,11 @@ class TestEventCompose(unittest.TestCase):
         self.assertFalse(event.compose.nightly)
         self.assertFalse(event.compose.layered)
         self.assertEqual(event.compose.location, 'test/location')
+
+    def test_event_type(self):
+        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2'])[1])
+        self.assertEqual(event.type, 'compose')
+
+    def test_custom_event_type(self):
+        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2', '--event-type', 'compose.foo.bar'])[1])
+        self.assertEqual(event.type, 'compose.foo.bar')

@@ -95,6 +95,7 @@ def compose_command(base_parser, args):
     parser = base_parser
     parser.add_argument('id', action=ToPayload,
                         help='Compose ID e.g. RHEL-8.3.0-20200701.2')
+    parser.add_argument('--event-type', default='compose')
     parser.add_argument('--product', action=ToPayload,
                         help='Product name as usually appears in ID')
     parser.add_argument('--version', action=ToPayload,
@@ -121,4 +122,4 @@ def compose_command(base_parser, args):
                         help='Systems in which the compose is expected to be available.')
     options = parser.parse_args(args)
 
-    return options, json.dumps({'type': 'compose', 'compose': options.payload})
+    return options, json.dumps({'type': options.event_type, 'compose': options.payload})
