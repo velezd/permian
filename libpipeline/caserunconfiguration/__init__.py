@@ -81,9 +81,13 @@ class CaseRunConfiguration():
             self.running_for[testplan_id] = False
             if any(self.running_for.values()):
                 return False
-            self.workflow.cancel(self)
             # TODO: record reason
-            self.updateResult(Result('canceled', None, True))
+            crc_copy = self.copy()
+            if self.workflow.groupTerminate([self.id]):
+                crc_copy.updateResult(Result('canceled', None, True))
+            else:
+                crc_copy.updateResult(Result('canceled', 'ERROR'))
+            self.testrun.update(crc_copy)
             return True
         else:
             for testplan_id in self.running_for:

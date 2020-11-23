@@ -59,7 +59,6 @@ class TestWorkflow(IsolatedWorkflow):
 
     def terminate(self):
         self.terminated = True
-        self.reportResult(Result('canceled', None, True))
         return True
 
     def displayStatus(self):
