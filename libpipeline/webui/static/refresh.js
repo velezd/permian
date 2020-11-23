@@ -1,20 +1,31 @@
+var refresh
+
 function on_load(jQuery) {
-    window.autorefresh = true;
-    setInterval(refreshData, 100);
+    var rate = $("#refresh_rate").val()
+    if (rate != 0) {
+        refresh = setInterval(refreshData, rate);
+    }
+}
+
+function change_refresh_rate() {
+    var rate = $("#refresh_rate").val()
+    clearInterval(refresh);
+    if (rate != 0) {
+        refresh = setInterval(refreshData, rate);
+    }
 }
 
 function refreshData() {
-    if ( ! window.autorefresh ) { return }
-    
     $.getJSON(pipeline_data_url, function(data) {
         $.each(data['caseRuns'], function(index, caserun) {
-            $(".caserun-"+caserun.id+" .caserun_name").text(caserun.name);
-            $(".caserun-"+caserun.id+" .caserun_configuration").text(caserun.configuration);
-            $(".caserun-"+caserun.id+" .caserun_runningfor").text(caserun.running_for);
-            $(".caserun-"+caserun.id+" .caserun_workflow").text(caserun.workflow);
-            $(".caserun-"+caserun.id+" .caserun_result").text(caserun.result);
-            $(".caserun-"+caserun.id+" .caserun_state").text(caserun.state);
-            $(".caserun-"+caserun.id+" .caserun_active").text(caserun.active);
+            $(".crc-"+caserun.id+" .crc_name").text(caserun.name);
+            $(".crc-"+caserun.id+" .crc_configuration").html(caserun.configuration);
+            $(".crc-"+caserun.id+" .crc_runningfor").text(caserun.running_for);
+            $(".crc-"+caserun.id+" .crc_displaystatus").html(caserun.display_status);
+            $(".crc-"+caserun.id+" .crc_workflow").text(caserun.workflow);
+            $(".crc-"+caserun.id+" .crc_result").text(caserun.result);
+            $(".crc-"+caserun.id+" .crc_state").text(caserun.state);
+            $(".crc-"+caserun.id+" .crc_cancel").prop('disabled', !caserun.active);
         });
     });
 }

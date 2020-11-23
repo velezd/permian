@@ -3,11 +3,16 @@
   <head>
     <title>{% block title %}MISSING TITLE!{% endblock %}</title>
     <link rel='stylesheet' href='{{ url_for("static", filename="style.css") }}' />
+    <link rel='stylesheet' href='{{ url_for("static", filename="dialog.css") }}' />
     <script type="text/javascript">
       var pipeline_data_url = "{{ url_for('main.pipeline_data') }}";
+      var cancel_url = "{{ url_for('main.cancel') }}";
     </script>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='dialog.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='refresh.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='filter.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='cancel.js') }}"></script>
   </head>
   <body>
     {% block body %}<p><strong>MISSING BODY!</strong></p>{% endblock %}

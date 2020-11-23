@@ -1,18 +1,213 @@
-h1 {
-    color: red;
+:root {
+    --header-bg: #fff;
+    --main-bg: #ebeced;
+    --container-bg: #fff;
+    --tr-nth-bg: #f6f6f7;
+    --mid-gray: #ccc;
+    --tooltip-bg: #555;
+    --tooltip-fg: #fff;
+    --switch-bg: #2196F3;
+}
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    background-color: var(--main-bg);
+    padding: 0px;
+    margin: 0px;
+}
+#display-testplans {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+#display-all {
+    margin-left: auto;
+    margin-right: auto;
+}
+.autohide {
+    display: none;
 }
 
-#caseruns_table {
-    border: 1px solid black;
-    border-collapse: collapse;
+/* START Header */
+header {
+    background-color: var(--header-bg);
     width: 100%;
+    padding-top: 20px;
+    margin: 0px 0px 10px 0px;
+    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.25);
 }
-#caseruns_table th {
-    border: 1px solid black;
+#header-top {
+    min-height: 60px;
 }
-#caseruns_table td {
-    border: 1px solid black;
+#header-left {
+    float: left;
+    width: 30%;
 }
-#caseruns_table tr:nth-child(even) {
-    background: #f6f6f7;
+#header-center {
+    float: left;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+    padding-top: 4px;
 }
+#header-right {
+    float: right;
+    text-align: right;
+    font-size: 15px;
+    width: 30%;
+}
+h1 {
+    padding: 0px;
+    margin: 2px 0px 0px 20px;
+    font-size: 25px;
+    font-weight: normal;
+}
+/* END Header*/
+
+.container {
+    padding: 12px;
+    margin: 7px;
+}
+.container table {
+    border: 1px solid var(--mid-gray);
+    text-align: center;
+    margin: 0px;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+.container th {
+    background-color:var(--mid-gray);
+    text-align: center;
+    padding: 5px 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.container td {
+    padding: 2px 10px;
+}
+.container tr {
+    background: var(--container-bg);
+}
+.container tr:nth-child(even) {
+    background: var(--tr-nth-bg);
+}
+
+/* START Testplan Container */
+.testplan_container {
+    flex: 0 1 auto;
+    background-color: var(--container-bg);
+    box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.25);
+}
+.testplan_container_header {
+    height: 45px;
+}
+.testplan_container h2 {
+    font-size: 20px;
+    margin: 5px;
+}
+.testplan_header_left {
+    float: left;
+}
+.testplan_header_right {
+    float: right;
+    text-align: right;
+}
+/* END Testplan Container */
+
+/* START Tooltips */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+.tooltip .tooltiptext {
+    visibility: hidden;
+    background-color: var(--tooltip-bg);
+    text-align: left;
+    color: var(--tooltip-fg);
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    opacity: 0;
+    white-space: nowrap;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+/* END Tooltips */
+
+/* START Toggle switch */
+.switch {
+    margin: 6px;
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 25px;
+  }
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--mid-gray);
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 12px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 21px;
+    width: 21px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--header-bg);
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: var(--switch-bg);
+}
+input:checked + .slider:before {
+    -webkit-transform: translateX(21px);
+    -ms-transform: translateX(21px);
+    transform: translateX(21px);
+}
+/* END Toggle switch */
+
+/* START Filter */
+#filter-box {
+    border-top: 1px solid var(--mid-gray);
+    display: none;
+    text-align: center;
+    padding: 15px;
+}
+#filter-box table {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+#filter-box td {
+    padding-left: 6px;
+    padding-right: 6px;
+}
+#filter-box select {
+    width: 200px;
+}
+#filter-box input {
+    width: 200px;
+}
+/* END Filter */
