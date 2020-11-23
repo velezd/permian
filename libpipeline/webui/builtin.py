@@ -67,10 +67,10 @@ def cancel():
     pipeline = currentPipeline()
 
     if crc_id:
-        pipeline.testRuns.caseRunConfigurations[crc_id].cancel('WebUI cancel', plan_name)
+        pipeline.testRuns.caseRunConfigurations[crc_id].cancel('WebUI cancel')
     elif plan_name:
         for crc in pipeline.testRuns.caseRunConfigurations.by_testplan()[plan_name]:
-            crc.cancel('WebUI cancel', plan_name)
+            crc.cancel('WebUI cancel')
     elif cancel_all:
         for crc in pipeline.testRuns.caseRunConfigurations:
             crc.cancel('WebUI cancel')

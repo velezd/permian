@@ -1,10 +1,8 @@
 function dialog_cancel_crc_in_tps(crc_id) {
-    open_dialog(`Cancel ${crc_id}`, "This CaseRunConfiguration is in multiple testplans. What do you want to do?",
-                [{id: 'all', label: "Cancel in all testplans", class: 'btn-primary',
+    open_dialog(`Cancel ${crc_id}`, "This CaseRunConfiguration is in multiple testplans. Do you want to cancel it in all testplans?",
+                [{id: 'yes', label: "Yes", class: 'btn-primary',
                   callback: function(){$.getJSON(cancel_url, {crc_id: crc_id});}},
-                 {id: 'one', label: "Cancel in one testplan", class: 'btn-default',
-                  callback: function(){$.getJSON(cancel_url, {crc_id: crc_id,  plan_name: plan_name});}},
-                 {id: 'cancel', label: "Cancel action", class: 'btn-danger',
+                 {id: 'no', label: "No", class: 'btn-danger',
                   callback: function(){}}
                 ],
                 true);
@@ -43,7 +41,7 @@ function cancel(crc_id, plan_name) {
             dialog_cancel_crc_in_tps(crc_id);
         }
         else {
-            $.getJSON(cancel_url, {crc_id: crc_id, plan_name: plan_name});
+            $.getJSON(cancel_url, {crc_id: crc_id});
         }
     });
 }

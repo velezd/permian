@@ -61,39 +61,28 @@ class CaseRunConfiguration():
         caserun.readOnly = True
         return caserun
 
-    def cancel(self, reason, testplan_id=None):
+    def cancel(self, reason):
         """
-        Attempt to cancel this case-run-configuration either for all testplans
-        or for specific testplan. The workflow cancel is invoked once there's
-        no testplan for which the case-run-configuration would run.
+        Attempt to cancel this case-run-configuration for all testplans.
 
         :param reason: Description why the cancel should happen.
         :type reason: str
-        :param testplan_id: Identifier of the testplan for which the case-run-configuration should be canceled, defaults to None
-        :type testplan_id: str, optional
-        :raises StateChangeError: When attempting to cancel already canceled or in other way ended test-run-configuration
-        :return: True if the workflow cancel was invoked
+        :return: True if the workflow cancel was succesfull
         :rtype: bool
         """
-        if self.readOnly:
-            raise ReadOnlyChangeError(f'Cannot change state of read-only result: {self}')
-        if testplan_id is not None:
-            self.running_for[testplan_id] = False
-            if any(self.running_for.values()):
-                return False
-            # TODO: record reason
-            crc_copy = self.copy()
-            if self.workflow.groupTerminate([self.id]):
-                crc_copy.updateResult(Result('canceled', None, True))
-            else:
-                crc_copy.updateResult(Result('canceled', 'ERROR'))
-            self.testrun.update(crc_copy)
-            return True
+        # TODO: record reason
+        if self.result.final:
+            return False
+        self.running_for =  { plan:False for plan in self.running_for }
+        crc_copy = self.copy()
+        if self.workflow.groupTerminate([self.id]):
+            crc_copy.updateResult(Result('canceled', None, True))
+            canceled = True
         else:
-            for testplan_id in self.running_for:
-                if self.cancel(reason, testplan_id):
-                    return True
-        raise UnexpectedState()
+            crc_copy.updateResult(Result('canceled', 'ERROR'))
+            canceled = False
+        self.testrun.update(crc_copy)
+        return canceled
 
     def updateResult(self, result):
         """
