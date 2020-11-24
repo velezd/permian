@@ -1,7 +1,8 @@
 var refresh
 
 function on_load(jQuery) {
-    var rate = $("#refresh_rate").val()
+    refreshData();
+    var rate = $("#refresh_rate").val();
     if (rate != 0) {
         refresh = setInterval(refreshData, rate);
     }
