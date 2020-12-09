@@ -58,8 +58,7 @@ class TestWebUIData(unittest.TestCase):
         with urllib.request.urlopen(self.webUI.baseurl + 'pipeline_data') as response:
             pipeline_data = json.loads(response.read())
 
-        pipeline_data['caseRuns'][0]['state'] = 'started'
-        pipeline_data['testPlans']['testplan 1'][0]['state'] = 'started'
+        pipeline_data[0]['state'] = 'started'
         self.testRuns.caseRunConfigurations[0].result.update(Result('started'))
 
         with urllib.request.urlopen(self.webUI.baseurl + 'pipeline_data') as response:
@@ -70,7 +69,7 @@ class TestWebUIDebug(unittest.TestCase):
     def test_webui_debug(self):
             self.skipTest('Enable only for debugging')
             self.library = library.Library('tests/test_library')
-            self.settings = Settings(cmdline_overrides={'library': {'defaultCaseConfigMergeMethod': 'extension'}}, environment={}, settings_locations=[])
+            self.settings = Settings(cmdline_overrides={'library': {'defaultCaseConfigMergeMethod': 'extension'}, 'testingPlugin': {'reportSenderDirectory': "./"}}, environment={}, settings_locations=[])
             self.event = Event('test', other={'tests': ['test1']})
             self.testRuns = TestRuns(self.library, self.event, self.settings)
             self.webUI = WebUI(self)

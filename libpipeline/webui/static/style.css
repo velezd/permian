@@ -131,7 +131,7 @@ h1 {
     padding: 10px;
     position: absolute;
     z-index: 1;
-    top: 125%;
+    top: 100%;
     opacity: 0;
     white-space: nowrap;
 }

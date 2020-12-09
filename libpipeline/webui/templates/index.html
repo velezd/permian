@@ -3,6 +3,10 @@
 RTT-Pipeline WebUI
 {% endblock %}
 
+{% block head %}
+<script type="text/javascript" src="{{ url_for('static', filename='refresh.js') }}"></script>
+{% endblock %}
+
 {% block body %}
 <header>
     <div id="header-top">
@@ -36,24 +40,24 @@ RTT-Pipeline WebUI
             <tr>
                 <td>Tast case</td>
                 <td><input name="testcase" type="text"></td>
-                <td>Status</td>
+                <td>State</td>
                 <td>
-                    <select name="status">
+                    <select name="state">
                     <option value="-">-</option>
-                    {%- for status in filter['status']  %}
-                    <option value="{{ status }}">{{ status }}</option>
+                    {%- for state in filter_data['states']  %}
+                    <option value="{{ state }}">{{ state }}</option>
                     {% endfor -%}
                     </select>
                 </td>
             </tr>
             <tr>
-                <td>Tast run</td>
-                <td><input name="testrun" type="text"></td>
+                <td>Tast plan</td>
+                <td><input name="testplan" type="text"></td>
                 <td>Result</td>
                 <td>
                     <select name="result">
                     <option value="-">-</option>
-                    {%- for result in filter['result']  %}
+                    {%- for result in filter_data['results']  %}
                     <option value="{{ result }}">{{ result }}</option>
                     {% endfor -%}
                     </select>
@@ -66,7 +70,7 @@ RTT-Pipeline WebUI
                 <td>
                     <select name="workflow">
                     <option value="-">-</option>
-                    {%- for workflow in filter['workflow']  %}
+                    {%- for workflow in filter_data['workflows']  %}
                     <option value="{{ workflow }}">{{ workflow }}</option>
                     {% endfor -%}
                     </select>
@@ -89,7 +93,7 @@ RTT-Pipeline WebUI
         <div class="testplan_header_right">
             <!--<button onclick="show_report_{{ testrun_id }}()" class="btn btn-default">Show reporting</button>-->
             <!--<button class="btn btn-warning">Postpone reporting</button>-->
-            <button onclick="cancel_plan('{{ testplan_name }}')" class=".btn-cancel-plan" id="{{ testplan_name }}">Cancel plan</button>
+            <button onclick="cancel_plan('{{ testplan_name }}')" class="btn-cancel-plan" id="{{ testplan_name }}">Cancel plan</button>
         </div>
         </div>
         <table>

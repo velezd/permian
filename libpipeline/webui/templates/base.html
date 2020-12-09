@@ -7,13 +7,14 @@
     <script type="text/javascript">
       var pipeline_data_url = "{{ url_for('main.pipeline_data') }}";
       var cancel_url = "{{ url_for('main.cancel') }}";
+      var cancel_filtered_url = "{{ url_for('main.cancel_filtered') }}";
     </script>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='marked.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='dialog.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='refresh.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='filter.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='cancel.js') }}"></script>
+    {% block head %}{% endblock %}
   </head>
   <body>
     {% block body %}<p><strong>MISSING BODY!</strong></p>{% endblock %}

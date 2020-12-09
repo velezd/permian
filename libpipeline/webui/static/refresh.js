@@ -16,13 +16,26 @@ function change_refresh_rate() {
     }
 }
 
+function configuration_to_html(configs) {
+    string = '<div class="tooltip"><span class="tooltiptext">'
+    values = new Array();
+    for (key in configs) {
+        string += `${key}: ${configs[key]}<br>`
+        values.push(configs[key])
+    }
+    string += '</span>'
+    string += values.join('; ');
+    string += '</div>'
+    return(string);
+}
+
 function refreshData() {
     $.getJSON(pipeline_data_url, function(data) {
-        $.each(data['caseRuns'], function(index, caserun) {
+        $.each(data, function(index, caserun) {
             if (JSON.stringify($(".crc-"+caserun.id).first().data("cache")) != JSON.stringify(caserun)) {
                 $(".crc-"+caserun.id).first().data("cache", caserun)
                 $(".crc-"+caserun.id+" .crc_name").text(caserun.name);
-                $(".crc-"+caserun.id+" .crc_configuration").html(caserun.configuration);
+                $(".crc-"+caserun.id+" .crc_configuration").html(configuration_to_html(caserun.configuration));
                 $(".crc-"+caserun.id+" .crc_runningfor").text(caserun.running_for);
                 $(".crc-"+caserun.id+" .crc_displaystatus").html(marked(caserun.display_status));
                 $(".crc-"+caserun.id+" .crc_workflow").text(caserun.workflow);
