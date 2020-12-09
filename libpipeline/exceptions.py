@@ -51,3 +51,26 @@ class UnknownStructure(Exception):
     def __init__(self, name):
         self.name = name
         super().__init__(f"Unknown structure: '{name}'")
+
+class LocalLogExistsError(Exception):
+    """
+    Raised when trying to change path to log which already exists and has different path.
+    """
+    def __init__(self, crcid, name, old_path, new_path):
+        msg = f"Cannot change path for log '{name}' of crcId: {crcid}. Old path: '{old_path}', new path: '{new_path}'"
+        self.crcid = crcid
+        self.name = name
+        self.old_path = old_path
+        self.new_path = new_path
+        super().__init__(msg)
+
+class RemoteLogError(Exception):
+    """
+    Raised when trying to access remote log in incompatible way.
+    """
+    def __init__(self, crcid, name, log_path):
+        msg = f"Cannot open remote logfile: '{log_path}' for log '{name}' of crcId: {crcid}"
+        self.crcid = crcid
+        self.name = name
+        self.log_path = log_path
+        super().__init__(msg)

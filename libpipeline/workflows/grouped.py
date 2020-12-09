@@ -1,9 +1,9 @@
 import abc
 import threading
+import os
 
 from ..exception_dump import dump_exception
 from ..result import Result
-
 
 class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
     """
@@ -132,18 +132,6 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
             crc.updateResult(result)
             self.testRuns.update(crc)
 
-    def groupGetLog(self, crcId, log_type):
-        """
-        Return log of the log_type associated to the crcId.
-
-        :param crcId: TODO
-        :type crcId: str
-        :param log_type: TODO
-        :type log_type: str or None
-        :return: Content of the log
-        :rtype: str
-        """
-
     @abc.abstractmethod
     def groupDisplayStatus(self, crcId):
         """
@@ -160,3 +148,38 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         :rtype: str
         """
 
+    def groupAddLog(self, name, log_path, crcIds=None):
+        """
+        Add arbitrary log_path to a log under specific name related to provided
+        crcIds. If crcIds is not provided, all crcIds related to the workflow
+        are used.
+
+        The log_path can either be path to local file (relative or absolute)
+        or URL.
+
+        This method just registers the log_path but doesn't create files.
+        """
+        if crcIds is None:
+            crcs = self.crcList
+        else:
+            crcs = [crc for crc in self.crcList if crc.id in crcIds]
+        for crc in crcs:
+            crc.addLog(name, log_path)
+
+    def groupLog(self, message, name="workflow", crcIds=None):
+        """
+        Add a message to a logfile with provided name related to provided
+        crcIds. If the provided crcIds don't have such log yet, it's
+        automatically created and assigned.
+
+        When trying to log message to a log which is not a local file,
+        exception RemoteLogError is raised.
+        """
+        if crcIds is None:
+            crcs = self.crcList
+        else:
+            crcs = [crc for crc in self.crcList if crc.id in crcIds]
+        for crc in crcs:
+            with crc.openLogfile(name, 'a', True) as fo:
+                fo.write(message)
+                fo.write("\n")

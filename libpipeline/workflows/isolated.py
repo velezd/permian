@@ -96,3 +96,9 @@ class IsolatedWorkflow(GroupedWorkflow):
         :return: Markdown formatted string to be displayed for user
         :rtype: str
         """
+
+    def addLog(self, name, log_path):
+        return self.groupAddLog(name, log_path)
+
+    def log(self, message, name="workflow", crcIds=None):
+        return self.groupLog(message, name)

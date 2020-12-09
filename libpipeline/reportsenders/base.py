@@ -105,6 +105,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         localCaseRunConfiguration = self.caseRunConfigurations[crcUpdate.id]
         # Update result of local copy of caseRunConfiguration
         localCaseRunConfiguration.updateResult(crcUpdate.result)
+        localCaseRunConfiguration.logs = crcUpdate.logs.copy()
 
         if crcUpdate.result.final:
             self.processFinalResult(crcUpdate)

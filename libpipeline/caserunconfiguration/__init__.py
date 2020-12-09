@@ -1,11 +1,14 @@
 import logging
 from functools import lru_cache
 from hashlib import sha1
+import os
+import re
 
 from ..result import Result
-from ..exceptions import UnexpectedState, StateChangeError, ReadOnlyChangeError, UnknownTestConfigurationMergeMethod
+from ..exceptions import UnexpectedState, StateChangeError, ReadOnlyChangeError, UnknownTestConfigurationMergeMethod, LocalLogExistsError, RemoteLogError
 from ..result import Result, UNSET, STATES, RESULTS
 
+URL_RE = re.compile("[^/]+://")
 LOGGER = logging.getLogger(__name__)
 
 class CaseRunConfiguration():
@@ -34,6 +37,8 @@ class CaseRunConfiguration():
         """TODO"""
         self.readOnly = False
         """If set to true, the object is meant to be used as read-only copy and some methods which have side effects are forbidden and raise exception."""
+        self.logs = dict()
+        """Paths or URLs to logs associated to the caseRunConfiguration with specific names"""
 
     @property
     @lru_cache(maxsize=None)
@@ -43,9 +48,12 @@ class CaseRunConfiguration():
 
     def copy(self):
         caserun = CaseRunConfiguration(self.testcase, self.configuration, [])
+        caserun.testrun = self.testrun
         caserun.running_for = self.running_for
         caserun.workflow = self.workflow
         caserun.result = self.result.copy()
+        # logs are on purpose shared
+        caserun.logs = self.logs
         return caserun
 
     def readOnlyCopy(self):
@@ -55,9 +63,12 @@ class CaseRunConfiguration():
         should not have ability to change state of the shared instance.
         """
         caserun = CaseRunConfiguration(self.testcase, self.configuration, [])
+        caserun.testrun = self.testrun
         caserun.running_for = self.running_for
         caserun.workflow = self.workflow
         caserun.result = self.result.copy()
+        # logs are on purpose shared
+        caserun.logs = self.logs
         caserun.readOnly = True
         return caserun
 
@@ -137,6 +148,37 @@ class CaseRunConfiguration():
         :return: None
         :rtype: None
         """
+
+    def addLog(self, name, logfile):
+        if name in self.logs and self.logs[name] != logfile:
+            raise LocalLogExistsError(self.id, name, self.logs[name], logfile)
+        self.logs[name] = logfile
+
+    def openLogfile(self, name, mode="r", autoadd=False):
+        """
+        Create (if doesn't exist) and open a logfile of given name related to
+        the crcId. If autoadd is true, add the log path to the related crcId.
+
+        Raise RemoteLogError if the crc already has remote log assigned.
+        """
+        try:
+            log_path = self.logs[name]
+        except KeyError:
+            log_path = os.path.join(
+                self.testrun.settings.get('workflows', 'local_logs_dir'),
+                self.id,
+                f'{name}.txt'
+            )
+        if log_path.startswith('file://'):
+            log_path = log_path[7:] # trim the file://
+        elif URL_RE.match(log_path):
+            raise RemoteLogError(self.id, name, log_path)
+        # make sure the target directory exists before opening the logfile
+        os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        log_fo = open(log_path, mode)
+        if autoadd:
+            self.addLog(name, log_path)
+        return log_fo
 
     def __iadd__(self, other):
         """
