@@ -12,7 +12,7 @@ def filter_results_string(crcs_list):
     :rtype: str
     """
     string = ''
-    base_string = 'Configuration: %s - Result: %s, %s - Links: %s; '
+    base_string = 'Configuration: %s - Result: %s, %s - Links: %s ; '
     for caserun in crcs_list:
         string += base_string % (str(caserun.configuration),
                                  str(caserun.result.state),
