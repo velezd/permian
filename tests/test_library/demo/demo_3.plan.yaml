@@ -1,0 +1,19 @@
+name: demonstration plan 3
+description: demonstration plan 2
+point_person: zveleba@redhat.com
+artifact_type: demo
+verified_by:
+  test_cases:
+    direct_list:
+      - NVDIMM / automated kickstart installation with NVDIMM
+reporting:
+  - type: xunit
+configurations:
+  - architecture: x86_64
+  - architecture: aarch64
+  - architecture: ppc64le
+  - architecture: s390x
+acceptance_criteria:
+  test_cases:
+    direct_list:
+      - NVDIMM / automated kickstart installation with NVDIMM

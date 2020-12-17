@@ -1,0 +1,23 @@
+name: grub2 / grubenv_saved_entry
+description: demo testcase
+author: zveleba@redhat.com
+priority: 1
+execution:
+  type: test
+  automation_data:
+    - state: queued
+    - sleep: 2
+    - state: running
+    - sleep: 45
+    - state: complete
+      result: PASS
+      final: true
+configurations:
+  - initial_delay: 0.3
+instructions:
+  setup:
+    - Test
+  steps:
+    - Test
+  teardown:
+    - Test

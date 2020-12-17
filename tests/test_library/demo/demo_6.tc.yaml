@@ -1,0 +1,31 @@
+name: grub2 / bootonce
+description: demo testcase
+author: zveleba@redhat.com
+priority: 1
+execution:
+  type: test
+  automation_data:
+    - state: queued
+    - sleep: 4
+    - state: running
+    - sleep: 30
+    - state: running
+      result: PASS
+      sleep: 20
+    - state: complete
+      result: FAIL
+      final: true
+configurations:
+  - architecture: x86_64
+    initial_delay: 0.5
+  - architecture: aarch64
+    initial_delay: 0.4
+  - architecture: ppc64le
+    initial_delay: 0.3
+instructions:
+  setup:
+    - Test
+  steps:
+    - Test
+  teardown:
+    - Test

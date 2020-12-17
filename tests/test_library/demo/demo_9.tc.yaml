@@ -1,0 +1,30 @@
+name: BLS / grubby / remove entry
+description: demo testcase
+author: zveleba@redhat.com
+priority: 1
+execution:
+  type: test
+  automation_data:
+    - state: queued
+    - sleep: 3
+    - state: started
+    - sleep: 10
+    - state: running
+    - sleep: 60
+    - state: cleaning
+      result: PASS
+    - sleep: 12
+    - state: complete
+      final: true
+configurations:
+  - variant: AppStream
+    initial_delay: 0.0
+  - variant: BaseOS
+    initial_delay: 0.0
+instructions:
+  setup:
+    - Test
+  steps:
+    - Test
+  teardown:
+    - Test

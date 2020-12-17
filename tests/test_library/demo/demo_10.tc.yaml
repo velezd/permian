@@ -1,0 +1,24 @@
+name: NVDIMM / automated kickstart installation with NVDIMM
+description: demo testcase
+author: zveleba@redhat.com
+priority: 1
+execution:
+  type: test
+  automation_data:
+    - state: queued
+    - sleep: 1
+    - state: running
+    - sleep: 15
+    - state: complete
+      result: PASS
+      final: true
+configurations:
+  - architecture: x86_64
+    initial_delay: 0.1
+instructions:
+  setup:
+    - Test
+  steps:
+    - Test
+  teardown:
+    - Test

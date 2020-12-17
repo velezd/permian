@@ -1,0 +1,26 @@
+name: partitioning / cryptsetup-luks / Encrypted LVM(pv) on RAID(mdX)
+description: demo testcase
+author: zveleba@redhat.com
+priority: 1
+execution:
+  type: test
+  automation_data:
+    - state: queued
+    - sleep: 5
+    - state: running
+    - sleep: 65
+    - state: running
+      result: PASS
+      sleep: 5
+    - state: complete
+      result: PASS
+      final: true
+configurations:
+  - initial_delay: 0.1
+instructions:
+  setup:
+    - Test
+  steps:
+    - Test
+  teardown:
+    - Test
