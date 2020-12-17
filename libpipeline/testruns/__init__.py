@@ -40,6 +40,7 @@ class TestRuns():
         self.caseRunConfigurations = event.generate_caseRunConfigurations(library, settings)
         for caserun in self.caseRunConfigurations:
             caserun.testrun = self
+            LOGGER.debug("Will run caseRunConfiguration %s: %s", caserun.id, caserun)
 
     def assignWorkflows(self, event, settings):
         """
