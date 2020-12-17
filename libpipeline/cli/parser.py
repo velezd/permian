@@ -96,7 +96,7 @@ class AppendToPayload(argparse.Action):
             namespace.payload = {}
         if self.payload_dest not in namespace.payload:
             namespace.payload[self.payload_dest] = []
-        namespace.payload.append(values)
+        namespace.payload[self.payload_dest].append(values)
 
 def bool_argument(value):
     """
