@@ -98,7 +98,7 @@ RTT-Pipeline WebUI
         </div>
         <table>
             <tr><th>Testcase</th><th>Configuration</th><th>Display Status</th><th>Workflow</th><th>Result</th><th>State</th><th>Logs</th><th>Actions</th></tr>
-            {% for crc in testplan %}
+            {% for crc in ( testplan | sort_crcs ) %}
                 <tr class="crc crc-{{ crc.id }}">
                     <td class="crc_name"></td>
                     <td class="crc_configuration"></td>
@@ -119,7 +119,7 @@ RTT-Pipeline WebUI
 <div class="autohide container" id="display-all">
     <table>
         <tr><th>Testcase</th><th>Configuration</th><th>Running for</th><th>Workflow</th><th>Display Status</th><th>Result</th><th>State</th><th>Logs</th><th>Actions</th></tr>
-        {% for crc in pipeline.testRuns.caseRunConfigurations %}
+        {% for crc in ( pipeline.testRuns.caseRunConfigurations | sort_crcs ) %}
             <tr class="crc crc-{{ crc.id }}">
                 <td class="crc_name"></td>
                 <td class="crc_configuration"></td>

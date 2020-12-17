@@ -10,6 +10,10 @@ WebUI.registerBlueprint(main)
 
 LOGGER = logging.getLogger(__name__)
 
+@main.app_template_filter()
+def sort_crcs(crcs):
+    return sorted(crcs, key=lambda crc: crc.testcase.name)
+
 @main.route('/')
 def index():
     pipeline=currentPipeline()
