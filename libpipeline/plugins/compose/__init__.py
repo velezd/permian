@@ -10,6 +10,8 @@ from .. import api
 from ...events.base import Event, payload_override
 from ...cli.parser import bool_argument, ToPayload, AppendToPayload
 
+from .compose_info import ComposeInfo
+
 
 @api.events.register('compose')
 class ComposeEvent(Event):
@@ -88,6 +90,10 @@ class ComposeStructure():
         if not self.layered:
             return None
         return self.version
+
+    @property
+    def composeinfo(self):
+        return ComposeInfo(self.location, self.location_http)
 
 
 @api.cli.register_command_parser('compose')
