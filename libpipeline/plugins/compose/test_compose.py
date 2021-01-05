@@ -1,6 +1,7 @@
 import unittest
 import re
-from unittest.mock import patch
+from unittest.mock import patch, create_autospec
+import productmd
 
 from libpipeline.cli.factory import CliFactory
 from libpipeline.events.factory import EventFactory
@@ -8,16 +9,16 @@ from libpipeline.events.factory import EventFactory
 class MockComposeResponse():
     def __init__(self, url):
         self.url = url
-    def read(self):
-        if self.url.endswith('/attr/nightly'):
-            match = re.match(r'http://example\.com/compose/.+\.n\..+', self.url)
-            if match:
-                return 'true'
-            else:
-                return 'false'
-        return ''
     def geturl(self):
         return self.url.replace('example.com/compose', 'example.com/here')
+
+def MockProductmdCompose(location):
+    instance = create_autospec(productmd.compose.Compose)(location)
+    if '.n.' in location:
+        instance.info.compose.type = "nightly"
+    else:
+        instance.info.compose.type = "production"
+    return instance
 
 class MockUrlopen():
     def __init__(self, url):
@@ -27,8 +28,9 @@ class MockUrlopen():
     def __exit__(self, type, value, traceback):
         pass
 
+@patch('productmd.compose.Compose', new=MockProductmdCompose)
+@patch('urllib.request.urlopen', new=MockUrlopen)
 class TestEventCompose(unittest.TestCase):
-    @patch('urllib.request.urlopen', new=MockUrlopen)
     def test_rhel_idonly(self):
         event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2'])[1])
         self.assertEqual(event.compose.id, 'RHEL-8.3.0-20200701.2')
@@ -45,7 +47,6 @@ class TestEventCompose(unittest.TestCase):
         self.assertFalse(event.compose.layered)
         self.assertEqual(event.compose.location, 'http://example.com/here/RHEL-8.3.0-20200701.2')
 
-    @patch('urllib.request.urlopen', new=MockUrlopen)
     def test_supp_idonly(self):
         event = EventFactory.make(CliFactory.parse('compose', ['Supp-9.2.1-RHEL-8-20200811.n.5'])[1])
         self.assertEqual(event.compose.id, 'Supp-9.2.1-RHEL-8-20200811.n.5')
@@ -62,7 +63,6 @@ class TestEventCompose(unittest.TestCase):
         self.assertTrue(event.compose.layered)
         self.assertEqual(event.compose.location, 'http://example.com/here/Supp-9.2.1-RHEL-8-20200811.n.5')
 
-    @patch('urllib.request.urlopen', new=MockUrlopen)
     def test_rhel_overrides(self):
         event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2',
                                                                '--product=Test',
@@ -86,7 +86,6 @@ class TestEventCompose(unittest.TestCase):
         self.assertTrue(event.compose.layered)
         self.assertEqual(event.compose.location, 'test/location')
 
-    @patch('urllib.request.urlopen', new=MockUrlopen)
     def test_rhel_overrides_version(self):
         event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2',
                                                                '--version=ahoj',
@@ -99,7 +98,6 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.minor, '9')
         self.assertEqual(event.compose.qr, '8')
 
-    @patch('urllib.request.urlopen', new=MockUrlopen)
     def test_supp_overrides(self):
         event = EventFactory.make(CliFactory.parse('compose', ['Supp-9.2.1-RHEL-8-20200811.n.5',
                                                                '--product=Test',
