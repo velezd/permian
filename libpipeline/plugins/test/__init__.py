@@ -47,6 +47,7 @@ class TestWorkflow(IsolatedWorkflow):
         sleep(self.crc.configuration.get('initial_delay', 0) + (self.crc.configuration.get('test', 0) * 0.01))
 
         for num, step in enumerate(self.crc.testcase.execution.automation_data, start=1):
+            self.log(f'Running step no {num}: {step}')
             if self.terminated: break
             self.status_step_counter = num
             state = step.get('state', last_state)
@@ -54,11 +55,25 @@ class TestWorkflow(IsolatedWorkflow):
             final = step.get('final', False)
 
             if self.terminated: break
+            if 'log' in step:
+                for logname, message in step['log'].items():
+                    self.log(f"Writing message to log: {logname}")
+                    self.log(message, logname)
+
+            if self.terminated: break
+            if 'log_file' in step:
+                for logname, log_path in step['log_file'].items():
+                    self.log(f"Adding log {logname} pointing to: {log_path}")
+                    self.addLog(logname, log_path)
+
+            if self.terminated: break
             if 'sleep' in step:
+                self.log(f"Sleeping: {step['sleep']}")
                 sleep(step['sleep'])
 
             if self.terminated: break
             if {'state', 'result', 'final'}.intersection(step.keys()):
+                self.log(f"Reporting Result({state}, {result}, {final})")
                 self.reportResult(Result(state, result, final))
                 last_state = state
 

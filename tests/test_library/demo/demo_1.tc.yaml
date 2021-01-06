@@ -6,9 +6,15 @@ execution:
   type: test
   automation_data:
     - state: queued
+      log_file:
+        redhat: http://redhat.com/
     - sleep: 5
+      log:
+        testlog: "some message"
     - state: running
     - sleep: 60
+      log:
+        testlog: "another message"
     - state: running
       result: PASS
       sleep: 5
