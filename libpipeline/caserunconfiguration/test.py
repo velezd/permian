@@ -1,7 +1,10 @@
 import unittest
+import tempfile
+import os
 
 from . import CaseRunConfiguration, CaseRunConfigurationsList, merge_testcase_configurations
 from ..result import Result
+from ..exceptions import LocalLogExistsError, RemoteLogError
 
 
 class DummyTestCase():
@@ -15,6 +18,82 @@ class DummyTestPlan():
     def __init__(self, name):
         self.name = name
         self.id = name
+
+class TestCaseRunConfigurationLogs(unittest.TestCase):
+    def setUp(self):
+        self.logsdir = tempfile.TemporaryDirectory(prefix="testlogs_")
+        testrun = unittest.mock.MagicMock()
+        testrun.settings.get.return_value = self.logsdir.name
+        plan = DummyTestPlan('A')
+        self.crc = CaseRunConfiguration(DummyTestCase('testcase1'), {}, [plan])
+        self.crc.testrun = testrun
+        self.assertEqual(os.listdir(self.logsdir.name), [])
+
+    def tearDown(self):
+        self.logsdir.cleanup()
+
+    def testAddLog(self):
+        self.assertEqual(self.crc.logs, {})
+        self.crc.addLog('foo', 'bar')
+        self.assertEqual(self.crc.logs, {'foo':'bar'})
+        # try to change already added log
+        with self.assertRaises(LocalLogExistsError) as cm:
+            self.crc.addLog('foo', 'baz')
+        exception = cm.exception
+        self.assertEqual(exception.crcid, self.crc.id)
+        self.assertEqual(exception.name, 'foo')
+        self.assertEqual(exception.old_path, 'bar')
+        self.assertEqual(exception.new_path, 'baz')
+        self.assertEqual(self.crc.logs, {'foo':'bar'})
+        # add another log
+        self.crc.addLog('another', 'something')
+        self.assertEqual(self.crc.logs, {'foo':'bar', 'another':'something'})
+        # add remote log
+        self.crc.addLog('url', 'http://example.com/')
+        self.assertEqual(
+            self.crc.logs,
+            {'foo':'bar', 'another':'something', 'url':'http://example.com/'}
+        )
+        self.assertEqual(os.listdir(self.logsdir.name), [])
+
+    def testOpenLogfileLocal(self):
+        message = 'Hello!'
+        with self.crc.openLogfile('foo', 'w') as logfile:
+            logfile.write(message)
+        # Check there's directory for the logs belonging to the crc
+        self.assertEqual(
+            os.listdir(self.logsdir.name),
+            [self.crc.id]
+        )
+        # Check the logs directory belonging to the crc contains the log
+        self.assertEqual(
+            os.listdir(os.path.join(self.logsdir.name, self.crc.id)),
+            ["foo.txt"]
+        )
+        with self.crc.openLogfile('foo') as logfile:
+            self.assertEqual(logfile.read(), message)
+        with open(os.path.join(self.logsdir.name, self.crc.id, 'foo.txt')) as direct_logfile:
+            self.assertEqual(direct_logfile.read(), message)
+
+    def testOpenLogfileLocalAdded(self):
+        message = 'Hello!'
+        with tempfile.NamedTemporaryFile('w+') as direct_logfile:
+            direct_logfile.write(message)
+            direct_logfile.flush()
+            self.crc.addLog('local', direct_logfile.name)
+            with self.crc.openLogfile('local') as logfile:
+                self.assertEqual(logfile.read(), message)
+            self.assertEqual(os.listdir(self.logsdir.name), [])
+
+    def testOpenLogfileRemote(self):
+        url = 'http://example.com/'
+        self.crc.addLog('url_log', url)
+        with self.assertRaises(RemoteLogError) as cm:
+            self.crc.openLogfile('url_log')
+        exception = cm.exception
+        self.assertEqual(exception.crcid, self.crc.id)
+        self.assertEqual(exception.name, 'url_log')
+        self.assertEqual(exception.log_path, url)
 
 class TestCaseRunConfigurationsList(unittest.TestCase):
     def setUp(self):
