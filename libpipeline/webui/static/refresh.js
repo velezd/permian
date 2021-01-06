@@ -29,6 +29,14 @@ function configuration_to_html(configs) {
     return(string);
 }
 
+function logs_list_to_html(crcid, logs) {
+    string = ''
+    for (log of logs) {
+        string += `<a href="./logs/${crcid}/${log}">${log}</a><br />`
+    }
+    return(string)
+}
+
 function refreshData() {
     $.getJSON(pipeline_data_url, function(data) {
         $.each(data, function(index, caserun) {
@@ -41,6 +49,7 @@ function refreshData() {
             $(".crc-"+caserun.id+" .crc_workflow").text(caserun.workflow);
             $(".crc-"+caserun.id+" .crc_result").text(caserun.result);
             $(".crc-"+caserun.id+" .crc_state").text(caserun.state);
+            $(".crc-"+caserun.id+" .crc_logs").html(logs_list_to_html(caserun.id, caserun.logs))
             $(".crc-"+caserun.id+" .crc_cancel").prop('disabled', !caserun.active);
         });
     });

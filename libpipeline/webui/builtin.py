@@ -1,6 +1,7 @@
 import logging
-from flask import Blueprint, render_template, jsonify, request
+from flask import Blueprint, render_template, jsonify, request, redirect, Response
 
+from ..exceptions import RemoteLogError
 from .server import WebUI
 from .request import currentWebUI, currentPipeline
 from ..result import RESULTS, STATES
@@ -44,12 +45,22 @@ def pipeline_data():
                         'running_for': [ tp_id for tp_id, tp_bool in caserun.running_for.items() if tp_bool ],
                         'result': caserun.result.result,
                         'state' : caserun.result.state,
+                        'logs' : list(caserun.logs.keys()),
                         'active' : not caserun.result.final,
                        }
 
         caseRuns.append(caserun_data)
 
     return jsonify(caseRuns)
+
+@main.route('/logs/<crcid>/<path:name>')
+def logs(crcid, name):
+    pipeline = currentPipeline()
+    try:
+        with pipeline.testRuns.caseRunConfigurations[crcid].openLogfile(name) as logfile:
+            return Response(logfile.read(), mimetype="text/plain")
+    except RemoteLogError as e:
+        return redirect(e.log_path)
 
 @main.route('/cancel')
 def cancel():
