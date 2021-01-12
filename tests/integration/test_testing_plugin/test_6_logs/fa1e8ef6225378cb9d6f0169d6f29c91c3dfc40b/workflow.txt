@@ -1,0 +1,20 @@
+Running step no 1: {'log_file': {'some_url': 'http://some.example.com/some/path'}, 'log': {'first': "Let's begin"}}
+Writing message to log: first
+Adding log some_url pointing to: http://some.example.com/some/path
+Running step no 2: {'state': 'queued', 'sleep': 1, 'log': {'second': 'Hello'}}
+Writing message to log: second
+Sleeping: 1
+Reporting Result(queued, None, False)
+Running step no 3: {'state': 'running', 'sleep': 3, 'log': {'first': 'Running!'}}
+Writing message to log: first
+Sleeping: 3
+Reporting Result(running, None, False)
+Running step no 4: {'state': 'running', 'result': 'PASS', 'sleep': 1, 'log_file': {'another_url': 'http://another.example.com/hello'}}
+Adding log another_url pointing to: http://another.example.com/hello
+Sleeping: 1
+Reporting Result(running, PASS, False)
+Running step no 5: {'state': 'complete', 'result': 'FAIL', 'final': True, 'log': {'first': 'Ended!', 'second': 'World!', 'third': 'Some message'}}
+Writing message to log: first
+Writing message to log: second
+Writing message to log: third
+Reporting Result(complete, FAIL, True)

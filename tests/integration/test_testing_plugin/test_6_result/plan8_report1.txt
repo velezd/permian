@@ -1,0 +1,11 @@
+reporter 8 - testrun "testing plugin plan 8" started
+reporter 8 - result partial testing plugin case 6-4 - queued, None, False
+reporter 8 - result partial testing plugin case 6-5 - queued, None, False
+reporter 8 - result partial testing plugin case 6-4 - running, None, False
+reporter 8 - result partial testing plugin case 6-5 - running, None, False
+reporter 8 - result partial testing plugin case 6-4 - running, PASS, False
+reporter 8 - result final testing plugin case 6-4 - complete, FAIL, True
+reporter 8 - result partial testing plugin case 6-5 - running, PASS, False
+reporter 8 - result final testing plugin case 6-5 - complete, FAIL, True
+reporter 8 - finished testcase "testing plugin case 6" in "testing plugin plan 8"
+reporter 8 - testrun "testing plugin plan 8" finished

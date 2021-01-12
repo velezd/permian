@@ -1,0 +1,40 @@
+name: testing plugin case 6
+description: Testing testcase for "test" workflow
+author: zveleba@redhat.com
+priority: 1
+execution:
+  type: test
+  automation_data:
+    - log_file:
+        some_url: http://some.example.com/some/path
+      log:
+        first: Let's begin
+    - state: queued
+      sleep: 1
+      log:
+        second: Hello
+    - state: running
+      sleep: 3
+      log:
+        first: Running!
+    - state: running
+      result: PASS
+      sleep: 1
+      log_file:
+        another_url: http://another.example.com/hello
+    - state: complete
+      result: FAIL
+      final: true
+      log:
+        first: Ended!
+        second: World!
+        third: Some message
+configurations:
+  - initial_delay: 0.5
+instructions:
+  setup:
+    - Test
+  steps:
+    - Test
+  teardown:
+    - Test
