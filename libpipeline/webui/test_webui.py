@@ -2,6 +2,8 @@ import unittest
 import time
 import json
 import urllib.request
+import requests
+import tempfile
 from flask import Blueprint
 from tclib import library
 from .server import WebUI
@@ -37,24 +39,25 @@ class TestWebUI(unittest.TestCase):
 
 class TestWebUIData(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUp(self):
+        self.logsdir = tempfile.TemporaryDirectory(prefix="testlogs_")
         ReportSenderFactory.clear_reportSender_classes()
         WorkflowFactory.clear_workflow_classes()
-        cls.library = library.Library('tests/test_library')
-        cls.settings = Settings(cmdline_overrides={'library': {'defaultCaseConfigMergeMethod': 'extension'}}, environment={}, settings_locations=[])
-        cls.event = Event('test', other={'tests': ['test1']})
-        cls.testRuns = TestRuns(cls.library, cls.event, cls.settings)
-
-    @classmethod
-    def tearDownClass(cls):
-        ReportSenderFactory.restore_reportSender_classes()
-        WorkflowFactory.restore_workflow_classes()
-
-    def test_webui_data(self):
+        self.library = library.Library('tests/test_library')
+        self.settings = Settings(cmdline_overrides={'library': {'defaultCaseConfigMergeMethod': 'extension'}, 'workflows': {'logsdir':self.logsdir.name}}, environment={}, settings_locations=[])
+        self.event = Event('test', other={'tests': ['test1']})
+        self.testRuns = TestRuns(self.library, self.event, self.settings)
         self.webUI = WebUI(self)
         self.webUI.start()
         self.webUI.waitUntilStarted()
 
+    @classmethod
+    def tearDown(self):
+        ReportSenderFactory.restore_reportSender_classes()
+        WorkflowFactory.restore_workflow_classes()
+        self.logsdir.cleanup()
+
+    def test_webui_data(self):
         with urllib.request.urlopen(self.webUI.baseurl + 'pipeline_data') as response:
             pipeline_data = json.loads(response.read())
 
@@ -64,6 +67,25 @@ class TestWebUIData(unittest.TestCase):
         with urllib.request.urlopen(self.webUI.baseurl + 'pipeline_data') as response:
             self.assertEqual(pipeline_data, json.loads(response.read()))
 
+    def test_webui_logs(self):
+        message = 'Hello from webUI test!'
+        external_url = 'http://some.server.example.com/foo/bar'
+        crc = self.testRuns.caseRunConfigurations[0]
+        with urllib.request.urlopen(self.webUI.baseurl + 'pipeline_data') as response:
+            expected_pipeline_data = json.loads(response.read())
+        self.assertEqual(expected_pipeline_data[0]['logs'], [])
+        expected_pipeline_data[0]['logs'] = ['external', 'hello']
+        crc.addLog('external', external_url)
+        with crc.openLogfile('hello', 'w', autoadd=True) as logfile:
+            logfile.write(message)
+        with urllib.request.urlopen(self.webUI.baseurl + 'pipeline_data') as response:
+            pipeline_data = json.loads(response.read())
+        self.assertEqual(pipeline_data, expected_pipeline_data)
+        # use requests to detect redirects as it's much easier than urllib.request. TODO: change all urllib.request to requests
+        response = requests.get(f'{self.webUI.baseurl}logs/{crc.id}/external', allow_redirects=False)
+        self.assertEqual(response.next.url, external_url)
+        with urllib.request.urlopen(f'{self.webUI.baseurl}logs/{crc.id}/hello') as response:
+            self.assertEqual(response.read().decode(), message)
 
 class TestWebUIDebug(unittest.TestCase):
     def test_webui_debug(self):
