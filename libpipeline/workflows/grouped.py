@@ -1,6 +1,7 @@
 import abc
 import threading
 import os
+import datetime
 
 from ..exception_dump import dump_exception
 from ..result import Result
@@ -37,6 +38,8 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         self.event = testRuns.event
         self.settings = testRuns.settings
         self.dryRun = self.settings.getboolean('workflows', 'dry_run')
+        self.logFormat = self.settings.get('workflows', 'log_format')
+        self.logTimestampFormat = self.settings.get('workflows', 'log_timestamp_format')
         self.exceptions = []
         for crc in crcList:
             crc.workflow = self
@@ -166,6 +169,12 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         for crc in crcs:
             crc.addLog(name, log_path)
 
+    def formatLogMessage(self, message):
+        return self.logFormat.format(
+            message=message,
+            asctime=datetime.datetime.utcnow().strftime(self.logTimestampFormat)
+        )
+
     def groupLog(self, message, name="workflow", crcIds=None):
         """
         Add a message to a logfile with provided name related to provided
@@ -175,6 +184,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         When trying to log message to a log which is not a local file,
         exception RemoteLogError is raised.
         """
+        message = self.formatLogMessage(message)
         if crcIds is None:
             crcs = self.crcList
         else:

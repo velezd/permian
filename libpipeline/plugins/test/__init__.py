@@ -41,6 +41,12 @@ class TestWorkflow(IsolatedWorkflow):
         self.status_step_counter = 0
         self.terminated = False
 
+    def formatLogMessage(self, message):
+        return self.logFormat.format(
+            message=message,
+            asctime=self.status_step_counter,
+        )
+
     def execute(self):
         last_state = None
         # initial delay - to ensure specific order of results in reporting

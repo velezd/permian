@@ -42,7 +42,7 @@ class Settings():
             'default',
         ))
         for key in self.settings:
-            self.settings[key] = configparser.ConfigParser()
+            self.settings[key] = configparser.ConfigParser(interpolation=None)
             self.settings[key].optionxform = str # preserve case for option names
 
         self.settings['overrides'].read_dict(cmdline_overrides)
