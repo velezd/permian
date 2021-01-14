@@ -5,16 +5,20 @@
 2 - Writing message to log: second
 2 - Sleeping: 1
 2 - Reporting Result(queued, None, False)
+2 - Changing state to: "queued" with result: "None"
 2 - Running step no 3: {'state': 'running', 'sleep': 3, 'log': {'first': 'Running!'}}
 3 - Writing message to log: first
 3 - Sleeping: 3
 3 - Reporting Result(running, None, False)
+3 - Changing state to: "running" with result: "None"
 3 - Running step no 4: {'state': 'running', 'result': 'PASS', 'sleep': 1, 'log_file': {'another_url': 'http://another.example.com/hello'}}
 4 - Adding log another_url pointing to: http://another.example.com/hello
 4 - Sleeping: 1
 4 - Reporting Result(running, PASS, False)
+4 - Changing state to: "running" with result: "PASS"
 4 - Running step no 5: {'state': 'complete', 'result': 'FAIL', 'final': True, 'log': {'first': 'Ended!', 'second': 'World!', 'third': 'Some message'}}
 5 - Writing message to log: first
 5 - Writing message to log: second
 5 - Writing message to log: third
 5 - Reporting Result(complete, FAIL, True)
+5 - Changing state to: "complete" with result: "FAIL"

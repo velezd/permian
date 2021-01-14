@@ -18,6 +18,10 @@ class TestWorkflowsRegistered(unittest.TestCase):
     def test_unknown(self):
         self.assertEqual(WorkflowFactory.workflow_classes[None], UnknownWorkflow)
 
+def nolog(*args, **kwargs):
+    pass
+
+@unittest.mock.patch('libpipeline.workflows.grouped.GroupedWorkflow.groupLog', new=nolog)
 class TestManual(unittest.TestCase):
     def test_run(self):
         caseRunConfiguration = CaseRunConfiguration(DummyTestCase(), {}, [])
@@ -34,6 +38,7 @@ class TestManual(unittest.TestCase):
         workflow.join()
         testRuns.update.assert_called_once_with(crcExpectedResult)
 
+@unittest.mock.patch('libpipeline.workflows.grouped.GroupedWorkflow.groupLog', new=nolog)
 class TestUnknown(unittest.TestCase):
     def test_run(self):
         caseRunConfiguration = CaseRunConfiguration(DummyTestCase(), {}, [])

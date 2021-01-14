@@ -131,6 +131,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         :return: None
         :rtype: None
         """
+        self.groupLog(f'Changing state to: "{result.state}" with result: "{result.result}"', crcList=crcList)
         for crc in crcList:
             crc.updateResult(result)
             self.testRuns.update(crc)
