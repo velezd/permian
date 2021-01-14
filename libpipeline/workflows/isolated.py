@@ -100,5 +100,5 @@ class IsolatedWorkflow(GroupedWorkflow):
     def addLog(self, name, log_path):
         return self.groupAddLog(name, log_path)
 
-    def log(self, message, name="workflow", crcIds=None):
+    def log(self, message, name="workflow"):
         return self.groupLog(message, name)

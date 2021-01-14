@@ -151,7 +151,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         :rtype: str
         """
 
-    def groupAddLog(self, name, log_path, crcIds=None):
+    def groupAddLog(self, name, log_path, crcList=None):
         """
         Add arbitrary log_path to a log under specific name related to provided
         crcIds. If crcIds is not provided, all crcIds related to the workflow
@@ -162,11 +162,9 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
 
         This method just registers the log_path but doesn't create files.
         """
-        if crcIds is None:
-            crcs = self.crcList
-        else:
-            crcs = [crc for crc in self.crcList if crc.id in crcIds]
-        for crc in crcs:
+        if crcList is None:
+            crcList = self.crcList
+        for crc in crcList:
             crc.addLog(name, log_path)
 
     def formatLogMessage(self, message):
@@ -175,7 +173,7 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
             asctime=datetime.datetime.utcnow().strftime(self.logTimestampFormat)
         )
 
-    def groupLog(self, message, name="workflow", crcIds=None):
+    def groupLog(self, message, name="workflow", crcList=None):
         """
         Add a message to a logfile with provided name related to provided
         crcIds. If the provided crcIds don't have such log yet, it's
@@ -185,11 +183,9 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         exception RemoteLogError is raised.
         """
         message = self.formatLogMessage(message)
-        if crcIds is None:
-            crcs = self.crcList
-        else:
-            crcs = [crc for crc in self.crcList if crc.id in crcIds]
-        for crc in crcs:
+        if crcList is None:
+            crcList = self.crcList
+        for crc in crcList:
             with crc.openLogfile(name, 'a', True) as fo:
                 fo.write(message)
                 fo.write("\n")
