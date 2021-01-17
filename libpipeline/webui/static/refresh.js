@@ -2,17 +2,21 @@ var refresh
 
 function on_load(jQuery) {
     refreshData();
-    var rate = $("#refresh_rate").val();
-    if (rate != 0) {
-        refresh = setInterval(refreshData, rate);
+    if (!static_webui) {
+        var rate = $("#refresh_rate").val();
+        if (rate != 0) {
+            refresh = setInterval(refreshData, rate);
+        }
     }
 }
 
 function change_refresh_rate() {
-    var rate = $("#refresh_rate").val()
-    clearInterval(refresh);
-    if (rate != 0) {
-        refresh = setInterval(refreshData, rate);
+    if (!static_webui) {
+        var rate = $("#refresh_rate").val()
+        clearInterval(refresh);
+        if (rate != 0) {
+            refresh = setInterval(refreshData, rate);
+        }
     }
 }
 
@@ -31,8 +35,15 @@ function configuration_to_html(configs) {
 
 function logs_list_to_html(crcid, logs) {
     string = ''
-    for (log of logs) {
-        string += `<a href="./logs/${crcid}/${log}">${log}</a><br />`
+    if (static_webui) {
+        for (log in logs) {
+            string += `<a href="${logs[log]}">${log}</a><br />`
+        }
+    }
+    else {
+        for (log of logs) {
+            string += `<a href="./logs/${crcid}/${log}">${log}</a><br />`
+        }
     }
     return(string)
 }

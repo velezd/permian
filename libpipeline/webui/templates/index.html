@@ -22,14 +22,14 @@ RTT-Pipeline WebUI
             <select id="refresh_rate" onchange="change_refresh_rate()">
                 <option value="0">OFF</option>
                 <option value="1000">1s</option>
-                <option value="5000" selected>5s</option>
+                <option value="5000" selected="selected">5s</option>
                 <option value="10000">10s</option>
                 <option value="30000">30s</option>
                 <option value="60000">60s</option>
             </select>
             Testplan tables
             <label class="switch">
-                <input type="checkbox" checked onclick='$("#display-testplans").toggle(); $("#display-all").toggle()'>
+                <input type="checkbox" checked="checked" onclick='$("#display-testplans").toggle(); $("#display-all").toggle()' />
                 <span class="slider round"></span>
             </label>
         </div>
@@ -39,7 +39,7 @@ RTT-Pipeline WebUI
         <table>
             <tr>
                 <td>Tast case</td>
-                <td><input name="testcase" type="text"></td>
+                <td><input name="testcase" type="text" /></td>
                 <td>State</td>
                 <td>
                     <select name="state">
@@ -52,7 +52,7 @@ RTT-Pipeline WebUI
             </tr>
             <tr>
                 <td>Tast plan</td>
-                <td><input name="testplan" type="text"></td>
+                <td><input name="testplan" type="text" /></td>
                 <td>Result</td>
                 <td>
                     <select name="result">
@@ -65,7 +65,7 @@ RTT-Pipeline WebUI
             </tr>
             <tr>
                 <td>Configuration</td>
-                <td><input name="configuration" type="text" placeholder="value;key:value"></td>
+                <td><input name="configuration" type="text" placeholder="value;key:value" /></td>
                 <td>Workflow</td>
                 <td>
                     <select name="workflow">

@@ -1,7 +1,12 @@
 import logging
 import requests
 import time
+import json
+import requests
+import libxml2
+from os import path, mkdir, makedirs
 
+from ..hooks.builtin import pipeline_ended
 from ..hooks.register import run_on, run_threaded_on
 from . import hooks
 
@@ -46,3 +51,73 @@ def webUIStartedMsg(webUI):
     Log URL of available webUI.
     """
     LOGGER.info(f'WebUI started at: {webUI.baseurl}')
+
+@run_on(pipeline_ended)
+def render_static(pipeline):
+    """
+    This is hook callback reacting on hooks.builtin.pipeline_ended.
+
+    Creates static version of WebUI that can be accessed after pipeline ends.
+    """
+    if not pipeline.settings.get('WebUI', 'create_static_webui'):
+        return
+
+    webui_url = pipeline.webUI.baseurl
+    webui_path = pipeline.settings.get('WebUI', 'static_webui_dir')
+    static_dir = path.join(webui_path, 'static')
+
+    # Create static WebUI directory
+    if not path.exists(webui_path):
+        makedirs(webui_path)
+
+    # Modify pipeline data
+    response = requests.get(webui_url + 'pipeline_data')
+    pipline_data = json.loads(response.text)
+    for crc in pipline_data:
+        # Handle local and external logs
+        new_logs = dict()
+        for log in crc['logs']:
+            url = f'./logs/{crc["id"]}/{log}'
+            r = requests.get(webui_url + url.lstrip('./'), allow_redirects=False)
+            if r.status_code == 302:
+                url = r.next.url
+            else:
+                url = url + '.txt'
+            new_logs[log] = url
+        crc['logs'] = new_logs
+
+    with open(path.join(webui_path, 'pipeline_data'), 'w') as fo:
+        fo.write(json.dumps(pipline_data))
+
+    # Create dir for static files
+    if not path.exists(static_dir):
+        mkdir(static_dir)
+
+    def download_static(static_path):
+        # Download static files
+        r = requests.get(webui_url + static_path.lstrip('/'))
+        with open(path.join(static_dir, r.url.split('/')[-1]), 'w') as fo:
+            fo.write(r.text)
+
+    # Modify WebUI page
+    response = requests.get(webui_url)
+    doc = libxml2.parseDoc(response.text)
+    for elem in doc.xpathEval('/html/head/*[@href or @src]'):
+        href = elem.prop('href')
+        if href is not None and href.startswith('/'):
+            elem.setProp('href', '.'+href)
+            download_static(href)
+        src = elem.prop('src')
+        if src is not None and src.startswith('/'):
+            elem.setProp('src', '.'+src)
+            download_static(src)
+
+    head = doc.xpathEval('/html/head')
+    script_content = """
+        var pipeline_data_url = "./pipeline_data";
+        var static_webui = true;
+        """
+    newElement = head[0].newChild(None, 'script', script_content)
+    newElement.newProp('type', 'text/javascript')
+
+    doc.htmlSaveFile(path.join(webui_path, 'index.html'))

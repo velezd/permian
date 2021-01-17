@@ -6,6 +6,7 @@
     <link rel='stylesheet' href='{{ url_for("static", filename="dialog.css") }}' />
     <script type="text/javascript">
       var pipeline_data_url = "{{ url_for('main.pipeline_data') }}";
+      var static_webui = false;
       var cancel_url = "{{ url_for('main.cancel') }}";
       var cancel_filtered_url = "{{ url_for('main.cancel_filtered') }}";
     </script>
