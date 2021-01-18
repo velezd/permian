@@ -9,7 +9,7 @@ function toggle_filter() {
     // Restore cancel tesplan buttons
     $('.btn-cancel-plan').each(function(i, button) {
         button.innerText = 'Cancel plan';
-        button.onclick = function() {cancel_run(button.id)};
+        button.onclick = function() {cancel_plan(button.id)};
     });
 }
 
