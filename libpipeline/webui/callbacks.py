@@ -65,6 +65,7 @@ def render_static(pipeline):
     webui_url = pipeline.webUI.baseurl
     webui_path = pipeline.settings.get('WebUI', 'static_webui_dir')
     static_dir = path.join(webui_path, 'static')
+    index_path = path.join(webui_path, 'index.html')
 
     # Create static WebUI directory
     if not path.exists(webui_path):
@@ -120,4 +121,5 @@ def render_static(pipeline):
     newElement = head[0].newChild(None, 'script', script_content)
     newElement.newProp('type', 'text/javascript')
 
-    doc.htmlSaveFile(path.join(webui_path, 'index.html'))
+    doc.htmlSaveFile(index_path)
+    hooks.static_WebUI_rendered(pipeline, index_path)

@@ -17,3 +17,9 @@ def WebUI_started(webUI):
     WebUI is running and ready to accept requests
     """
     pass
+
+@define_hook
+def static_WebUI_rendered(pipeline, path):
+    """
+    Static WebUI has been rendered for the pipeline in the provided path.
+    """

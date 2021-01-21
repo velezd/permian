@@ -3,10 +3,28 @@ import requests
 import json
 
 from ..api.hooks import threaded_callback_on
-from ...webui.hooks import WebUI_started
+from ...webui.hooks import WebUI_started, static_WebUI_rendered
 
 
 LOGGER = logging.getLogger(__name__)
+
+def set_webui_link_description(settings, event, URL, is_artifact=False):
+    build_num = settings.get('jenkins', 'build_num')
+    build_url = f'{settings.get("jenkins", "url")}/job/{settings.get("jenkins", "job_name")}/{build_num}'
+    submit_url = f'{build_url}/configSubmit'
+    artifact_baseurl = f'{build_url}/artifact'
+    if is_artifact:
+        URL = f'{artifact_baseurl}/{URL}'
+    payload = {
+        'displayName': f'#{build_num}: {event}',
+        'description': f'<a href="{URL}">WebUI</a>',
+    }
+
+    LOGGER.debug(f'Setting jenkins build info: {submit_url}; {str(payload)}')
+    response = requests.post(submit_url, data={'Submit': 'save', 'json': json.dumps(payload)},
+                             auth=(settings.get('jenkins', 'username'), settings.get('jenkins', 'password')))
+    if response.status_code != 200:
+        LOGGER.error(f'Can\'t set jenkins build name and description: {response.status_code}: {response.text}')
 
 
 @threaded_callback_on(WebUI_started)
@@ -20,16 +38,7 @@ def set_jenkins_build_info(webUI):
     if not required_jenkins_settings(settings):
         return
 
-    build_num = settings.get('jenkins', 'build_num')
-    url = f'{settings.get("jenkins", "url")}/job/{settings.get("jenkins", "job_name")}/{build_num}/configSubmit'
-    payload = {'displayName': f'#{build_num}: {str(webUI.pipeline.event)}',
-               'description': f'WebUI: <a href="{webUI.baseurl}">{webUI.baseurl}</a>'}
-
-    LOGGER.debug(f'Setting jenkins build info: {url}; {str(payload)}')
-    response = requests.post(url, data={'Submit': 'save', 'json': json.dumps(payload)},
-                             auth=(settings.get('jenkins', 'username'), settings.get('jenkins', 'password')))
-    if response.status_code != 200:
-        LOGGER.error(f'Can\'t set jenkins build name and description: {response.status_code}: {response.text}')
+    set_webui_link_description(settings, webUI.pipeline.event, webUI.baseurl)
 
 
 def required_jenkins_settings(settings):
@@ -38,3 +47,17 @@ def required_jenkins_settings(settings):
         return all([ settings.get('jenkins', setting) != '' for setting in ['url', 'username', 'password', 'job_name', 'build_num'] ])
     except KeyError:
         return False
+
+
+@threaded_callback_on(static_WebUI_rendered)
+def set_jenkins_build_info_static_webui(pipeline, path):
+    """ 
+    This is hook callback reacting on WebUI_started.
+    Sets jenkins build display_name and description to event name and link to webUI
+    """
+    settings = pipeline.settings
+
+    if not required_jenkins_settings(settings):
+        return
+
+    set_webui_link_description(settings, pipeline.event, path, is_artifact=True)
