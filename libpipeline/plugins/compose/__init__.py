@@ -19,7 +19,9 @@ class ComposeEvent(Event):
         super().__init__(type, compose=compose, **kwargs)
 
     def __str__(self):
-        return f"Compose {self.compose.id}"
+        label_part = f" ({self.compose.label.split('-')[0]})" if self.compose.label else ""
+        short_type = self.type.split('.')[-1]
+        return f"{self.compose.id}{label_part} {short_type}"
 
 @api.events.register_structure('compose')
 class ComposeStructure():

@@ -16,8 +16,10 @@ def MockProductmdCompose(location):
     instance = create_autospec(productmd.compose.Compose)(location)
     if '.n.' in location:
         instance.info.compose.type = "nightly"
+        instance.info.compose.label = None
     else:
         instance.info.compose.type = "production"
+        instance.info.compose.label = "Hello-3.14"
     return instance
 
 class MockUrlopen():
@@ -128,3 +130,11 @@ class TestEventCompose(unittest.TestCase):
     def test_custom_event_type(self):
         event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2', '--event-type', 'compose.foo.bar'])[1])
         self.assertEqual(event.type, 'compose.foo.bar')
+
+    def test_str_label(self):
+        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2', '--event-type', 'compose.foo.bar.baz'])[1])
+        self.assertEqual(str(event), 'RHEL-8.3.0-20200701.2 (Hello) baz')
+
+    def test_str_nolabel(self):
+        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.n.2', '--event-type', 'compose.foo.bar.baz'])[1])
+        self.assertEqual(str(event), 'RHEL-8.3.0-20200701.n.2 baz')
