@@ -36,7 +36,7 @@ class TestEventFactory(unittest.TestCase):
         self.assertEqual(self.event.other['value'], "42")
 
     def test_format_branch_spec(self):
-        branch = self.event.format_branch_spec('Answer is {other[value]}')
+        branch = self.event.format_branch_spec('Answer is {{other["value"]}}')
         self.assertEqual(branch, 'Answer is 42')
 
 class TestEventFactoryTypes(unittest.TestCase):

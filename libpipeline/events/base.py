@@ -1,6 +1,6 @@
 import functools
+import jinja2
 from ..caserunconfiguration import CaseRunConfiguration, ConfigurationsList, CaseRunConfigurationsList
-from tclib.expressions import eval_bool
 #from ..exceptions import UnknownEventSubTypeExpression
 
 from .functions import dotted_startswith
@@ -28,7 +28,7 @@ class Event():
             self.structures[structure_name] = EventStructuresFactory.make(structure_name, fields)
 
     def format_branch_spec(self, fmt):
-        return fmt.format(**self.structures)
+        return jinja2.Template(fmt).render(event=self, **self.structures)
 
     def generate_caseRunConfigurations(self, library, settings):
         """ Generates caseRunConfigurations for testcases in library relevant to this event
