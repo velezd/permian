@@ -10,3 +10,5 @@ test.integration:
 	./run_integration_tests.sh
 doc:
 	make -C doc html
+clean:
+	rm -r *.log *.dump logs xunit-*.xml index.html pipeline_data static || :
