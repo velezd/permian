@@ -77,6 +77,11 @@ class ComposeStructure():
     def prerelease(self):
         if self._prerelease is not None:
             return self._prerelease
+        if self.label is None:
+            # The compose has no label set. Consider it as pre-release.
+            # This will cause issues with nightly composes which are built
+            # late in the cycle containing RC-like content.
+            return False
         return not self.label.startswith('RC-')
 
     @property
