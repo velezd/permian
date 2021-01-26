@@ -1,0 +1,12 @@
+reporter 2 - testrun "run_subset plan 2" started
+reporter 2 - result partial testing plugin case 2-2 - queued, None, False
+reporter 2 - result partial testing plugin case 3-2 - queued, None, False
+reporter 2 - result partial testing plugin case 2-2 - running, None, False
+reporter 2 - result partial testing plugin case 3-2 - running, None, False
+reporter 2 - result partial testing plugin case 2-2 - running, PASS, False
+reporter 2 - result final testing plugin case 2-2 - complete, PASS, True
+reporter 2 - finished testcase "testing plugin case 2" in "run_subset plan 2"
+reporter 2 - result partial testing plugin case 3-2 - running, FAIL, False
+reporter 2 - result final testing plugin case 3-2 - complete, FAIL, True
+reporter 2 - finished testcase "testing plugin case 3" in "run_subset plan 2"
+reporter 2 - testrun "run_subset plan 2" finished

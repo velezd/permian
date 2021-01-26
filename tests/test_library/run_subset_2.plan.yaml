@@ -1,0 +1,22 @@
+name: run_subset plan 2
+description: |
+  Testplan used for testing run_subset command containing multiple cases and configurations
+point_person: nobody
+artifact_type: test
+execute_on:
+  - filter: "tp.name in event.selected_testplans"
+verified_by:
+  test_cases:
+    direct_list:
+      - testing plugin case 2
+      - testing plugin case 3
+reporting:
+  - type: test
+    data:
+      reporter: 2
+      filename: 'plan2_report1.txt'
+configurations:
+  - test: 2
+    some: foo
+  - test: 3
+    some: bar
