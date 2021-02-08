@@ -110,9 +110,16 @@ class RunSubsetEvent(Event):
     # have to be handled by overloading.
     def __getattr__(self, attrname):
         try:
-            return super().__getattr__(attrname)
+            # Try to get structure from this event first. If the structure
+            # exists, return it.
+            value = super().__getattr__(attrname)
+            if value is not None:
+                return value
         except AttributeError:
-            return getattr(self.original_event, attrname)
+            pass
+        # No such structure or attribute is in this event, try to get it from
+        # original event.
+        return getattr(self.original_event, attrname)
 
     def __str__(self):
         return f'(subset) {self.original_event}'
