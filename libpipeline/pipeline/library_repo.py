@@ -99,7 +99,7 @@ def clone(target_directory, event, settings):
         try:
             LOGGER.info(f'Attempting to clone branch: "{branchName}" from: "{repoURL}"')
             with open('/dev/null', 'w') as dev_null:
-                subprocess.run(['git', 'clone', '-b', branchName, repoURL, target_directory], stderr=dev_null, check=True)
+                subprocess.run(['git', 'clone', '--depth', '1', '-b', branchName, repoURL, target_directory], stderr=dev_null, check=True)
             break
         except subprocess.CalledProcessError:
             continue
