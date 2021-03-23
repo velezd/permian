@@ -23,6 +23,10 @@ reporting:
     data:
       reporter: 7
       filename: 'plan6_report2.txt'
+  - type: test
+    data:
+      reporter: 8
+      filename: 'plan6_report3.txt'
 configurations:
   - test: 4
   - test: 5
