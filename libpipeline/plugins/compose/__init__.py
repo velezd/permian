@@ -80,9 +80,12 @@ class ComposeStructure():
         if self._prerelease is not None:
             return self._prerelease
         if self.label is None:
-            # The compose has no label set. Consider it as pre-release.
+            # The compose has no label set. Do not consider it as pre-release.
             # This will cause issues with nightly composes which are built
-            # late in the cycle containing RC-like content.
+            # prior the RC compose. This is however safer approach and as
+            # there's no simple way to implement this, the information about
+            # prerelase needs to be passed from external source when label is
+            # missing.
             return False
         return not self.label.startswith('RC-')
 
