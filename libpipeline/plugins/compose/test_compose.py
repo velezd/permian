@@ -46,6 +46,7 @@ class TestEventCompose(unittest.TestCase):
         self.assertIsNone(event.compose.parent_product)
         self.assertIsNone(event.compose.parent_version)
         self.assertFalse(event.compose.nightly)
+        self.assertTrue(event.compose.prerelease)
         self.assertFalse(event.compose.layered)
         self.assertEqual(event.compose.location, 'http://example.com/here/RHEL-8.3.0-20200701.2')
 
@@ -62,6 +63,7 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.parent_product, 'RHEL')
         self.assertEqual(event.compose.parent_version, '9.2.1')
         self.assertTrue(event.compose.nightly)
+        self.assertFalse(event.compose.prerelease)
         self.assertTrue(event.compose.layered)
         self.assertEqual(event.compose.location, 'http://example.com/here/Supp-9.2.1-RHEL-8-20200811.n.5')
 
@@ -71,6 +73,7 @@ class TestEventCompose(unittest.TestCase):
                                                                '--version=1.3.2',
                                                                '--location=test/location',
                                                                '--nightly=1',
+                                                               '--prerelease=false',
                                                                '--layered=true',
                                                                '--parent-product=TEST',
                                                                '--parent-version=7.2.0'])[1])
@@ -85,6 +88,7 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.parent_product, 'TEST')
         self.assertEqual(event.compose.parent_version, '7.2.0')
         self.assertTrue(event.compose.nightly)
+        self.assertFalse(event.compose.prerelease)
         self.assertTrue(event.compose.layered)
         self.assertEqual(event.compose.location, 'test/location')
 
@@ -106,6 +110,7 @@ class TestEventCompose(unittest.TestCase):
                                                                '--version=1.3.2',
                                                                '--location=test/location',
                                                                '--nightly=no',
+                                                               '--prerelease=yes',
                                                                '--layered=no',
                                                                '--parent-product=TEST',
                                                                '--parent-version=7.2.0'])[1])
@@ -120,6 +125,7 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.parent_product, 'TEST')
         self.assertEqual(event.compose.parent_version, '7.2.0')
         self.assertFalse(event.compose.nightly)
+        self.assertTrue(event.compose.prerelease)
         self.assertFalse(event.compose.layered)
         self.assertEqual(event.compose.location, 'test/location')
 

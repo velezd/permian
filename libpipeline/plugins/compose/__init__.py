@@ -133,6 +133,8 @@ def compose_command(base_parser, args):
                         help='URL to compose location')
     parser.add_argument('--nightly', type=bool_argument, action=ToPayload,
                         help='Is compose nighlty, true/false')
+    parser.add_argument('--prerelease', type=bool_argument, action=ToPayload,
+                        help='Is compose prerelease, true/false')
     parser.add_argument('--layered', type=bool_argument, action=ToPayload,
                         help='Is compose layered, true/false')
     parser.add_argument('--parent-product', action=ToPayload,
