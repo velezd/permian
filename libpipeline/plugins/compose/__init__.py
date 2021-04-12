@@ -9,8 +9,10 @@ import json
 from .. import api
 from ...events.base import Event, payload_override
 from ...cli.parser import bool_argument, ToPayload, AppendToPayload
+from ..beaker import list_tagged_composes
 
 from .compose_info import ComposeInfo
+from .compose_diff import ComposeDiff
 
 
 @api.events.register('compose')
@@ -114,6 +116,42 @@ class ComposeStructure():
     @property
     def composeinfo(self):
         return ComposeInfo(self.location, self.location_http or self.location)
+
+    def previous(self, beaker_tag=None):
+        if beaker_tag is not None:
+            tagget_composes = list_tagged_composes(f'{self.product}-{self.major}.{self.minor}._-%', (beaker_tag,))
+            if tagget_composes is None:
+                return None
+
+            # Create list of compose ids add tested compose id and sort
+            compose_list = [ c['distro_name'] for c in tagget_composes ]
+            if self.id not in compose_list:
+                compose_list.append(self.id)
+            compose_list = sorted(compose_list)
+
+            try:
+                previous_compose_id = compose_list[compose_list.index(self.id)-1]
+                # tested compose or latest compose in the list is not valid previous compose
+                if previous_compose_id != self.id and previous_compose_id != compose_list[-1]:
+                    return ComposeStructure(previous_compose_id)
+                else:
+                    return None
+            except IndexError:
+                return None
+
+        raise TypeError('previous requires at least one argument from (beaker_tag)')
+
+    @property
+    def components(self):
+        _components = set()
+        for variant in self.composeinfo.metadata.rpms.rpms.values():
+            for architecture in variant.values():
+                for comp in architecture.keys():
+                    _components.add(comp)
+        return _components
+
+    def diff(self, other_compose):
+        return ComposeDiff(self, other_compose)
 
 
 @api.cli.register_command_parser('compose')

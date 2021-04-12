@@ -5,6 +5,8 @@ import productmd
 
 from libpipeline.cli.factory import CliFactory
 from libpipeline.events.factory import EventFactory
+from libpipeline.plugins.compose import ComposeStructure
+from libpipeline.plugins.compose.compose_diff import ComposeDiff
 
 class MockComposeResponse():
     def __init__(self, url):
@@ -144,3 +146,59 @@ class TestEventCompose(unittest.TestCase):
     def test_str_nolabel(self):
         event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.n.2', '--event-type', 'compose.foo.bar.baz'])[1])
         self.assertEqual(str(event), 'RHEL-8.3.0-20200701.n.2 baz')
+
+
+def mock_list_tagged_composes(pattern, tags):
+    return [{'distro_id': 1, 'distro_tags': tags, 'distro_version': 'RedHatEnterpriseLinux8.2', 'distro_name': 'RHEL-8.2.0-20200404.0'},
+            {'distro_id': 2, 'distro_tags': tags, 'distro_version': 'RedHatEnterpriseLinux8.2', 'distro_name': 'RHEL-8.2.0-20200401.0'},
+            {'distro_id': 3, 'distro_tags': tags, 'distro_version': 'RedHatEnterpriseLinux8.2', 'distro_name': 'RHEL-8.2.0-20200331.0'},
+            {'distro_id': 4, 'distro_tags': tags, 'distro_version': 'RedHatEnterpriseLinux8.2', 'distro_name': 'RHEL-8.2.0-20200310.0'}]
+
+class TestComposePrevious(unittest.TestCase):
+    @patch('libpipeline.plugins.compose.list_tagged_composes', new=mock_list_tagged_composes)
+    def test_previous_compose_exists(self):
+        compose = ComposeStructure('RHEL-8.2.0-20200402.0')
+        self.assertEqual(compose.previous(beaker_tag='test').id, 'RHEL-8.2.0-20200401.0')
+
+    @patch('libpipeline.plugins.compose.list_tagged_composes', new=mock_list_tagged_composes)
+    def test_previous_compose_exists_latest(self):
+        compose = ComposeStructure('RHEL-8.3.0-20210402.d.1')
+        self.assertEqual(compose.previous(beaker_tag='test').id, 'RHEL-8.2.0-20200404.0')
+
+    @patch('libpipeline.plugins.compose.list_tagged_composes', new=mock_list_tagged_composes)
+    def test_previous_compose_none_current_in_list(self):
+        compose = ComposeStructure('RHEL-8.2.0-20200310.0')
+        self.assertEqual(compose.previous(beaker_tag='test'), None)
+
+    @patch('libpipeline.plugins.compose.list_tagged_composes', new=mock_list_tagged_composes)
+    def test_previous_compose_none(self):
+        compose = ComposeStructure('RHEL-8.2.0-20200210.0')
+        self.assertEqual(compose.previous(beaker_tag='test'), None)
+
+    @patch('libpipeline.plugins.compose.list_tagged_composes')
+    def test_previous_compose_no_relevant_composes(self, list_tagged_mock):
+        list_tagged_mock.return_value = None
+        compose = ComposeStructure('RHEL-8.2.0-20200402.0')
+        self.assertEqual(compose.previous(beaker_tag='test'), None)
+        list_tagged_mock.assert_called_once_with('RHEL-8.2._-%', ('test',))
+
+
+class ComposeTest1():
+    components = {'anaconda-0:29.19.2.17-1.el8.src',
+                  'python-blivet-1:3.1.0-20.el8.src'}
+
+class ComposeTest2():
+    components = {'anaconda-0:29.21.1.5-1.el8.src',
+                  'python-blivet-1:3.1.0-20.el8.src',
+                  'grub2-1:2.02-81.el8.src'}
+
+class TestComposeDiff(unittest.TestCase):
+    def test_compose_diff(self):
+        diff = ComposeDiff(ComposeTest1(), ComposeTest2())
+        self.assertEqual(diff.component_names, {'anaconda', 'grub2'})
+
+    def test_compose_diff_no_compose(self):
+        with self.assertLogs() as cm:
+            diff = ComposeDiff(ComposeTest1(), None)
+            self.assertEqual(diff.component_names, {'anaconda', 'python-blivet'})
+        self.assertTrue(cm.output[0].startswith('WARNING:libpipeline.plugins.compose.compose_diff:'))
