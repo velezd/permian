@@ -1,5 +1,12 @@
 from .factory import EventStructuresFactory
 
+@EventStructuresFactory.register('product')
+class ProductStructure():
+    def __init__(self, name, major, minor):
+        self.name = name
+        self.major = major
+        self.minor = minor
+
 @EventStructuresFactory.register('other')
 class OtherStructure():
     def __init__(self, **kwargs):

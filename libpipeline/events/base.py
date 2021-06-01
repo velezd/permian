@@ -28,7 +28,7 @@ class Event():
             self.structures[structure_name] = EventStructuresFactory.make(structure_name, fields)
 
     def format_branch_spec(self, fmt):
-        return jinja2.Template(fmt).render(event=self, **self.structures)
+        return jinja2.Template(fmt).render(event=self)
 
     def generate_caseRunConfigurations(self, library, settings):
         """ Generates caseRunConfigurations for testcases in library relevant to this event

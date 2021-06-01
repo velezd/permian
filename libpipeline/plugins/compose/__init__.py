@@ -10,6 +10,7 @@ from .. import api
 from ...events.base import Event, payload_override
 from ...cli.parser import bool_argument, ToPayload, AppendToPayload
 from ..beaker import list_tagged_composes
+from libpipeline.events.structures.builtin import ProductStructure
 
 from .compose_info import ComposeInfo
 from .compose_diff import ComposeDiff
@@ -153,6 +154,12 @@ class ComposeStructure():
     def diff(self, other_compose):
         return ComposeDiff(self, other_compose)
 
+    def to_product(self):
+        return ProductStructure(
+            self.product,
+            self.major,
+            self.minor,
+        )
 
 @api.cli.register_command_parser('compose')
 def compose_command(base_parser, args):
