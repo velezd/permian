@@ -34,5 +34,8 @@ class ManualWorkflow(IsolatedWorkflow):
     def execute(self):
         self.reportResult(Result('DNF', None, True))
 
+    def dry_execute(self):
+        self.reportResult(Result('complete', 'PASS', True))
+
     def displayStatus(self):
         return 'Nothing to do'
