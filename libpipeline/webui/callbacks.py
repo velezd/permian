@@ -122,4 +122,5 @@ def render_static(pipeline):
     newElement.newProp('type', 'text/javascript')
 
     doc.htmlSaveFile(index_path)
+    doc.free()
     hooks.static_WebUI_rendered(pipeline, index_path)
