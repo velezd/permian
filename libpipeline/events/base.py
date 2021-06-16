@@ -1,5 +1,7 @@
 import functools
 import jinja2
+import json
+from hashlib import sha256
 from ..caserunconfiguration import CaseRunConfiguration, ConfigurationsList, CaseRunConfigurationsList
 #from ..exceptions import UnknownEventSubTypeExpression
 
@@ -26,6 +28,8 @@ class Event():
         self.structures = {}
         for structure_name, fields in event_structures.items():
             self.structures[structure_name] = EventStructuresFactory.make(structure_name, fields)
+
+        self.id = sha256(f'{self.type}-{json.dumps(event_structures, sort_keys=True)}'.encode()).hexdigest()
 
     def format_branch_spec(self, fmt):
         return jinja2.Template(fmt).render(event=self)
