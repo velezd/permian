@@ -1,0 +1,18 @@
+name: fedoraCI testplan 1
+description: Testplan for testing fedora_ci_msg report sender
+point_person: zveleba@redhat.com
+artifact_type: test
+execute_on:
+  - filter: "tp.name in event.selected_testplans"
+parent_plan:
+configurations:
+  - conf: 1
+  - conf: 2
+verified_by:
+  test_cases:
+    direct_list:
+      - testing plugin case 1
+acceptance_criteria:
+  test_cases:
+    direct_list:
+      - testing plugin case 1
