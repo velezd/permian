@@ -30,7 +30,7 @@ class ComposeEvent(Event):
 class ComposeStructure():
     id_regex = re.compile(r'(?P<product>\w+)-(?P<version>(?P<major>\d+)(\.(?P<minor>\d+))?(\.(?P<qr>\d))?)(-(?P<parent>\w+)-\d)?-(?P<date>\d+)(\.(?P<flag>.))?\.(?P<spin>\d+)')
 
-    def __init__(self, id, product=None, version=None, major=None, minor=None, qr=None, date=None, respin=None, location=None, location_http=None, nightly=None, development=None, label=None, prerelease=None, tags=None, new_tag=None, layered=None, parent_product=None, parent_version=None, available_in=None):
+    def __init__(self, id, product=None, version=None, major=None, minor=None, qr=None, date=None, respin=None, location=None, location_http=None, compose_type=None, nightly=None, development=None, label=None, prerelease=None, tags=None, new_tag=None, layered=None, parent_product=None, parent_version=None, available_in=None):
         self.id = id
         self._matches = re.match(self.id_regex, self.id)
         self.product = product or self._matches.group('product')
@@ -45,6 +45,7 @@ class ComposeStructure():
             self.qr = None
         self._location = location
         self.location_http = location_http
+        self._type = compose_type
         self._nightly = nightly
         self.development = development if development is not None else self._matches.group('flag') == 'd'
         self._label = label
@@ -67,10 +68,16 @@ class ComposeStructure():
             raise Exception('Could not find compose with ID %s via %s, error %s' % (self.id, self.settings.get('compose', 'location'), excp.code))
 
     @property
+    def type(self):
+        if self._type is not None:
+            return self._type
+        return self.composeinfo.metadata.info.compose.type
+
+    @property
     def nightly(self):
         if self._nightly is not None:
             return self._nightly
-        return self.composeinfo.metadata.info.compose.type == "nightly"
+        return self.type == "nightly"
 
     @property
     def label(self):
@@ -179,6 +186,8 @@ def compose_command(base_parser, args):
                         help='Product version quarterly release part only')
     parser.add_argument('--location', action=ToPayload,
                         help='URL to compose location')
+    parser.add_argument('--compose-type', action=ToPayload,
+                        help='Type of compose eg. production, nightly, testing...')
     parser.add_argument('--nightly', type=bool_argument, action=ToPayload,
                         help='Is compose nighlty, true/false')
     parser.add_argument('--prerelease', type=bool_argument, action=ToPayload,
