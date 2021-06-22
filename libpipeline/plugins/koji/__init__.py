@@ -11,6 +11,7 @@ from libpipeline.events.structures.builtin import ProductStructure
 from libpipeline.cli.parser import bool_argument, ToPayload, AppendToPayload
 
 from libpipeline.plugins.compose import ComposeStructure
+from libpipeline.plugins.beaker import BeakerCompose
 
 TAG_REGEXPS = (
     # product-1.2.3-state
@@ -79,6 +80,9 @@ class KojiBuild():
         compose_id = productmd.compose.Compose(compose_path).info.compose.id
         return ComposeStructure(compose_id, location=compose_path)
 
+    def to_beakerCompose(self):
+        return BeakerCompose.from_compose(self.to_compose())
+
     def to_product(self):
         parsed_tag = parse_koji_tag(self.new_tag)
         return ProductStructure(
@@ -105,6 +109,8 @@ def koji_build_tag_command(base_parser, args):
     # TODO: fix ToPayload to work with new-tag
     parser.add_argument('new_tag', action=ToPayload,
                         help='New tag that was added to the build')
+    parser.add_argument('--composes-baseurl', action=ToPayload,
+                        help='Override URL where composes from brew builds are stored')
     parser.add_argument('--event-type', default='koji.build.tag')
     parser.add_argument('--build-id', type=int, action=ToPayload,
                         help='Override build id')
