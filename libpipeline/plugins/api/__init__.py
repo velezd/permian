@@ -28,6 +28,7 @@ from . import (
     cli,
     events,
     hooks,
+    issueanalyzer,
     reportsenders,
     webui,
     workflows,

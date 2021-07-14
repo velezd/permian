@@ -10,6 +10,8 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
 RUN yum -y install make python3-pylint diffutils
 # tclib deps
 RUN yum -y install python3-yaml
+# bugzilla plugin deps
+RUN yum -y install python3-bugzilla
 
 # fetch other libraries and tools
 WORKDIR /root
