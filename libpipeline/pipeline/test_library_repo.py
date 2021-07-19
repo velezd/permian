@@ -25,15 +25,15 @@ def make_git_testrepo(src_directory):
     numprefix = re.compile('^([0-9]+-)?')
     git_directory = re.sub('\.src$', '.git', src_directory)
     os.mkdir(git_directory)
-    subprocess.run(['git', 'init'], cwd=git_directory, check=True)
+    subprocess.run(['git', 'init', '-q'], cwd=git_directory, check=True)
     for srcbranchdir in sorted(os.listdir(src_directory)):
         branch = numprefix.sub('', srcbranchdir)
-        subprocess.run(['git', 'checkout', '-b', branch], cwd=git_directory, check=True)
+        subprocess.run(['git', 'checkout', '-q', '-b', branch], cwd=git_directory, check=True)
         subprocess.run(['cp', '-rT', os.path.join(src_directory, srcbranchdir), git_directory], check=True)
         files = os.listdir(git_directory)
         subprocess.run(['git', 'add'] + files, cwd=git_directory, check=True)
         message = f"Create branch {branch}"
-        subprocess.run(['git', 'commit', '-m', message], cwd=git_directory) # don't check commit result as there may not be any changes
+        subprocess.run(['git', 'commit', '-q', '--allow-empty', '-m', message], cwd=git_directory, check=True) # use --allow-empty to make commit even if there are no changes
     return git_directory
 
 def mocked_strategy(*args, **kwargs):
