@@ -97,5 +97,4 @@ class TestWebUIDebug(unittest.TestCase):
             self.webUI = WebUI(self)
             self.webUI.start()
             self.webUI.waitUntilStarted()
-            print(self.webUI.baseurl)
             time.sleep(30)
