@@ -3,8 +3,11 @@ import urllib
 
 class ComposeInfo():
     def __init__(self, location, location_http):
-        self.location = location
         self.metadata = productmd.compose.Compose(location_http)
+        if self.metadata.compose_path != location_http and self.metadata.compose_path.endswith('/compose'):
+            # if location_http missed /compose, the location needs it as well
+            location = '/'.join([location, 'compose'])
+        self.location = location
         self._treeinfos = {}
 
     def tree_url(self, variant, architecture):
