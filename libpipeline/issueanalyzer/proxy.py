@@ -22,8 +22,8 @@ class IssueAnalyzerProxy():
         cls.issue_analyzers.add(issue_analyzer)
         return issue_analyzer
 
-    def __init__(self, pipeline):
-        self.pipeline = pipeline
+    def __init__(self, settings):
+        self.settings = settings
         self._issue_cache = {}
         self._issue_cache_lock = threading.Lock()
 

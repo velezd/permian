@@ -3,6 +3,7 @@ import logging
 from ..exceptions import StateChangeError
 from ..workflows.factory import WorkflowFactory
 from ..reportsenders.factory import ReportSenderFactory
+from ..issueanalyzer.proxy import IssueAnalyzerProxy
 from ..caserunconfiguration import CaseRunConfigurationsList
 from ..result import Result
 
@@ -19,6 +20,7 @@ class TestRuns():
         self.event = event
         self.settings = settings
         self.caseRunConfigurations = []
+        self.issueAnalyzerProxy = IssueAnalyzerProxy(self.settings)
         """List of CaseRunConfigurations taking part in this execution"""
         self.populateCaseRunConfigurations(library, event, settings)
         self.assignWorkflows(event, settings)

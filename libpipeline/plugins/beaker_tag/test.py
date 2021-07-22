@@ -4,6 +4,7 @@ from libpipeline.plugins.beaker_tag import BeakerTagReportSender
 from libpipeline.settings import Settings
 from libpipeline.caserunconfiguration import CaseRunConfiguration, CaseRunConfigurationsList
 from libpipeline.result import Result
+from libpipeline.issueanalyzer.proxy import IssueAnalyzerProxy
 from tclib import library
 
 
@@ -43,7 +44,9 @@ class TestBeakerTagReportSender(unittest.TestCase):
                                                        self.library.testplans['Beaker tag testplan 2'].reporting[0],
                                                        self.caseRunConfigurations,
                                                        DummyEvent1(),
-                                                       self.settings)
+                                                       self.settings,
+                                                       IssueAnalyzerProxy(self.settings),
+                                                       )
             crcUpdate = self.crc.copy()
             crcUpdate.result = Result(state='complete', result='PASS', final=True)
             self.assertTrue(self.report_sender.resultUpdate(crcUpdate))
@@ -63,7 +66,9 @@ class TestBeakerTagReportSender(unittest.TestCase):
                                                        self.library.testplans['Beaker tag testplan 2'].reporting[0],
                                                        self.caseRunConfigurations,
                                                        DummyEvent1(),
-                                                       self.settings_not_dry)
+                                                       self.settings_not_dry,
+                                                       IssueAnalyzerProxy(self.settings_not_dry),
+                                                       )
             crcUpdate = self.crc.copy()
             crcUpdate.result = Result(state='complete', result='PASS', final=True)
             self.assertTrue(self.report_sender.resultUpdate(crcUpdate))
@@ -80,7 +85,9 @@ class TestBeakerTagReportSender(unittest.TestCase):
                                                        self.library.testplans['Beaker tag testplan 1'].reporting[0],
                                                        self.caseRunConfigurations,
                                                        DummyEvent1(),
-                                                       self.settings)
+                                                       self.settings,
+                                                       IssueAnalyzerProxy(self.settings),
+                                                       )
             crcUpdate = self.crc.copy()
             crcUpdate.result = Result(state='complete', result='PASS', final=True)
             self.assertTrue(self.report_sender.resultUpdate(crcUpdate))
@@ -96,7 +103,9 @@ class TestBeakerTagReportSender(unittest.TestCase):
                                                        self.library.testplans['Beaker tag testplan 1'].reporting[0],
                                                        self.caseRunConfigurations,
                                                        DummyEvent1(),
-                                                       self.settings)
+                                                       self.settings,
+                                                       IssueAnalyzerProxy(self.settings),
+                                                       )
             crcUpdate = self.crc.copy()
             crcUpdate.result = Result(state='complete', result='FAIL', final=True)
             self.assertTrue(self.report_sender.resultUpdate(crcUpdate))
@@ -112,7 +121,9 @@ class TestBeakerTagReportSender(unittest.TestCase):
                                                        self.library.testplans['Beaker tag testplan 1'].reporting[0],
                                                        self.caseRunConfigurations,
                                                        DummyEvent2(),
-                                                       self.settings)
+                                                       self.settings,
+                                                       IssueAnalyzerProxy(self.settings),
+                                                       )
             crcUpdate = self.crc.copy()
             crcUpdate.result = Result(state='complete', result='PASS', final=True)
             self.assertTrue(self.report_sender.resultUpdate(crcUpdate))

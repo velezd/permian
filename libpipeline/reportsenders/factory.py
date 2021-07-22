@@ -60,9 +60,9 @@ class ReportSenderFactory():
                 reportSenderClass = cls._get_fallback(reporting.type, None, None)
                 if reporting.group_by:
                     for values, groupCrcList in crcList.by_configuration(*reporting.group_by).items():
-                        yield reportSenderClass(testPlan, reporting, groupCrcList.copy(), testRuns.event, testRuns.settings, dict(zip(reporting.group_by, values)))
+                        yield reportSenderClass(testPlan, reporting, groupCrcList.copy(), testRuns.event, testRuns.settings, testRuns.issueAnalyzerProxy, dict(zip(reporting.group_by, values)))
                 else:
-                    yield reportSenderClass(testPlan, reporting, crcList.copy(), testRuns.event, testRuns.settings)
+                    yield reportSenderClass(testPlan, reporting, crcList.copy(), testRuns.event, testRuns.settings, testRuns.issueAnalyzerProxy)
 
     @classmethod
     def _get_additional(cls, additional_file, library):

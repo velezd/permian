@@ -33,7 +33,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
     :param settings: Pipeline settings object
     :type settings: libpipeline.settings.Settings
     """
-    def __init__(self, testplan, reporting_structure, caseRunConfigurations, event, settings, group=None):
+    def __init__(self, testplan, reporting_structure, caseRunConfigurations, event, settings, issueAnalyzerProxy, group=None):
         super().__init__()
         self.testplan = testplan
         self.reporting = reporting_structure
@@ -42,6 +42,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         self.event = event
         self.settings = settings
         self.dry_run = self.settings.getboolean('reportSenders', 'dry_run')
+        self.issueAnalyzerProxy = issueAnalyzerProxy
         self.group=group
         self.resultsQueue = queue.Queue()
         self.exception = None
