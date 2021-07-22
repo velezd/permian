@@ -3,7 +3,7 @@ import queue
 import abc
 import logging
 
-from ..caserunconfiguration import CaseRunConfiguration
+from ..caserunconfiguration import CaseRunConfiguration, CaseRunConfigurationsList
 from ..exceptions import UnexpectedState
 from ..exception_dump import dump_exception
 
@@ -109,6 +109,9 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         localCaseRunConfiguration.logs = crcUpdate.logs.copy()
 
         if crcUpdate.result.final:
+            if self.reporting.data is None or self.reporting.data.get('submit_issues', True):
+                for issue in self.issuesFor([crcUpdate]):
+                    issue.submit()
             self.processFinalResult(crcUpdate)
             # Catch end of test case
             if all([crc.result.final for crc in self.caseRunConfigurations if crcUpdate.testcase == crc.testcase]):
@@ -129,6 +132,30 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         """
         if not self.resultsQueue.empty():
             raise UnexpectedState("The reportSender queue isn't empty.")
+
+    def issuesFor(self, crcList):
+        """
+        Provide issue set for the crcList to find out if the result needs
+        additional review or if no review is necessary as all identified issues
+        are already known.
+
+        :param crcList: CaseRunConfigurations to be inspected registered issue analyzers
+        :type crcList: iterable of CaseRunConfiguration
+        :return: Issues found for provided crcList. Check isComplete property to find out if the set of issues is complete. If not, the CaseRunConfiguration results need to be reviewed.
+        :rtype: IssueSet
+        """
+        return self.issueAnalyzerProxy.analyze(crcList)
+
+    def resultOf(self, caseRunConfigurations):
+        if not isinstance(caseRunConfigurations, CaseRunConfigurationsList):
+            caseRunConfigurations = CaseRunConfigurationsList(caseRunConfigurations)
+        result = caseRunConfigurations.result
+        issueSet = self.issuesFor(caseRunConfigurations)
+        # if there's some issue missing or some issue needs review, use
+        # error state as 'needs-review'
+        if not issueSet.isComplete or issueSet.needsReview:
+            return 'ERROR'
+        return caseRunConfigurations.result
 
     @abc.abstractmethod
     def processPartialResult(self, crc):
