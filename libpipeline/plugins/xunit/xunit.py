@@ -46,3 +46,6 @@ class BaseXunitReportSender(BaseReportSender):
         return self.template.render(testcases=self.caseRunConfigurations.by_testcase(),
                                     reportsender=self,
                                     properties=properties)
+
+    def xunitResultOf(self, caseRunConfigurations):
+        return self.results_map.get(self.resultOf(caseRunConfigurations))

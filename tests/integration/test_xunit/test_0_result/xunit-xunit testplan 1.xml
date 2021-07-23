@@ -9,7 +9,7 @@
             <system-out>
             Configuration: {&#39;initial_delay&#39;: 0.1, &#39;conf&#39;: 1} - Result: complete, FAIL - Links: None ; Configuration: {&#39;initial_delay&#39;: 0.1, &#39;conf&#39;: 2} - Result: complete, FAIL - Links: None ; 
             </system-out>
-            <failure message="Configuration: {&#39;initial_delay&#39;: 0.1, &#39;conf&#39;: 1} - Result: complete, FAIL - Links: None ; Configuration: {&#39;initial_delay&#39;: 0.1, &#39;conf&#39;: 2} - Result: complete, FAIL - Links: None ; " type="failure" />
+            <error message="Configuration: {&#39;initial_delay&#39;: 0.1, &#39;conf&#39;: 1} - Result: complete, FAIL - Links: None ; Configuration: {&#39;initial_delay&#39;: 0.1, &#39;conf&#39;: 2} - Result: complete, FAIL - Links: None ; " type="error" />
         </testcase>
     </testsuite>
 </testsuites>

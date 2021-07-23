@@ -7,6 +7,7 @@
     </properties>
     <testsuite name="{{ reportsender.testplan.name }}" tests="{{ testcases|length - exclude|length }}">
         {%- for tc_name, crcs_list in testcases.items() %}
+        {%- set xunitResult = reportsender.xunitResultOf(crcs_list) %}
         <testcase name="{{ tc_name }}" classname="{{ reportsender.testplan.name }}">
             <properties>
                 {%- for prop_name, prop_value in properties.get(tc_name, {}).items() %}
@@ -16,11 +17,11 @@
             <system-out>
             {{ crcs_list|results_string }}
             </system-out>
-            {%- if reportsender.results_map[crcs_list.result] == 'skipped' %}
+            {%- if xunitResult == 'skipped' %}
             <skipped message="{{ crcs_list|results_string }}" type="skipped" />
-            {%- elif reportsender.results_map[crcs_list.result] == 'failure' %}
+            {%- elif xunitResult == 'failure' %}
             <failure message="{{ crcs_list|results_string }}" type="failure" />
-            {%- elif reportsender.results_map[crcs_list.result] == 'error' %}
+            {%- elif xunitResult == 'error' %}
             <error message="{{ crcs_list|results_string }}" type="error" />
             {%- endif %}
         </testcase>
