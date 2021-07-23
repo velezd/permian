@@ -8,6 +8,8 @@ from ...workflows.isolated import IsolatedWorkflow
 from ...result import Result, STATES, RESULTS, UNSET
 from ...events.base import Event 
 from ...reportsenders.base import BaseReportSender
+from ...issueanalyzer.base import BaseAnalyzer, BaseIssue
+from ...issueanalyzer.issueset import IssueSet
 
 
 LOGGER = logging.getLogger(__name__)
@@ -67,6 +69,13 @@ class TestWorkflow(IsolatedWorkflow):
                     self.log(message, logname)
 
             if self.terminated: break
+            if 'log_content' in step:
+                for logname, content in step['log_content'].items():
+                    self.log(f"Writing message to log: {logname}")
+                    with self.crc.openLogfile(logname, 'w', True) as fo:
+                        fo.write(content)
+
+            if self.terminated: break
             if 'log_file' in step:
                 for logname, log_path in step['log_file'].items():
                     self.log(f"Adding log {logname} pointing to: {log_path}")
@@ -114,10 +123,12 @@ class TestReportSender(BaseReportSender):
             crc.result.state, crc.result.result, crc.result.final))
 
     def processFinalResult(self, crc):
-        self.processing_log_file.write('reporter %s - result final %s-%s - %s, %s, %s\n' % (self.reporting.data.get('reporter', 0),
+        self.processing_log_file.write('reporter %s - result final %s-%s - %s, %s->%s(%r), %s\n' % (self.reporting.data.get('reporter', 0),
             crc.testcase.name,
             crc.configuration.get('test', 0),
-            crc.result.state, crc.result.result, crc.result.final))
+            crc.result.state, crc.result.result,
+            self.resultOf([crc]), self.issuesFor([crc]),
+            crc.result.final))
 
     def processTestRunStarted(self):
         self.processing_log_file.write('reporter %s - testrun "%s" started\n' % (self.reporting.data.get('reporter', 0),
@@ -130,3 +141,37 @@ class TestReportSender(BaseReportSender):
     def processCaseRunFinished(self, testCaseID):
         self.processing_log_file.write('reporter %s - finished testcase "%s" in "%s"\n' % (self.reporting.data.get('reporter', 0),
             testCaseID, self.testplan.name))
+
+class TestIssue(BaseIssue):
+    def __init__(self, settings, uri, report_url, resolved=None):
+        super().__init__(settings)
+        self.test_uri = uri or None
+        self.test_report_url = report_url or None
+        self.test_resolved = resolved in ("1", "t", "True", "true")
+
+    def make(self):
+        return f'new({self.uri or self.report_url})'
+
+    def update(self):
+        pass
+
+    def _lookup(self):
+        return self.test_uri
+
+    @property
+    def resolved(self):
+        return self.test_resolved
+
+    @property
+    def report_url(self):
+        return self.test_report_url
+
+@api.issueanalyzer.register
+class TestIssueAnalyzer(BaseAnalyzer):
+    @staticmethod
+    def analyze(analyzerProxy, caseRunConfiguration):
+        for logname, logfile in caseRunConfiguration.logs.items():
+            if not logname.startswith('testissue_'):
+                continue
+            with open(logfile) as logfile_fo:
+                yield TestIssue(analyzerProxy.settings, *(x.rstrip('\n') for x in logfile_fo.readlines()))

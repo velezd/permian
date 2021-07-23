@@ -1,0 +1,4 @@
+0 - Running step no 1: {'state': 'complete', 'result': 'FAIL', 'final': True, 'log_content': {'testissue_1': 'some_unresolved_issue_url\nsome_unresolved_issue_report_url\n'}}
+1 - Writing message to log: testissue_1
+1 - Reporting Result(complete, FAIL, True)
+1 - Changing state to: "complete" with result: "FAIL"

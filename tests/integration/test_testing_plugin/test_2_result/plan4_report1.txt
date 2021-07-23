@@ -8,13 +8,13 @@ reporter 4 - result partial testing plugin case 2-3 - running, None, False
 reporter 4 - result partial testing plugin case 3-1 - running, None, False
 reporter 4 - result partial testing plugin case 3-3 - running, None, False
 reporter 4 - result partial testing plugin case 2-1 - running, PASS, False
-reporter 4 - result final testing plugin case 2-1 - complete, PASS, True
+reporter 4 - result final testing plugin case 2-1 - complete, PASS->PASS(IssueSet()), True
 reporter 4 - result partial testing plugin case 2-3 - running, PASS, False
-reporter 4 - result final testing plugin case 2-3 - complete, PASS, True
+reporter 4 - result final testing plugin case 2-3 - complete, PASS->PASS(IssueSet()), True
 reporter 4 - finished testcase "testing plugin case 2" in "testing plugin plan 4"
 reporter 4 - result partial testing plugin case 3-1 - running, FAIL, False
-reporter 4 - result final testing plugin case 3-1 - complete, FAIL, True
+reporter 4 - result final testing plugin case 3-1 - complete, FAIL->ERROR(IssueSet()), True
 reporter 4 - result partial testing plugin case 3-3 - running, FAIL, False
-reporter 4 - result final testing plugin case 3-3 - complete, FAIL, True
+reporter 4 - result final testing plugin case 3-3 - complete, FAIL->ERROR(IssueSet()), True
 reporter 4 - finished testcase "testing plugin case 3" in "testing plugin plan 4"
 reporter 4 - testrun "testing plugin plan 4" finished

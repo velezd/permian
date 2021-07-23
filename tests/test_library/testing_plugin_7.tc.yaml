@@ -1,0 +1,23 @@
+name: testing plugin case 7
+description: Testing testcase for "test" workflow
+author: pholica@redhat.com
+priority: 1
+execution:
+  type: test
+  automation_data:
+    - state: complete
+      result: FAIL
+      final: true
+      log_content:
+        testissue_1: |
+          some_unresolved_issue_url
+          some_unresolved_issue_report_url
+configurations:
+  - initial_delay: 0.2
+instructions:
+  setup:
+    - Test
+  steps:
+    - Test
+  teardown:
+    - Test

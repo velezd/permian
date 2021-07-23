@@ -1,0 +1,26 @@
+name: testing plugin plan 9
+description: |
+  Testplan made testing plugin - including testing workflow and ReportSender
+  Used for testing of workflows using logs.
+point_person: pholica@redhat.com
+artifact_type: test
+execute_on:
+  - filter: "tp.name in event.selected_testplans"
+verified_by:
+  test_cases:
+    direct_list:
+      - testing plugin case 7
+      - testing plugin case 8
+reporting:
+  - type: test
+    data:
+      reporter: 8
+      filename: 'plan9_report1.txt'
+configurations:
+  - test: 4
+  - test: 5
+acceptance_criteria:
+  test_cases:
+    direct_list:
+      - testing plugin case 7
+      - testing plugin case 8
