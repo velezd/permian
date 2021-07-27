@@ -85,84 +85,99 @@ class Settings():
         """
         self.settings['library'].read(glob.glob(os.path.join(library_path, pattern)))
 
-    def get(self, section, option):
+    def get(self, sections, option):
         """
-        Get value of option in section taking in account priority order of
-        settings sources.
+        Get value of option in one of provided sections taking in account
+        priority order of settings sources.
 
-        :param section: name of the section
-        :type section: str
+        :param sections: Names of the sections that are tried in given order. It's possible to also provide just one name.
+        :type sections: str or iterable
         :param option: name of the option
         :type option: str
         :return: value of option in section
         :rtype: str
         """
-        for settings_source in self.settings.values():
-            try:
-                return settings_source[section][option]
-            except KeyError:
-                pass
-        raise KeyError("No option '%s' defined in section '%s'" % (option, section))
+        if isinstance(sections, str):
+            sections = [sections]
+        for section in sections:
+            for settings_source in self.settings.values():
+                try:
+                    return settings_source[section][option]
+                except KeyError:
+                    pass
+        raise KeyError("No option '%s' defined in any of sections %s" % (option, sections))
 
-    def getboolean(self, section, option):
+    def getboolean(self, sections, option):
         """
-        Get value of option in section using self.get and convert it into a boolean
+        Get value of option in one of sections using self.get and convert it
+        into a boolean
 
-        :param section: name of the section
+        :param section: Names of the sections that are tried in given order. It's possible to also provide just one name.
         :type section: str
         :param option: name of the option
         :type option: str
         :return: value of option in section
         :rtype: bool
         """
-        for settings_source in self.settings.values():
-            try:
-                return settings_source.getboolean(section, option)
-            except ValueError:
-                raise TypeError("'Setting %s.%s=%s' is not a valid boolean - see ConfigParser.getboolean." % (section, option, settings_source[section][option]))
-            except configparser.Error:
-                pass
-        raise KeyError("No option '%s' defined in section '%s'" % (option, section))
+        if isinstance(sections, str):
+            sections = [sections]
+        for section in sections:
+            for settings_source in self.settings.values():
+                try:
+                    return settings_source.getboolean(section, option)
+                except ValueError:
+                    raise TypeError("'Setting %s.%s=%s' is not a valid boolean - see ConfigParser.getboolean." % (section, option, settings_source[section][option]))
+                except configparser.Error:
+                    pass
+        raise KeyError("No option '%s' defined in any of sections %s" % (option, sections))
 
-    def getint(self, section, option):
+    def getint(self, sections, option):
         """
-        Get value of option in section using self.get and convert it into a int
+        Get value of option in one of sections using self.get and convert it
+        into a int
 
-        :param section: name of the section
+        :param section: Names of the sections that are tried in given order. It's possible to also provide just one name.
         :type section: str
         :param option: name of the option
         :type option: str
         :return: value of option in section
         :rtype: bool
         """
-        for settings_source in self.settings.values():
-            try:
-                return settings_source.getint(section, option)
-            except ValueError:
-                raise TypeError("'Setting %s.%s=%s' is not a valid int - see ConfigParser.getboolean." % (section, option, settings_source[section][option]))
-            except configparser.Error:
-                pass
-        raise KeyError("No option '%s' defined in section '%s'" % (option, section))
+        if isinstance(sections, str):
+            sections = [sections]
+        for section in sections:
+            for settings_source in self.settings.values():
+                try:
+                    return settings_source.getint(section, option)
+                except ValueError:
+                    raise TypeError("'Setting %s.%s=%s' is not a valid int - see ConfigParser.getboolean." % (section, option, settings_source[section][option]))
+                except configparser.Error:
+                    pass
+        raise KeyError("No option '%s' defined in any of sections %s" % (option, sections))
 
-    def getfloat(self, section, option):
+    def getfloat(self, sections, option):
         """
-        Get value of option in section using self.get and convert it into a float
+        Get value of option in one of sections using self.get and convert it
+        into a float
 
-        :param section: name of the section
+        :param section: Names of the sections that are tried in given order. It's possible to also provide just one name.
         :type section: str
         :param option: name of the option
         :type option: str
         :return: value of option in section
         :rtype: float
         """
-        for settings_source in self.settings.values():
-            try:
-                return settings_source.getfloat(section, option)
-            except ValueError:
-                raise TypeError("'Setting %s.%s=%s' is not a valid float - see ConfigParser.getboolean." % (section, option, settings_source[section][option]))
-            except configparser.Error:
-                pass
-        raise KeyError("No option '%s' defined in section '%s'" % (option, section))
+        if isinstance(sections, str):
+            sections = [sections]
+        for section in sections:
+            for settings_source in self.settings.values():
+                try:
+                    return settings_source.getfloat(section, option)
+                except ValueError:
+                    raise TypeError("'Setting %s.%s=%s' is not a valid float - see ConfigParser.getboolean." % (section, option, settings_source[section][option]))
+                except configparser.Error:
+                    pass
+        raise KeyError("No option '%s' defined in any of sections %s" % (option, sections))
 
     def options(self, section):
         """

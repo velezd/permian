@@ -121,3 +121,49 @@ class TestSettingsMerge(unittest.TestCase):
                 ('optionB', 'settingsB'),
             ]
         )
+
+class TestSettingsSectionFallback(unittest.TestCase):
+    def setUp(self):
+        self.settings = Settings(
+            cmdline_overrides={
+                'primary' : {
+                    'common' : 'CommonPrimaryValue',
+                    'only_primary': 'OnlyPrimaryValue',
+                },
+                'secondary' : {
+                    'common' : 'CommonSecondaryValue',
+                    'nonprimary' : 'NonprimarySecondaryValue',
+                    'only_secondary': 'OnlySecondaryValue',
+                },
+                'tertiary' : {
+                    'common' : 'CommonTertiaryValue',
+                    'nonprimary' : 'NonprimaryTertiaryValue',
+                    'only_tertiary': 'OnlyTertiaryValue',
+                },
+            },
+            environment={},
+            settings_locations=[],
+        )
+        self.sections = ('primary', 'secondary', 'tertiary')
+
+    def testFallback(self):
+        self.assertEqual(
+            self.settings.get(self.sections, 'common'),
+            self.settings.get('primary', 'common'),
+        )
+        self.assertEqual(
+            self.settings.get(self.sections, 'nonprimary'),
+            self.settings.get('secondary', 'nonprimary'),
+        )
+        self.assertEqual(
+            self.settings.get(self.sections, 'only_primary'),
+            self.settings.get('primary', 'only_primary'),
+        )
+        self.assertEqual(
+            self.settings.get(self.sections, 'only_secondary'),
+            self.settings.get('secondary', 'only_secondary'),
+        )
+        self.assertEqual(
+            self.settings.get(self.sections, 'only_tertiary'),
+            self.settings.get('tertiary', 'only_tertiary'),
+        )
