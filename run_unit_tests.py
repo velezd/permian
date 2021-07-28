@@ -9,7 +9,7 @@ if __name__ == "__main__":
     loader = unittest.TestLoader()
     # just use default discover values for pattern and start_dir
     tests = loader.discover(pattern="test*.py", start_dir=".")
-    runner = unittest.runner.TextTestRunner(verbosity=2)
+    runner = unittest.runner.TextTestRunner(verbosity=1)
     result = runner.run(tests)
     if not result.wasSuccessful():
         sys.exit(2)
