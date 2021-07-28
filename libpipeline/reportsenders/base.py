@@ -33,6 +33,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
     :param settings: Pipeline settings object
     :type settings: libpipeline.settings.Settings
     """
+    description_format = "Configuration: %s - Result: %s, %s - Links: %s ; "
     def __init__(self, testplan, reporting_structure, caseRunConfigurations, event, settings, issueAnalyzerProxy, group=None):
         super().__init__()
         self.testplan = testplan
@@ -156,6 +157,33 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         if not issueSet.isComplete or issueSet.needsReview:
             return 'ERROR'
         return caseRunConfigurations.result
+
+    def descriptionOf(self, caseRunConfigurations):
+        """
+        Provide human readable description of results for provided
+        caseRunConfigurations which will be used during reporting
+
+        :param caseRunConfigurations: List of caseRunConfiguration based on which the description should be formed.
+        :type caseRunConfigurations: iterable of CaseRunConfiguration
+        :return: Human readable description of the results.
+        :rtype: str
+        """
+        descriptions = []
+        for crc in caseRunConfigurations:
+            descriptions.append(
+                self.description_format % (
+                    str(crc.configuration),
+                    str(crc.result.state),
+                    str(crc.result.result),
+                    ', '.join([
+                        link
+                        for link
+                        in crc.result.extra_fields.get('beaker_links', ['None'])
+                    ]),
+                )
+            )
+        return "".join(descriptions)
+
 
     @abc.abstractmethod
     def processPartialResult(self, crc):

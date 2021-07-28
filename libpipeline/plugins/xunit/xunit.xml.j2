@@ -8,6 +8,7 @@
     <testsuite name="{{ reportsender.testplan.name }}" tests="{{ testcases|length - exclude|length }}">
         {%- for tc_name, crcs_list in testcases.items() %}
         {%- set xunitResult = reportsender.xunitResultOf(crcs_list) %}
+        {%- set description = reportsender.descriptionOf(crcs_list) %}
         <testcase name="{{ tc_name }}" classname="{{ reportsender.testplan.name }}">
             <properties>
                 {%- for prop_name, prop_value in properties.get(tc_name, {}).items() %}
@@ -15,14 +16,14 @@
                 {%- endfor %}
             </properties>
             <system-out>
-            {{ crcs_list|results_string }}
+            {{ description }}
             </system-out>
             {%- if xunitResult == 'skipped' %}
-            <skipped message="{{ crcs_list|results_string }}" type="skipped" />
+            <skipped message="{{ description }}" type="skipped" />
             {%- elif xunitResult == 'failure' %}
-            <failure message="{{ crcs_list|results_string }}" type="failure" />
+            <failure message="{{ description }}" type="failure" />
             {%- elif xunitResult == 'error' %}
-            <error message="{{ crcs_list|results_string }}" type="error" />
+            <error message="{{ description }}" type="error" />
             {%- endif %}
         </testcase>
         {%- endfor %}
