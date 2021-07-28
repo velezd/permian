@@ -33,7 +33,8 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
     :param settings: Pipeline settings object
     :type settings: libpipeline.settings.Settings
     """
-    description_format = "Configuration: %s - Result: %s, %s - Links: %s ; "
+    description_format = "Configuration: %s - Result: %s, %s - Beaker links: %s - Issues: %s ; "
+    issue_format = "%s"
     def __init__(self, testplan, reporting_structure, caseRunConfigurations, event, settings, issueAnalyzerProxy, group=None):
         super().__init__()
         self.testplan = testplan
@@ -180,6 +181,11 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
                         for link
                         in crc.result.extra_fields.get('beaker_links', ['None'])
                     ]),
+                    '\n'.join([
+                        self.issue_format % issue
+                        for issue
+                        in self.issuesFor([crc])
+                    ])
                 )
             )
         return "".join(descriptions)
