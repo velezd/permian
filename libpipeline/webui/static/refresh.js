@@ -34,17 +34,18 @@ function configuration_to_html(configs) {
 }
 
 function logs_list_to_html(crcid, logs) {
-    string = ''
+    string = '<ul>'
     if (static_webui) {
         for (log in logs) {
-            string += `<a href="${logs[log]}">${log}</a><br />`
+            string += `<li><a href="${logs[log]}">${log}</a></li>`
         }
     }
     else {
         for (log of logs) {
-            string += `<a href="./logs/${crcid}/${log}">${log}</a><br />`
+            string += `<li><a href="./logs/${crcid}/${log}">${log}</a></li>`
         }
     }
+    string += '</ul>'
     return(string)
 }
 
@@ -60,7 +61,7 @@ function refreshData() {
             $(".crc-"+caserun.id+" .crc_workflow").text(caserun.workflow);
             $(".crc-"+caserun.id+" .crc_result").text(caserun.result);
             $(".crc-"+caserun.id+" .crc_state").text(caserun.state);
-            $(".crc-"+caserun.id+" .crc_logs").html(logs_list_to_html(caserun.id, caserun.logs))
+            $(".crc-"+caserun.id+" .crc_logs ul").replaceWith(logs_list_to_html(caserun.id, caserun.logs))
             $(".crc-"+caserun.id+" .crc_cancel").prop('disabled', !caserun.active);
         });
     });

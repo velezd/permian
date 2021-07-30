@@ -106,7 +106,7 @@ RTT-Pipeline WebUI
                     <td class="crc_workflow"></td>
                     <td class="crc_result"></td>
                     <td class="crc_state"></td>
-                    <td class="crc_logs"></td>
+                    <td class="crc_logs"><button class="expander" onclick="expand_nextSibling(this)">▼</button><ul /></td>
                     <td class="crc_actions"><button onclick="cancel('{{ crc.id }}')" class="crc_cancel">Cancel</button></td>
                 </tr>
             {% endfor %}
@@ -128,7 +128,7 @@ RTT-Pipeline WebUI
                 <td class="crc_displaystatus"></td>
                 <td class="crc_result"></td>
                 <td class="crc_state"></td>
-                <td class="crc_logs"></td>
+                <td class="crc_logs"><button class="expander" onclick="expand_nextSibling(this)">▼</button><ul /></td>
                 <td class="crc_actions"><button onclick="cancel('{{ crc.id }}')" class="crc_cancel">Cancel</button></td>
             </tr>
         {% endfor %}

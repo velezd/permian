@@ -96,6 +96,21 @@ h1 {
     background: var(--tr-nth-bg);
 }
 
+.crc_logs {
+    position: relative;
+}
+
+.crc_logs ul {
+    max-height: 2.2em;
+    overflow-y: hidden;
+}
+
+.crc_logs .expander {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
 /* START Testplan Container */
 .testplan_container {
     flex: 0 1 auto;
