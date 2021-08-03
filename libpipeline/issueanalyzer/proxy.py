@@ -2,6 +2,7 @@ import threading
 import contextlib
 
 from .issueset import IssueSet
+from ..exception_dump import dump_exception
 
 class IssueAnalyzerProxy():
     """
@@ -50,7 +51,11 @@ class IssueAnalyzerProxy():
             # the analysis cannot be reliable
             issueSet = IssueSet(complete=caseRunConfiguration.result.final)
             for IssueAnalyzer in self.issue_analyzers:
-                issueSet.extend(IssueAnalyzer.analyze(self, caseRunConfiguration))
+                try:
+                    issueSet.extend(IssueAnalyzer.analyze(self, caseRunConfiguration))
+                except Exception as e:
+                    dump_exception(e, IssueAnalyzer)
+                    issueSet.extend(IssueSet(complete=False))
             if not issueSet and caseRunConfiguration.result.result != "PASS":
                 # No issue was found and the result is not PASS, so there
                 # seems to be something missing, mark it as incomplete to
