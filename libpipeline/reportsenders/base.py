@@ -173,7 +173,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         for crc in caseRunConfigurations:
             descriptions.append(
                 self.description_format % (
-                    str(crc.configuration),
+                    {key:value for key, value in sorted(crc.configuration.items())},
                     str(crc.result.state),
                     str(crc.result.result),
                     ', '.join([
