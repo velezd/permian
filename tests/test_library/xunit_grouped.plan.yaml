@@ -1,0 +1,27 @@
+name: xunit grouped testplan
+description: Testplan for testing xunit report sender with group_by
+point_person: zveleba@redhat.com
+artifact_type: test
+execute_on:
+  - filter: "tp.name in event.selected_testplans"
+parent_plan:
+configurations:
+  - conf: 1
+    variant: test
+  - conf: 2
+    variant: test
+verified_by:
+  test_cases:
+    direct_list:
+      - testing plugin case 5
+      - testing plugin case 2
+reporting:
+  - type: xunit
+    group_by:
+      - variant
+      - initial_delay
+acceptance_criteria:
+  test_cases:
+    direct_list:
+      - testing plugin case 5
+      - testing plugin case 2

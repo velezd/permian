@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<testsuites>
+    <properties>
+    </properties>
+    <testsuite name="xunit grouped testplan" tests="1">
+        <testcase name="testing plugin case 2" classname="xunit grouped testplan">
+            <properties>
+            </properties>
+            <system-out>
+            Configuration: {&#39;conf&#39;: 1, &#39;initial_delay&#39;: 0.2, &#39;variant&#39;: &#39;test&#39;} - Result: complete, PASS - Beaker links: None - Issues:  ; Configuration: {&#39;conf&#39;: 2, &#39;initial_delay&#39;: 0.2, &#39;variant&#39;: &#39;test&#39;} - Result: complete, PASS - Beaker links: None - Issues:  ; 
+            </system-out>
+        </testcase>
+    </testsuite>
+</testsuites>
