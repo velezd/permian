@@ -22,11 +22,11 @@ class TestRuns():
         self.caseRunConfigurations = []
         self.issueAnalyzerProxy = IssueAnalyzerProxy(self.settings)
         """List of CaseRunConfigurations taking part in this execution"""
-        self.populateCaseRunConfigurations(library, event, settings)
+        self.populateCaseRunConfigurations(library, event)
         self.assignWorkflows(event, settings)
         self.reportSenders = list(ReportSenderFactory.assign(self))
 
-    def populateCaseRunConfigurations(self, library, event, settings):
+    def populateCaseRunConfigurations(self, library, event):
         """
         Based on the event and settings takes Test plans from library and
         for each of the Test plans collects list of Test cases and their
@@ -39,7 +39,7 @@ class TestRuns():
         of the Test plans the case-run-configurations belong to.
         """
         LOGGER.debug("Getting caseRunConfigurations from event")
-        self.caseRunConfigurations = event.generate_caseRunConfigurations(library, settings)
+        self.caseRunConfigurations = event.generate_caseRunConfigurations(library)
         for caserun in self.caseRunConfigurations:
             caserun.testrun = self
             LOGGER.debug("Will run caseRunConfiguration %s: %s", caserun.id, caserun)

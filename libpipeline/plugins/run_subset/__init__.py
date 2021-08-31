@@ -31,9 +31,9 @@ class RunSubsetEvent(Event):
     def format_branch_spec(self, fmt):
         return self.original_event.format_branch_spec(fmt)
 
-    def generate_caseRunConfigurations(self, library, settings):
+    def generate_caseRunConfigurations(self, library):
         crcList = CaseRunConfigurationsList()
-        original_crcList = self.original_event.generate_caseRunConfigurations(library, settings)
+        original_crcList = self.original_event.generate_caseRunConfigurations(library)
         for crc in original_crcList:
             if self.run_subset.testplans is not None:
                 crc.running_for = {

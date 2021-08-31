@@ -35,13 +35,11 @@ class Event():
     def format_branch_spec(self, fmt):
         return jinja2.Template(fmt).render(event=self)
 
-    def generate_caseRunConfigurations(self, library, settings):
+    def generate_caseRunConfigurations(self, library):
         """ Generates caseRunConfigurations for testcases in library relevant to this event
 
         :param library: Library
         :type library: tclib.Library
-        :param settings: Pipeline settings
-        :type settings: libpipeline.settings.Settings
         :return: CaseRunConfigurations
         :rtype: CaseRunConfigurationsList
         """
@@ -50,7 +48,7 @@ class Event():
         for testplan in self.filter_testPlans(library):
             # Init testplan configurations as ConfigurationsList
             testplan_configurations = ConfigurationsList(testplan.configurations,
-                                                         merge_method=settings.get('library', 'defaultCaseConfigMergeMethod'))
+                                                         merge_method=self.settings.get('library', 'defaultCaseConfigMergeMethod'))
             for testcase in testplan.verificationTestCases:
                 # Merge testplan configurations with testcase configurations
                 caserun_configurations = testplan_configurations.merge(testcase.configurations)

@@ -4,6 +4,7 @@ from unittest.mock import patch, create_autospec
 import productmd
 
 from libpipeline.cli.factory import CliFactory
+from libpipeline.settings import Settings
 from libpipeline.events.factory import EventFactory
 from libpipeline.plugins.compose import ComposeStructure
 from libpipeline.plugins.compose.compose_diff import ComposeDiff
@@ -35,8 +36,12 @@ class MockUrlopen():
 @patch('productmd.compose.Compose', new=MockProductmdCompose)
 @patch('urllib.request.urlopen', new=MockUrlopen)
 class TestEventCompose(unittest.TestCase):
+    def setUp(self):
+        self.settings = Settings(cmdline_overrides={'compose': {'location': 'http://example.com/compose/%s'}},
+                                 environment={},
+                                 settings_locations=[])
     def test_rhel_idonly(self):
-        event = EventFactory.make(None, CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2'])[1])
+        event = EventFactory.make(self.settings, CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2'])[1])
         self.assertEqual(event.compose.id, 'RHEL-8.3.0-20200701.2')
         self.assertEqual(event.compose.version, '8.3.0')
         self.assertEqual(event.compose.major, '8')
@@ -53,7 +58,7 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.location, 'http://example.com/here/RHEL-8.3.0-20200701.2')
 
     def test_supp_idonly(self):
-        event = EventFactory.make(None, CliFactory.parse('compose', ['Supp-9.2.1-RHEL-8-20200811.n.5'])[1])
+        event = EventFactory.make(self.settings, CliFactory.parse('compose', ['Supp-9.2.1-RHEL-8-20200811.n.5'])[1])
         self.assertEqual(event.compose.id, 'Supp-9.2.1-RHEL-8-20200811.n.5')
         self.assertEqual(event.compose.version, '9.2.1')
         self.assertEqual(event.compose.major, '9')
@@ -70,7 +75,7 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.location, 'http://example.com/here/Supp-9.2.1-RHEL-8-20200811.n.5')
 
     def test_rhel_overrides(self):
-        event = EventFactory.make(None,
+        event = EventFactory.make(self.settings,
                                   CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2',
                                                                '--product=Test',
                                                                '--version=1.3.2',
@@ -96,7 +101,7 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.location, 'test/location')
 
     def test_rhel_overrides_version(self):
-        event = EventFactory.make(None,
+        event = EventFactory.make(self.settings,
                                   CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2',
                                                                '--version=ahoj',
                                                                '--major=10',
@@ -109,7 +114,7 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.qr, '8')
 
     def test_supp_overrides(self):
-        event = EventFactory.make(None,
+        event = EventFactory.make(self.settings,
                                   CliFactory.parse('compose', ['Supp-9.2.1-RHEL-8-20200811.n.5',
                                                                '--product=Test',
                                                                '--version=1.3.2',
@@ -136,28 +141,28 @@ class TestEventCompose(unittest.TestCase):
 
     def test_event_type(self):
         event = EventFactory.make(
-            None,
+            self.settings,
             CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2'])[1]
         )
         self.assertEqual(event.type, 'compose')
 
     def test_custom_event_type(self):
         event = EventFactory.make(
-            None,
+            self.settings,
             CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2', '--event-type', 'compose.foo.bar'])[1]
         )
         self.assertEqual(event.type, 'compose.foo.bar')
 
     def test_str_label(self):
         event = EventFactory.make(
-            None,
+            self.settings,
             CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2', '--event-type', 'compose.foo.bar.baz'])[1]
         )
         self.assertEqual(str(event), 'RHEL-8.3.0-20200701.2 (Hello) baz')
 
     def test_str_nolabel(self):
         event = EventFactory.make(
-            None,
+            self.settings,
             CliFactory.parse('compose', ['RHEL-8.3.0-20200701.n.2', '--event-type', 'compose.foo.bar.baz'])[1]
         )
         self.assertEqual(str(event), 'RHEL-8.3.0-20200701.n.2 baz')
