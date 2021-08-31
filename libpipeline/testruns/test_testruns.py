@@ -55,7 +55,7 @@ class TestWorkflowGrouped(GroupedWorkflow):
 def testruns_init():
         lib = library.Library('tests/test_library')
         settings = Settings(cmdline_overrides={'library': {'defaultCaseConfigMergeMethod': 'extension'}}, environment={}, settings_locations=[])
-        event = Event('test', other={'tests': ['test_workflows']})
+        event = Event(settings, 'test', other={'tests': ['test_workflows']})
         return TestRuns(lib, event, settings)
 
 

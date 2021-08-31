@@ -57,7 +57,7 @@ class EventFactory():
         return decorator
 
     @classmethod
-    def make(cls, data):
+    def make(cls, settings, data):
         """
         Create new Event instance based on provided event specification which
         can be either json encoded event specification string or directly
@@ -79,6 +79,8 @@ class EventFactory():
         (in this order) and contains 2 structures "toy" and "factory" which
         are passed to the event class constructor as kwargs.
 
+        :param settings: Settings that are passed to events and their event structures.
+        :type settings: libpipeline.settings.Settings
         :param data: Event specification string (json) or the decoded dict value of event specification.
         :type data: str or dict
         :return:
@@ -89,7 +91,7 @@ class EventFactory():
         event_type = data.pop('type')
         structures = data
         event_class = cls.get_class(event_type)
-        return event_class(event_type, **structures)
+        return event_class(settings, event_type, **structures)
 
     @classmethod
     def get_class(cls, event_type):

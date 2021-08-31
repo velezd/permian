@@ -22,15 +22,17 @@ class EventStructuresFactory():
     :py:method:`EventStructuresFactory.convert`.
 
     Structure classes are ordinary python classes where the only interfaces
-    used by the pipeline are the constructor (`__init__` method) and special
-    `from_*` classmethods and `to_*` methods. The constructor of the structure
-    class defines allowed keys which can be used in the event specification
-    string and parameters which are without default value must be set in the
-    event specification string. For Example::
+    used by the pipeline are the constructor (`__init__` method with mandatory
+    settings argument), settings attribute and special `from_*` classmethods
+    and `to_*` methods. The constructor of the structure class defines allowed
+    keys which can be used in the event specification string and parameters
+    which are without default value must be set in the event specification
+    string. For Example::
 
         @EventStructureFactory.register('car')
-        class CarStructure():
-            def __init__(self, color, seats=5):
+        class CarStructure(libpipeline.events.structures.BaseStructure):
+            def __init__(self, settings, color, seats=5):
+                super().__init__(settings)
                 self.color = color
                 self.seats = seats
 
@@ -95,13 +97,13 @@ class EventStructuresFactory():
         return decorator
 
     @classmethod
-    def make(cls, name, fields):
+    def make(cls, settings, name, fields):
         """
         Return instance of structure registered under the name passing the
-        fields as kwargs to the structure class constructor.
+        settings along with fields as kwargs to the structure class constructor.
         """
         structure_class = cls.get_class(name)
-        return structure_class(**fields)
+        return structure_class(settings, **fields)
 
     @classmethod
     def known(cls):
@@ -149,6 +151,9 @@ class EventStructuresFactory():
         `NotImplemented`, the conversion is considered successful and the
         obtained value is returned. If no `to_*` succeds, `NotImplemented` is
         returned signalling the conversion was not sucessful.
+
+        Note that individual classes are responsible for passing the settings
+        from one to each other.
 
         :param desired_structure: Name under which the desired class is registered.
         :type desired_structure: str

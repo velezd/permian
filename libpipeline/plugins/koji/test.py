@@ -16,6 +16,7 @@ class TestKojiEvent(unittest.TestCase):
 
     def test_minimal(self, koji_proxy_class):
         event = EventFactory.make(
+            None,
             CliFactory.parse('koji_build_tag', [self.hub_url, self.nvr, self.tag])[1]
         )
         self.assertIsInstance(event, KojiEvent)
@@ -39,6 +40,7 @@ class TestKojiEvent(unittest.TestCase):
             '--package-name', package_name,
         ]
         event = EventFactory.make(
+            None,
             CliFactory.parse('koji_build_tag', command_args)[1]
         )
         self.assertIsInstance(event, KojiEvent)
@@ -62,7 +64,7 @@ class TestKojiEventStructure(unittest.TestCase):
     composes_baseurl = 'http://example.com/composes/foo'
 
     def test_minimal(self, koji_proxy_class):
-        koji_build = KojiBuild(self.hub_url, self.nvr)
+        koji_build = KojiBuild(None, self.hub_url, self.nvr)
         self.assertEqual(koji_build.hub_url, self.hub_url)
         self.assertEqual(koji_build.nvr, self.nvr)
 
@@ -76,7 +78,7 @@ class TestKojiEventStructure(unittest.TestCase):
             {'name': self.new_tag},
             {'name': 'foo'},
         )
-        koji_build = KojiBuild(self.hub_url, self.nvr)
+        koji_build = KojiBuild(None, self.hub_url, self.nvr)
         self.assertEqual(koji_build.hub_url, self.hub_url)
         self.assertEqual(koji_build.nvr, self.nvr)
         self.assertEqual(koji_build.build_id, self.build_id)
@@ -89,6 +91,7 @@ class TestKojiEventStructure(unittest.TestCase):
 
     def test_all(self, koji_proxy_class):
         koji_build = KojiBuild(
+            None,
             self.hub_url, self.nvr, build_id=self.build_id,
             task_id=self.task_id, package_name=self.package_name,
             new_tag=self.new_tag
@@ -116,7 +119,7 @@ class TestKojiEventStructure(unittest.TestCase):
         )
         Compose.return_value.info.compose.id = compose_id
         requests_get.return_value.text = compose_relpath
-        koji_build = KojiBuild(self.hub_url, self.nvr, composes_baseurl=self.composes_baseurl)
+        koji_build = KojiBuild(None, self.hub_url, self.nvr, composes_baseurl=self.composes_baseurl)
         compose = koji_build.to_compose()
         self.assertEqual(compose.id, compose_id)
         self.assertEqual(

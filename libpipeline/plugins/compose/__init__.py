@@ -11,6 +11,7 @@ from ...events.base import Event, payload_override
 from ...cli.parser import bool_argument, ToPayload, AppendToPayload
 from ..beaker import list_tagged_composes
 from libpipeline.events.structures.builtin import ProductStructure
+from libpipeline.events.structures.base import BaseStructure
 
 from .compose_info import ComposeInfo
 from .compose_diff import ComposeDiff
@@ -18,8 +19,8 @@ from .compose_diff import ComposeDiff
 
 @api.events.register('compose')
 class ComposeEvent(Event):
-    def __init__(self, type, compose, **kwargs):
-        super().__init__(type, compose=compose, **kwargs)
+    def __init__(self, settings, type, compose, **kwargs):
+        super().__init__(settings, type, compose=compose, **kwargs)
 
     def __str__(self):
         label_part = f" ({self.compose.label.split('-')[0]})" if self.compose.label else ""
@@ -27,10 +28,11 @@ class ComposeEvent(Event):
         return f"{self.compose.id}{label_part} {short_type}"
 
 @api.events.register_structure('compose')
-class ComposeStructure():
+class ComposeStructure(BaseStructure):
     id_regex = re.compile(r'(?P<product>\w+)-(?P<version>(?P<major>\d+)(\.(?P<minor>\d+))?(\.(?P<qr>\d))?)(-(?P<parent>\w+)-\d)?-(?P<date>\d+)(\.(?P<flag>.))?\.(?P<spin>\d+)')
 
-    def __init__(self, id, product=None, version=None, major=None, minor=None, qr=None, date=None, respin=None, location=None, location_http=None, compose_type=None, nightly=None, development=None, label=None, prerelease=None, tags=None, new_tag=None, layered=None, parent_product=None, parent_version=None, available_in=None):
+    def __init__(self, settings, id, product=None, version=None, major=None, minor=None, qr=None, date=None, respin=None, location=None, location_http=None, compose_type=None, nightly=None, development=None, label=None, prerelease=None, tags=None, new_tag=None, layered=None, parent_product=None, parent_version=None, available_in=None):
+        super().__init__(settings)
         self.id = id
         self._matches = re.match(self.id_regex, self.id)
         self.product = product or self._matches.group('product')
@@ -141,7 +143,7 @@ class ComposeStructure():
                 previous_compose_id = compose_list[compose_list.index(self.id)-1]
                 # tested compose or latest compose in the list is not valid previous compose
                 if previous_compose_id != self.id and previous_compose_id != compose_list[-1]:
-                    return ComposeStructure(previous_compose_id)
+                    return ComposeStructure(self.settings, previous_compose_id)
                 else:
                     return None
             except IndexError:
@@ -163,6 +165,7 @@ class ComposeStructure():
 
     def to_product(self):
         return ProductStructure(
+            self.settings,
             self.product,
             self.major,
             self.minor,

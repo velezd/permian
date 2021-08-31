@@ -1,15 +1,18 @@
 from .factory import EventStructuresFactory
+from .base import BaseStructure
 
 @EventStructuresFactory.register('product')
-class ProductStructure():
-    def __init__(self, name, major, minor):
+class ProductStructure(BaseStructure):
+    def __init__(self, settings, name, major, minor):
+        super().__init__(settings)
         self.name = name
         self.major = major
         self.minor = minor
 
 @EventStructuresFactory.register('other')
-class OtherStructure():
-    def __init__(self, **kwargs):
+class OtherStructure(BaseStructure):
+    def __init__(self, settings, **kwargs):
+        super().__init__(settings)
         self.fields = kwargs
 
     def __iter__(self):

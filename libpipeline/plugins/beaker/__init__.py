@@ -10,6 +10,7 @@ import threading
 import bkr.common.pyconfig
 import bkr.common.hub
 import libpipeline.plugins.api.events
+from libpipeline.events.structures.base import BaseStructure
 
 """
 This package provides various additional functionality related to beaker used
@@ -43,7 +44,7 @@ def _compose_cmp(this, that):
 
 
 @libpipeline.plugins.api.events.register_structure('beakerCompose')
-class BeakerCompose():
+class BeakerCompose(BaseStructure):
     """
     :param compose_id: Id of compose like RHEL-X.Y.Q-YYYYMMDD.S
     :type compose_id: str
@@ -54,7 +55,8 @@ class BeakerCompose():
     :param minor: Minor version number
     :type minor: int
     """
-    def __init__(self, compose_id, product, major, minor):
+    def __init__(self, settings, compose_id, product, major, minor):
+        super().__init__(settings)
         self.id = compose_id
         self.product = product
         self.major = major
@@ -63,6 +65,7 @@ class BeakerCompose():
     @classmethod
     def from_compose(cls, compose):
         return cls(
+            compose.settings,
             compose.id,
             compose.product,
             compose.major,

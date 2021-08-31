@@ -10,6 +10,7 @@ from ...events.base import Event
 from ...reportsenders.base import BaseReportSender
 from ...issueanalyzer.base import BaseAnalyzer, BaseIssue
 from ...issueanalyzer.issueset import IssueSet
+from libpipeline.events.structures.base import BaseStructure
 
 
 LOGGER = logging.getLogger(__name__)
@@ -25,8 +26,9 @@ def test_command(base_parser, args):
 
 
 @api.events.register_structure('test')
-class TestStructure():
-    def __init__(self, testplans):
+class TestStructure(BaseStructure):
+    def __init__(self, settings, testplans):
+        super().__init__(settings)
         self.testplans = testplans
 
 @api.events.register('test')

@@ -55,7 +55,7 @@ for pipeline execution, the Pipeline would do something similar::
       "items" : ["a", "b", "c"]
     }
   }'''
-  event = EventFactory.make(event_string)
+  event = EventFactory.make(settings, event_string)
   branch = event.format_branch_spec(branch_format)
   # pipeline would clone the git repository fetching the branch and proceed with next steps (passing the event along with tclib.Library and settings for the execution)
 

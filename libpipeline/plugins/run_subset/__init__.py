@@ -8,6 +8,7 @@ from ...cli.factory import CliFactory
 from ...events.base import Event
 from ...events.factory import EventFactory
 from ...caserunconfiguration import CaseRunConfigurationsList
+from libpipeline.events.structures.base import BaseStructure
 
 def keys_values_sep(pair_sep, keyval_sep):
     def keys_values(data):
@@ -23,9 +24,9 @@ def keys_values_sep(pair_sep, keyval_sep):
 
 @api.events.register('run_subset')
 class RunSubsetEvent(Event):
-    def __init__(self, type, run_subset, **kwargs):
-        super().__init__(type, run_subset=run_subset, **kwargs)
-        self.original_event = EventFactory.make(self.run_subset.event)
+    def __init__(self, settings, type, run_subset, **kwargs):
+        super().__init__(settings, type, run_subset=run_subset, **kwargs)
+        self.original_event = EventFactory.make(self.settings, self.run_subset.event)
 
     def format_branch_spec(self, fmt):
         return self.original_event.format_branch_spec(fmt)
@@ -125,8 +126,9 @@ class RunSubsetEvent(Event):
         return f'(subset) {self.original_event}'
 
 @api.events.register_structure('run_subset')
-class RunSubsetStructure():
-    def __init__(self, event, testplans=None, testplans_queries=None, testcases=None, testcases_queries=None, configurations=None, crc_queries=None):
+class RunSubsetStructure(BaseStructure):
+    def __init__(self, settings, event, testplans=None, testplans_queries=None, testcases=None, testcases_queries=None, configurations=None, crc_queries=None):
+        super().__init__(settings)
         self.event = event
         self.testplans = testplans
         self.testplans_queries = testplans_queries

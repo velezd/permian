@@ -51,8 +51,8 @@ class ExampleResultsProcessor():
 
 @api.events.register('example')
 class ExampleEvent(Event):
-    def __init__(self, event_type, **kwargs):
-        super().__init__(event_type, **kwargs)
+    def __init__(self, settings, event_type, **kwargs):
+        super().__init__(settings, event_type, **kwargs)
         example_hook('Hello from Event constructor')
 
 @api.hooks.make

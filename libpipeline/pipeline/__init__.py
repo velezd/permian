@@ -54,7 +54,7 @@ class Pipeline():
         if env is None:
             env = copy.copy(os.environ)
         self.settings = Settings(overrides, env, settings_paths)
-        self.event = EventFactory.make(event)
+        self.event = EventFactory.make(self.settings, event)
         self.library = None
         self.testRuns = None
         self.executed = False

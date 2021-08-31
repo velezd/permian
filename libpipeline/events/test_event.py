@@ -9,7 +9,8 @@ class TestCaseRunsConfigurationsMerge(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.library = library.Library('tests/test_library')
-        cls.event = Event('test', other={'tests': ['test1']})
+        cls.event = Event(None, 'test', other={'tests': ['test1']})
+        # TODO: refactor the Event.generate_caseRunConfigurations to use Event.settings
 
     def test_merge_extend(self):
         settings = Settings(cmdline_overrides={'library': {'defaultCaseConfigMergeMethod': 'extension'}}, environment={}, settings_locations=[])
@@ -75,7 +76,8 @@ class TestCaseRunsRunningFor(unittest.TestCase):
     def setUpClass(cls):
         cls.library = library.Library('tests/test_library')
         cls.settings = Settings(cmdline_overrides={'library': {'defaultCaseConfigMergeMethod': 'extension'}}, environment={}, settings_locations=[])
-        cls.event = Event('test', other={'tests': ['test1', 'test2']})
+        cls.event = Event(None, 'test', other={'tests': ['test1', 'test2']})
+        # TODO: refactor the Event.generate_caseRunConfigurations to use Event.settings
 
     def test_single_caserun(self):
         self.library.testplans['testplan 1'].configurations = None

@@ -14,8 +14,8 @@ class Event():
     provides converted event structures) and decides which testplans and
     caserunconfigurations will be executed based on the event.
 
-    This base class can be directly used just by providing event type and
-    optionally definitions of event_structures which are constructed using
+    This base class can be directly used just by providing settings, event type
+    and optionally definitions of event_structures which are constructed using
     EventStructuresFactory. Such created event uses default selection of
     testplans with testcases and provides only the provided event structures
     (along with possibly automatically converted event structures).
@@ -23,11 +23,12 @@ class Event():
     When defining new event type, one should create a new child class
     inheriting this class providing additional methods and/or properties.
     """
-    def __init__(self, event_type, **event_structures):
+    def __init__(self, settings, event_type, **event_structures):
+        self.settings = settings
         self.type = event_type
         self.structures = {}
         for structure_name, fields in event_structures.items():
-            self.structures[structure_name] = EventStructuresFactory.make(structure_name, fields)
+            self.structures[structure_name] = EventStructuresFactory.make(settings, structure_name, fields)
 
         self.id = sha256(f'{self.type}-{json.dumps(event_structures, sort_keys=True)}'.encode()).hexdigest()
 

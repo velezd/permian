@@ -138,7 +138,10 @@ class TestSubsets(unittest.TestCase):
             settings_locations=[],
         )
         self.library = Library('./tests/test_library/')
-        self.original_event = EventFactory.make(CliFactory.parse('demo', [])[1])
+        self.original_event = EventFactory.make(
+            None,
+            CliFactory.parse('demo', [])[1]
+        )
         self.original_crcList = self.original_event.generate_caseRunConfigurations(self.library, self.settings)
         # Make sure the original plan contains expected reference data
         self.assertCountEqual(
@@ -162,7 +165,10 @@ class TestSubsets(unittest.TestCase):
 
     def test_unchanged(self):
         
-        event = EventFactory.make(CliFactory.parse('run_subset', ['demo'])[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', ['demo'])[1]
+        )
         self.assertEqual(
             event.generate_caseRunConfigurations(self.library, self.settings),
             self.original_crcList,
@@ -176,7 +182,10 @@ class TestSubsets(unittest.TestCase):
             '--testplan', tp2,
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         # check there are only crcIds from selected plans
         # use sets as one crc can me in multiple testplans
@@ -203,7 +212,10 @@ class TestSubsets(unittest.TestCase):
             '--testcase', tc2,
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         self.assertCountEqual(
             crcList.by_testcase(),
@@ -227,7 +239,10 @@ class TestSubsets(unittest.TestCase):
             '--testcase', other_tc,
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         self.assertCountEqual(
             crcList.by_testcase(),
@@ -245,7 +260,10 @@ class TestSubsets(unittest.TestCase):
             '--testplan-query', f'tp.name == "{tp1}"',
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         # check there are only crcIds from selected plans
         # use sets as one crc can me in multiple testplans
@@ -269,7 +287,10 @@ class TestSubsets(unittest.TestCase):
             '--testcase-query', f'tc.name == "{tc1}"',
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         # Check only tc1 is preset
         self.assertCountEqual(
@@ -287,7 +308,10 @@ class TestSubsets(unittest.TestCase):
             '--configuration', 'architecture:x86_64',
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         self.assertCountEqual(
             crcList,
@@ -299,7 +323,10 @@ class TestSubsets(unittest.TestCase):
             '--configuration', 'architecture:x86_64,variant:BaseOS',
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         self.assertCountEqual(
             crcList,
@@ -312,7 +339,10 @@ class TestSubsets(unittest.TestCase):
             '--configuration', 'architecture:s390x',
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         self.assertCountEqual(
             crcList,
@@ -326,7 +356,10 @@ class TestSubsets(unittest.TestCase):
             '--configuration', 'architecture:s390x,variant:AppStream',
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         self.assertCountEqual(
             crcList,
@@ -339,7 +372,10 @@ class TestSubsets(unittest.TestCase):
             '--crc-query', 'crc.configuration.get("architecture") == "x86_64"',
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         self.assertCountEqual(
             crcList,
@@ -352,7 +388,10 @@ class TestSubsets(unittest.TestCase):
             '--crc-query', 'crc.configuration.get("architecture") == "s390x"',
             'demo'
         ]
-        event = EventFactory.make(CliFactory.parse('run_subset', args)[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('run_subset', args)[1]
+        )
         crcList = event.generate_caseRunConfigurations(self.library, self.settings)
         self.assertCountEqual(
             crcList,

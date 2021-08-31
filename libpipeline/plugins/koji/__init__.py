@@ -8,6 +8,7 @@ import requests
 from libpipeline.plugins import api
 from libpipeline.events.base import Event
 from libpipeline.events.structures.builtin import ProductStructure
+from libpipeline.events.structures.base import BaseStructure
 from libpipeline.cli.parser import bool_argument, ToPayload, AppendToPayload
 
 from libpipeline.plugins.compose import ComposeStructure
@@ -31,8 +32,9 @@ def parse_koji_tag(tag):
     return None
 
 @api.events.register_structure('koji_build')
-class KojiBuild():
-    def __init__(self, hub_url, nvr, build_id=None, task_id=None, package_name=None, tags=None, new_tag=None, composes_baseurl=None):
+class KojiBuild(BaseStructure):
+    def __init__(self, settings, hub_url, nvr, build_id=None, task_id=None, package_name=None, tags=None, new_tag=None, composes_baseurl=None):
+        super().__init__(settings)
         self._info = None
         self.hub_url = hub_url
         self.nvr = nvr
@@ -78,7 +80,7 @@ class KojiBuild():
         compose_relpath = requests.get(entrypoint).text.strip()
         compose_path = f'{entrypoint_dir}/{compose_relpath}'
         compose_id = productmd.compose.Compose(compose_path).info.compose.id
-        return ComposeStructure(compose_id, location=compose_path)
+        return ComposeStructure(self.settings, compose_id, location=compose_path)
 
     def to_beakerCompose(self):
         return BeakerCompose.from_compose(self.to_compose())
@@ -86,6 +88,7 @@ class KojiBuild():
     def to_product(self):
         parsed_tag = parse_koji_tag(self.new_tag)
         return ProductStructure(
+            self.settings,
             parsed_tag['product'],
             parsed_tag['major'],
             parsed_tag['minor'],
@@ -93,8 +96,8 @@ class KojiBuild():
 
 @api.events.register('koji')
 class KojiEvent(Event):
-    def __init__(self, type, koji_build, **kwargs):
-        super().__init__(type, koji_build=koji_build, **kwargs)
+    def __init__(self, settings, type, koji_build, **kwargs):
+        super().__init__(settings, type, koji_build=koji_build, **kwargs)
 
     def __str__(self):
         return f"{self.koji_build.package_name} {self.koji_build.nvr} {self.koji_build.new_tag}"

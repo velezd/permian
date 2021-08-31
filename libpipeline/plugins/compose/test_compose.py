@@ -36,7 +36,7 @@ class MockUrlopen():
 @patch('urllib.request.urlopen', new=MockUrlopen)
 class TestEventCompose(unittest.TestCase):
     def test_rhel_idonly(self):
-        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2'])[1])
+        event = EventFactory.make(None, CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2'])[1])
         self.assertEqual(event.compose.id, 'RHEL-8.3.0-20200701.2')
         self.assertEqual(event.compose.version, '8.3.0')
         self.assertEqual(event.compose.major, '8')
@@ -53,7 +53,7 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.location, 'http://example.com/here/RHEL-8.3.0-20200701.2')
 
     def test_supp_idonly(self):
-        event = EventFactory.make(CliFactory.parse('compose', ['Supp-9.2.1-RHEL-8-20200811.n.5'])[1])
+        event = EventFactory.make(None, CliFactory.parse('compose', ['Supp-9.2.1-RHEL-8-20200811.n.5'])[1])
         self.assertEqual(event.compose.id, 'Supp-9.2.1-RHEL-8-20200811.n.5')
         self.assertEqual(event.compose.version, '9.2.1')
         self.assertEqual(event.compose.major, '9')
@@ -70,7 +70,8 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.location, 'http://example.com/here/Supp-9.2.1-RHEL-8-20200811.n.5')
 
     def test_rhel_overrides(self):
-        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2',
+        event = EventFactory.make(None,
+                                  CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2',
                                                                '--product=Test',
                                                                '--version=1.3.2',
                                                                '--location=test/location',
@@ -95,7 +96,8 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.location, 'test/location')
 
     def test_rhel_overrides_version(self):
-        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2',
+        event = EventFactory.make(None,
+                                  CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2',
                                                                '--version=ahoj',
                                                                '--major=10',
                                                                '--minor=9',
@@ -107,7 +109,8 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.qr, '8')
 
     def test_supp_overrides(self):
-        event = EventFactory.make(CliFactory.parse('compose', ['Supp-9.2.1-RHEL-8-20200811.n.5',
+        event = EventFactory.make(None,
+                                  CliFactory.parse('compose', ['Supp-9.2.1-RHEL-8-20200811.n.5',
                                                                '--product=Test',
                                                                '--version=1.3.2',
                                                                '--location=test/location',
@@ -132,19 +135,31 @@ class TestEventCompose(unittest.TestCase):
         self.assertEqual(event.compose.location, 'test/location')
 
     def test_event_type(self):
-        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2'])[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2'])[1]
+        )
         self.assertEqual(event.type, 'compose')
 
     def test_custom_event_type(self):
-        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2', '--event-type', 'compose.foo.bar'])[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2', '--event-type', 'compose.foo.bar'])[1]
+        )
         self.assertEqual(event.type, 'compose.foo.bar')
 
     def test_str_label(self):
-        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2', '--event-type', 'compose.foo.bar.baz'])[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('compose', ['RHEL-8.3.0-20200701.2', '--event-type', 'compose.foo.bar.baz'])[1]
+        )
         self.assertEqual(str(event), 'RHEL-8.3.0-20200701.2 (Hello) baz')
 
     def test_str_nolabel(self):
-        event = EventFactory.make(CliFactory.parse('compose', ['RHEL-8.3.0-20200701.n.2', '--event-type', 'compose.foo.bar.baz'])[1])
+        event = EventFactory.make(
+            None,
+            CliFactory.parse('compose', ['RHEL-8.3.0-20200701.n.2', '--event-type', 'compose.foo.bar.baz'])[1]
+        )
         self.assertEqual(str(event), 'RHEL-8.3.0-20200701.n.2 baz')
 
 
@@ -157,28 +172,28 @@ def mock_list_tagged_composes(pattern, tags):
 class TestComposePrevious(unittest.TestCase):
     @patch('libpipeline.plugins.compose.list_tagged_composes', new=mock_list_tagged_composes)
     def test_previous_compose_exists(self):
-        compose = ComposeStructure('RHEL-8.2.0-20200402.0')
+        compose = ComposeStructure(None, 'RHEL-8.2.0-20200402.0')
         self.assertEqual(compose.previous(beaker_tag='test').id, 'RHEL-8.2.0-20200401.0')
 
     @patch('libpipeline.plugins.compose.list_tagged_composes', new=mock_list_tagged_composes)
     def test_previous_compose_exists_latest(self):
-        compose = ComposeStructure('RHEL-8.3.0-20210402.d.1')
+        compose = ComposeStructure(None, 'RHEL-8.3.0-20210402.d.1')
         self.assertEqual(compose.previous(beaker_tag='test').id, 'RHEL-8.2.0-20200404.0')
 
     @patch('libpipeline.plugins.compose.list_tagged_composes', new=mock_list_tagged_composes)
     def test_previous_compose_none_current_in_list(self):
-        compose = ComposeStructure('RHEL-8.2.0-20200310.0')
+        compose = ComposeStructure(None, 'RHEL-8.2.0-20200310.0')
         self.assertEqual(compose.previous(beaker_tag='test'), None)
 
     @patch('libpipeline.plugins.compose.list_tagged_composes', new=mock_list_tagged_composes)
     def test_previous_compose_none(self):
-        compose = ComposeStructure('RHEL-8.2.0-20200210.0')
+        compose = ComposeStructure(None, 'RHEL-8.2.0-20200210.0')
         self.assertEqual(compose.previous(beaker_tag='test'), None)
 
     @patch('libpipeline.plugins.compose.list_tagged_composes')
     def test_previous_compose_no_relevant_composes(self, list_tagged_mock):
         list_tagged_mock.return_value = None
-        compose = ComposeStructure('RHEL-8.2.0-20200402.0')
+        compose = ComposeStructure(None, 'RHEL-8.2.0-20200402.0')
         self.assertEqual(compose.previous(beaker_tag='test'), None)
         list_tagged_mock.assert_called_once_with('RHEL-8.2._-%', ('test',))
 
