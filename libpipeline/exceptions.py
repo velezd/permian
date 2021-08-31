@@ -74,3 +74,12 @@ class RemoteLogError(Exception):
         self.name = name
         self.log_path = log_path
         super().__init__(msg)
+
+class ResourceNotAvailable(Exception):
+    """
+    Raised when desired resource is not available. The purpose is to signal
+    that some resource should be available (according to the settings), but
+    it's not available.
+    """
+    def __init__(self, msg):
+        super().__init__(msg)

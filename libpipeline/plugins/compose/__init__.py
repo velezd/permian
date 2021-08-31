@@ -15,6 +15,7 @@ from libpipeline.events.structures.base import BaseStructure
 
 from .compose_info import ComposeInfo
 from .compose_diff import ComposeDiff
+from .exceptions import ComposeNotAvailable
 
 
 @api.events.register('compose')
@@ -67,7 +68,7 @@ class ComposeStructure(BaseStructure):
             with urllib.request.urlopen(self.settings.get('compose', 'location') % self.id) as response:
                 return response.geturl()
         except urllib.error.HTTPError as excp:
-            raise Exception('Could not find compose with ID %s via %s, error %s' % (self.id, self.settings.get('compose', 'location'), excp.code))
+            raise ComposeNotAvailable('Could not find compose with ID %s via %s, error %s' % (self.id, self.settings.get('compose', 'location'), excp.code))
 
     @property
     def type(self):
