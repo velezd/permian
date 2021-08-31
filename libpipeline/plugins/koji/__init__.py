@@ -36,10 +36,10 @@ def parse_koji_tag(tag):
 
 @api.events.register_structure('koji_build')
 class KojiBuild(BaseStructure):
-    def __init__(self, settings, hub_url, nvr, build_id=None, task_id=None, package_name=None, tags=None, new_tag=None, composes_baseurl=None):
+    def __init__(self, settings, nvr, build_id=None, task_id=None, package_name=None, tags=None, new_tag=None):
         super().__init__(settings)
         self._info = None
-        self.hub_url = hub_url
+        self.hub_url = self.settings.get('koji', 'hub_url')
         self.nvr = nvr
         self.build_id = None # have it set to None until it's discovered
         self.build_id = build_id or self.info['build_id']
@@ -47,7 +47,7 @@ class KojiBuild(BaseStructure):
         self._new_tag = new_tag
         self.task_id = task_id or self.info['task_id']
         self.package_name = package_name or self.info['package_name']
-        self.composes_baseurl = composes_baseurl
+        self.composes_baseurl = self.settings.get('koji', 'testcompose_baseurl')
 
     @property
     def info(self):
@@ -76,7 +76,7 @@ class KojiBuild(BaseStructure):
         return self._new_tag
 
     def to_compose(self):
-        if self.composes_baseurl is None:
+        if not self.composes_baseurl:
             return NotImplemented
         timeout = self.settings.getfloat('koji', 'testcompose_timeout')
         delay = self.settings.getfloat('koji', 'testcompose_retry_interval')
@@ -123,15 +123,11 @@ class KojiEvent(Event):
 @api.cli.register_command_parser('koji_build_tag')
 def koji_build_tag_command(base_parser, args):
     parser = base_parser
-    parser.add_argument('hub_url', action=ToPayload,
-                        help='URL of koji hub where the build was tagged')
     parser.add_argument('nvr', action=ToPayload,
                         help='Koji build nvr like abc-1.2-3.fc4')
     # TODO: fix ToPayload to work with new-tag
     parser.add_argument('new_tag', action=ToPayload,
                         help='New tag that was added to the build')
-    parser.add_argument('--composes-baseurl', action=ToPayload,
-                        help='Override URL where composes from brew builds are stored')
     parser.add_argument('--event-type', default='koji.build.tag')
     parser.add_argument('--build-id', type=int, action=ToPayload,
                         help='Override build id')

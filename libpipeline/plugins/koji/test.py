@@ -12,14 +12,24 @@ from libpipeline.plugins.compose.exceptions import ComposeNotAvailable
 
 @patch('xmlrpc.client.ServerProxy')
 class TestKojiEvent(unittest.TestCase):
-    hub_url = 'http://koji.example.com/path/to/hub'
-    nvr = 'foo-1.2-3.dt4'
-    tag = 'bar'
+    def setUp(self):
+        self.hub_url = 'http://koji.example.com/path/to/hub'
+        self.nvr = 'foo-1.2-3.dt4'
+        self.tag = 'bar'
+        self.settings = Settings(
+            {
+                'koji' : {
+                    'hub_url' : self.hub_url,
+                },
+            },
+            {},
+            {},
+        )
 
     def test_minimal(self, koji_proxy_class):
         event = EventFactory.make(
-            None,
-            CliFactory.parse('koji_build_tag', [self.hub_url, self.nvr, self.tag])[1]
+            self.settings,
+            CliFactory.parse('koji_build_tag', [self.nvr, self.tag])[1]
         )
         self.assertIsInstance(event, KojiEvent)
         self.assertIsInstance(event.koji_build, KojiBuild)
@@ -33,7 +43,6 @@ class TestKojiEvent(unittest.TestCase):
         task_id = 12345
         package_name = 'stress-o-meter'
         command_args = [
-            self.hub_url,
             self.nvr,
             self.tag,
             '--event-type', event_type,
@@ -42,7 +51,7 @@ class TestKojiEvent(unittest.TestCase):
             '--package-name', package_name,
         ]
         event = EventFactory.make(
-            None,
+            self.settings,
             CliFactory.parse('koji_build_tag', command_args)[1]
         )
         self.assertIsInstance(event, KojiEvent)
@@ -57,20 +66,21 @@ class TestKojiEvent(unittest.TestCase):
 
 @patch('xmlrpc.client.ServerProxy')
 class TestKojiEventStructure(unittest.TestCase):
-    hub_url = 'http://koji.example.com/path/to/hub'
-    nvr = 'foo-1.2-3.dt4'
-    build_id = 1001
-    task_id = 1337
-    package_name = 'surprise!'
-    new_tag = 'acme-1.2.3-poof'
-    composes_baseurl = 'http://example.com/composes/foo'
-
     def setUp(self):
+        self.hub_url = 'http://koji.example.com/path/to/hub'
+        self.nvr = 'foo-1.2-3.dt4'
+        self.build_id = 1001
+        self.task_id = 1337
+        self.package_name = 'surprise!'
+        self.new_tag = 'acme-1.2.3-poof'
+        self.composes_baseurl = 'http://example.com/composes/foo'
         self.settings = Settings(
             {
                 'koji' : {
+                    'hub_url' : self.hub_url,
                     'testcompose_timeout' : 3,
                     'testcompose_retry_interval' : 1.2,
+                    'testcompose_baseurl' : self.composes_baseurl
                 },
             },
             {},
@@ -78,7 +88,7 @@ class TestKojiEventStructure(unittest.TestCase):
         )
 
     def test_minimal(self, koji_proxy_class):
-        koji_build = KojiBuild(self.settings, self.hub_url, self.nvr)
+        koji_build = KojiBuild(self.settings, self.nvr)
         self.assertEqual(koji_build.hub_url, self.hub_url)
         self.assertEqual(koji_build.nvr, self.nvr)
 
@@ -92,7 +102,7 @@ class TestKojiEventStructure(unittest.TestCase):
             {'name': self.new_tag},
             {'name': 'foo'},
         )
-        koji_build = KojiBuild(self.settings, self.hub_url, self.nvr)
+        koji_build = KojiBuild(self.settings, self.nvr)
         self.assertEqual(koji_build.hub_url, self.hub_url)
         self.assertEqual(koji_build.nvr, self.nvr)
         self.assertEqual(koji_build.build_id, self.build_id)
@@ -106,7 +116,7 @@ class TestKojiEventStructure(unittest.TestCase):
     def test_all(self, koji_proxy_class):
         koji_build = KojiBuild(
             self.settings,
-            self.hub_url, self.nvr, build_id=self.build_id,
+            self.nvr, build_id=self.build_id,
             task_id=self.task_id, package_name=self.package_name,
             new_tag=self.new_tag
         )
@@ -134,7 +144,7 @@ class TestKojiEventStructure(unittest.TestCase):
         Compose.return_value.info.compose.id = compose_id
         requests_get.return_value.ok = True
         requests_get.return_value.text = compose_relpath
-        koji_build = KojiBuild(self.settings, self.hub_url, self.nvr, composes_baseurl=self.composes_baseurl)
+        koji_build = KojiBuild(self.settings, self.nvr)
         compose = koji_build.to_compose()
         self.assertEqual(compose.id, compose_id)
         self.assertEqual(
@@ -156,7 +166,7 @@ class TestKojiEventStructure(unittest.TestCase):
             {'name': self.new_tag},
         )
         requests_get.return_value.ok = False
-        koji_build = KojiBuild(self.settings, self.hub_url, self.nvr, composes_baseurl=self.composes_baseurl)
+        koji_build = KojiBuild(self.settings, self.nvr)
         with self.assertRaises(ComposeNotAvailable):
             compose = koji_build.to_compose()
         entrypoint = f'{self.composes_baseurl}/{self.task_id}-{self.package_name}'
