@@ -1,12 +1,14 @@
 import unittest
 import re
-from unittest.mock import patch, create_autospec
+from unittest.mock import patch, create_autospec, call
 import productmd
 
 from libpipeline.events.factory import EventFactory
 from libpipeline.cli.factory import CliFactory
+from libpipeline.settings import Settings
 
 from . import KojiEvent, KojiBuild
+from libpipeline.plugins.compose.exceptions import ComposeNotAvailable
 
 @patch('xmlrpc.client.ServerProxy')
 class TestKojiEvent(unittest.TestCase):
@@ -63,8 +65,20 @@ class TestKojiEventStructure(unittest.TestCase):
     new_tag = 'acme-1.2.3-poof'
     composes_baseurl = 'http://example.com/composes/foo'
 
+    def setUp(self):
+        self.settings = Settings(
+            {
+                'koji' : {
+                    'testcompose_timeout' : 3,
+                    'testcompose_retry_interval' : 1.2,
+                },
+            },
+            {},
+            {},
+        )
+
     def test_minimal(self, koji_proxy_class):
-        koji_build = KojiBuild(None, self.hub_url, self.nvr)
+        koji_build = KojiBuild(self.settings, self.hub_url, self.nvr)
         self.assertEqual(koji_build.hub_url, self.hub_url)
         self.assertEqual(koji_build.nvr, self.nvr)
 
@@ -78,7 +92,7 @@ class TestKojiEventStructure(unittest.TestCase):
             {'name': self.new_tag},
             {'name': 'foo'},
         )
-        koji_build = KojiBuild(None, self.hub_url, self.nvr)
+        koji_build = KojiBuild(self.settings, self.hub_url, self.nvr)
         self.assertEqual(koji_build.hub_url, self.hub_url)
         self.assertEqual(koji_build.nvr, self.nvr)
         self.assertEqual(koji_build.build_id, self.build_id)
@@ -91,7 +105,7 @@ class TestKojiEventStructure(unittest.TestCase):
 
     def test_all(self, koji_proxy_class):
         koji_build = KojiBuild(
-            None,
+            self.settings,
             self.hub_url, self.nvr, build_id=self.build_id,
             task_id=self.task_id, package_name=self.package_name,
             new_tag=self.new_tag
@@ -118,11 +132,40 @@ class TestKojiEventStructure(unittest.TestCase):
             {'name': self.new_tag},
         )
         Compose.return_value.info.compose.id = compose_id
+        requests_get.return_value.ok = True
         requests_get.return_value.text = compose_relpath
-        koji_build = KojiBuild(None, self.hub_url, self.nvr, composes_baseurl=self.composes_baseurl)
+        koji_build = KojiBuild(self.settings, self.hub_url, self.nvr, composes_baseurl=self.composes_baseurl)
         compose = koji_build.to_compose()
         self.assertEqual(compose.id, compose_id)
         self.assertEqual(
             compose.location,
             f'{self.composes_baseurl}/{compose_relpath}'
         )
+
+    @patch('requests.get')
+    @patch('productmd.compose.Compose')
+    def test_convert_compose_fail(self, Compose, requests_get, koji_proxy_class):
+        compose_id = 'FooBar-1.23-123456.t.98'
+        compose_relpath = '../some_compose_dir'
+        koji_proxy_class.return_value.getBuild.return_value = {
+            'build_id' : self.build_id,
+            'task_id' : self.task_id,
+            'package_name' : self.package_name,
+        }
+        koji_proxy_class.return_value.listTags.return_value = (
+            {'name': self.new_tag},
+        )
+        requests_get.return_value.ok = False
+        koji_build = KojiBuild(self.settings, self.hub_url, self.nvr, composes_baseurl=self.composes_baseurl)
+        with self.assertRaises(ComposeNotAvailable):
+            compose = koji_build.to_compose()
+        entrypoint = f'{self.composes_baseurl}/{self.task_id}-{self.package_name}'
+        # testcompose_timeout=3
+        # testcompose_retry_interval=1.2
+        # There should be 3 attempts (but not more) before the timeout
+        requests_get.assert_has_calls([
+            call(entrypoint),
+            call(entrypoint),
+            call(entrypoint)
+        ])
+        self.assertEqual(requests_get.call_count, 3)

@@ -4,6 +4,8 @@ import json
 import xmlrpc.client
 import productmd
 import requests
+import time
+import datetime
 
 from libpipeline.plugins import api
 from libpipeline.events.base import Event
@@ -12,6 +14,7 @@ from libpipeline.events.structures.base import BaseStructure
 from libpipeline.cli.parser import bool_argument, ToPayload, AppendToPayload
 
 from libpipeline.plugins.compose import ComposeStructure
+from libpipeline.plugins.compose.exceptions import ComposeNotAvailable
 from libpipeline.plugins.beaker import BeakerCompose
 
 TAG_REGEXPS = (
@@ -75,12 +78,27 @@ class KojiBuild(BaseStructure):
     def to_compose(self):
         if self.composes_baseurl is None:
             return NotImplemented
+        timeout = self.settings.getfloat('koji', 'testcompose_timeout')
+        delay = self.settings.getfloat('koji', 'testcompose_retry_interval')
+        wait_until = None if timeout <= 0 else datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         entrypoint = f'{self.composes_baseurl}/{self.task_id}-{self.package_name}'
         entrypoint_dir = os.path.dirname(entrypoint)
-        compose_relpath = requests.get(entrypoint).text.strip()
-        compose_path = f'{entrypoint_dir}/{compose_relpath}'
-        compose_id = productmd.compose.Compose(compose_path).info.compose.id
-        return ComposeStructure(self.settings, compose_id, location=compose_path)
+        # try to locate the compose until timeout is reached
+        while wait_until is None or datetime.datetime.now() < wait_until:
+            response = requests.get(entrypoint)
+            if response.ok:
+                compose_relpath = response.text.strip()
+                compose_path = f'{entrypoint_dir}/{compose_relpath}'
+                try:
+                    compose_id = productmd.compose.Compose(compose_path).info.compose.id
+                    return ComposeStructure(self.settings, compose_id, location=compose_path)
+                except RuntimeError: # raised by productmd when failed to load compose metadata
+                    pass
+            # Don't repeat attempts if timeout was set to 0
+            if timeout == 0:
+                break
+            time.sleep(delay)
+        raise ComposeNotAvailable(f'''Entrypoint "{entrypoint}" either doesn't exist or points to a location which doesn't contain compose.''')
 
     def to_beakerCompose(self):
         return BeakerCompose.from_compose(self.to_compose())
