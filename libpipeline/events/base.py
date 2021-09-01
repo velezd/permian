@@ -1,6 +1,7 @@
 import functools
 import jinja2
 import json
+import threading
 from hashlib import sha256
 from ..caserunconfiguration import CaseRunConfiguration, ConfigurationsList, CaseRunConfigurationsList
 #from ..exceptions import UnknownEventSubTypeExpression
@@ -29,7 +30,7 @@ class Event():
         self.structures = {}
         for structure_name, fields in event_structures.items():
             self.structures[structure_name] = EventStructuresFactory.make(settings, structure_name, fields)
-
+        self.structures_convert_lock = threading.RLock()
         self.id = sha256(f'{self.type}-{json.dumps(event_structures, sort_keys=True)}'.encode()).hexdigest()
 
     def format_branch_spec(self, fmt):
@@ -80,18 +81,19 @@ class Event():
     def __getattr__(self, attrname):
         if attrname not in EventStructuresFactory.known():
             return super().__getattribute__(attrname)
-        try:
-            return self.structures[attrname]
-        except KeyError:
-            pass
-        structure = EventStructuresFactory.convert(attrname, self.structures)
-        if structure is NotImplemented:
-            # Return None if the requested structure is not compatible to
-            # allow jinja templates to not crash on expressions like
-            # event.nonexisting_structure.foo but to consider them as None
-            return None
-        self.structures[attrname] = structure
-        return structure
+        with self.structures_convert_lock:
+            try:
+                return self.structures[attrname]
+            except KeyError:
+                pass
+            structure = EventStructuresFactory.convert(attrname, self.structures)
+            if structure is NotImplemented:
+                # Return None if the requested structure is not compatible to
+                # allow jinja templates to not crash on expressions like
+                # event.nonexisting_structure.foo but to consider them as None
+                return None
+            self.structures[attrname] = structure
+            return structure
 
 def payload_override(payload_name):
     def decorator(method):
