@@ -48,6 +48,7 @@ class KojiBuild(BaseStructure):
         self.task_id = task_id or self.info['task_id']
         self.package_name = package_name or self.info['package_name']
         self.composes_baseurl = self.settings.get('koji', 'testcompose_baseurl')
+        self._to_compose_exception = None
 
     @property
     def info(self):
@@ -76,6 +77,8 @@ class KojiBuild(BaseStructure):
         return self._new_tag
 
     def to_compose(self):
+        if self._to_compose_exception is not None:
+            raise self._to_compose_exception
         if not self.composes_baseurl:
             return NotImplemented
         timeout = self.settings.getfloat('koji', 'testcompose_timeout')
@@ -98,7 +101,8 @@ class KojiBuild(BaseStructure):
             if timeout == 0:
                 break
             time.sleep(delay)
-        raise ComposeNotAvailable(f'''Entrypoint "{entrypoint}" either doesn't exist or points to a location which doesn't contain compose.''')
+        self._to_compose_exception = ComposeNotAvailable(f'''Entrypoint "{entrypoint}" either doesn't exist or points to a location which doesn't contain compose.''')
+        raise self._to_compose_exception
 
     def to_beakerCompose(self):
         return BeakerCompose.from_compose(self.to_compose())
