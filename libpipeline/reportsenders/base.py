@@ -162,7 +162,7 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         # error state as 'needs-review'
         if not issueSet.isComplete or issueSet.needsReview:
             return 'ERROR'
-        return caseRunConfigurations.result
+        return result
 
     def descriptionOf(self, caseRunConfigurations):
         """
