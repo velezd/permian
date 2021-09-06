@@ -152,6 +152,11 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
         if not isinstance(caseRunConfigurations, CaseRunConfigurationsList):
             caseRunConfigurations = CaseRunConfigurationsList(caseRunConfigurations)
         result = caseRunConfigurations.result
+        # If the all caseRunConfigurations are without result, don't change the
+        # result as they haven't even started yet so they couldn't have
+        # encountered any issue yet.
+        if result is None:
+            return result
         issueSet = self.issuesFor(caseRunConfigurations)
         # if there's some issue missing or some issue needs review, use
         # error state as 'needs-review'
