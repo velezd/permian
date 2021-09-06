@@ -2,7 +2,15 @@
 <testsuites>
     <properties>
     </properties>
-    <testsuite name="xunit testplan 1" tests="1">
+    <testsuite name="xunit testplan 1" tests="2">
+        <testcase name="testcase 1" classname="xunit testplan 1">
+            <properties>
+            </properties>
+            <system-out>
+            Configuration: {&#39;conf&#39;: 1} - Result: DNF, None - Beaker links: None - Issues:  ; Configuration: {&#39;conf&#39;: 2} - Result: DNF, None - Beaker links: None - Issues:  ; 
+            </system-out>
+            <skipped message="Configuration: {&#39;conf&#39;: 1} - Result: DNF, None - Beaker links: None - Issues:  ; Configuration: {&#39;conf&#39;: 2} - Result: DNF, None - Beaker links: None - Issues:  ; " type="skipped" />
+        </testcase>
         <testcase name="testing plugin case 1" classname="xunit testplan 1">
             <properties>
             </properties>

@@ -12,6 +12,7 @@ verified_by:
   test_cases:
     direct_list:
       - testing plugin case 1
+      - testcase 1 # manual testcase
 reporting:
   - type: xunit
 acceptance_criteria:
