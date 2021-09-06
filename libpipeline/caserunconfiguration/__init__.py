@@ -284,13 +284,13 @@ class CaseRunConfigurationsList(list):
 
     @property
     def status(self):
-        """Return highest result present in the caseRunConfigurations"""
+        """Return lowest state present in the caseRunConfigurations"""
         states = { state:i for i, state in enumerate(STATES) }
         return list(STATES)[min([states[crc.result.state] for crc in self])]
 
     @property
     def result(self):
-        """Return lowest state present in the caseRunConfigurations"""
+        """Return highest result present in the caseRunConfigurations"""
         results = { result:i for i, result in enumerate(RESULTS) }
         return list(RESULTS)[max([results[crc.result.result] for crc in self])]
 
