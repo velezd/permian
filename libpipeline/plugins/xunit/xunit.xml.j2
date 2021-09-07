@@ -6,7 +6,7 @@
         {%- endfor %}
     </properties>
     <testsuite name="{{ reportsender.testplan.name }}" tests="{{ testcases|length - exclude|length }}">
-        {%- for tc_name, crcs_list in testcases.items() %}
+        {%- for tc_name, crcs_list in testcases.items()|sort %}
         {%- set xunitResult = reportsender.xunitResultOf(crcs_list) %}
         {%- set description = reportsender.descriptionOf(crcs_list) %}
         <testcase name="{{ tc_name }}" classname="{{ reportsender.testplan.name }}">
