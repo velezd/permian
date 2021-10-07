@@ -60,6 +60,7 @@ function refreshData() {
             $(".crc-"+caserun.id+" .crc_displaystatus").html(marked(caserun.display_status));
             $(".crc-"+caserun.id+" .crc_workflow").text(caserun.workflow);
             $(".crc-"+caserun.id+" .crc_result").text(caserun.result);
+            $(".crc-"+caserun.id+" .crc_result").attr('data-result', caserun.result);
             $(".crc-"+caserun.id+" .crc_state").text(caserun.state);
             $(".crc-"+caserun.id+" .crc_logs ul").replaceWith(logs_list_to_html(caserun.id, caserun.logs))
             $(".crc-"+caserun.id+" .crc_cancel").prop('disabled', !caserun.active);
