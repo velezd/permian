@@ -4,9 +4,11 @@ function expand_nextSibling(elem) {
         // Set maxHeight explicitly to none overriding the max-height for this
         // specific element.
         siblingStyle.maxHeight = 'none';
+        elem.innerText = '▲'
     }
     else {
         // Remove the maxHeight override.
         siblingStyle.removeProperty('max-height');
+        elem.innerText = '▼'
     }
 }
