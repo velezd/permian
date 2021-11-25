@@ -1,0 +1,16 @@
+name: container
+description: See the source
+author: rvykydal@redhat.com
+execution:
+  type: kickstart-test
+  automation_data:
+    test: container
+priority: 1
+instructions:
+  setup:
+    - Download iso
+    - Check out repo
+  steps:
+    - Run test
+  teardown:
+    - Clean up
