@@ -75,6 +75,8 @@ class BaseReportSender(threading.Thread, metaclass=abc.ABCMeta):
             self.checkEmptyQueue()
         except Exception as e:
             self.exception = dump_exception(e, self)
+            # reraise the exception so that it's exposed for unit tests
+            raise
 
     def resultUpdate(self, crc):
         """

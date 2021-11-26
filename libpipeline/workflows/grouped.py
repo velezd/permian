@@ -64,10 +64,15 @@ class GroupedWorkflow(threading.Thread, metaclass=abc.ABCMeta):
         except Exception as e:
             self.exceptions.append(dump_exception(e, self))
             self.groupReportResult(self.crcList, Result('DNF', 'ERROR', True))
-        try:
-            self.teardown()
-        except Exception as e:
-            self.exceptions.append(dump_exception(e, self))
+            # reraise the exception so that it's exposed for unit tests
+            raise
+        finally:
+            try:
+                self.teardown()
+            except Exception as e:
+                self.exceptions.append(dump_exception(e, self))
+                # reraise the exception so that it's exposed for unit tests
+                raise
 
     def setup(self):
         """
