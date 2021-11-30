@@ -10,26 +10,27 @@ mocked_os_environ = {'SOMETHING_ELSE': 'foo',
 
 mock = MagicMock()
 
-TEST_PLUGINS_PATH = 'tests/plugins'
+TEST_PLUGINS_PATH = {'tests/plugins'}
+plugins_dir = list(TEST_PLUGINS_PATH)[0]
 
 class TestPluginsOverride(unittest.TestCase):
     @patch('os.environ', new=mocked_os_environ)
     def test_env_plugins_override(self):
-        disabled, enabled = env_plugins_override()
+        disabled, enabled, _ = env_plugins_override()
         self.assertEqual(disabled, {'plugin1', 'plugin2', 'plugin3'})
         self.assertEqual(enabled, {'plugin4'})
 
     @patch('libpipeline.plugins.PLUGINS_PATH', new=TEST_PLUGINS_PATH)
     def test_plugins_disabled_flag(self):
-        self.assertFalse(disabled('test1_enabled'))
-        self.assertTrue(disabled('test2_disabled'))
+        self.assertFalse(disabled(plugins_dir, 'test1_enabled'))
+        self.assertTrue(disabled(plugins_dir, 'test2_disabled'))
 
     @patch('libpipeline.plugins.DISABLED_PLUGINS', new={'test1_enabled'})
     @patch('libpipeline.plugins.ENABLED_PLUGINS', new={'test2_disabled'})
     @patch('libpipeline.plugins.PLUGINS_PATH', new=TEST_PLUGINS_PATH)
     def test_plugins_disabled_override(self):
-        self.assertTrue(disabled('test1_enabled'))
-        self.assertFalse(disabled('test2_disabled'))
+        self.assertTrue(disabled(plugins_dir, 'test1_enabled'))
+        self.assertFalse(disabled(plugins_dir, 'test2_disabled'))
 
 class TestPluginsLoad(unittest.TestCase):
     @patch('importlib.import_module', new=mock)

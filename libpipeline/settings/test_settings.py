@@ -1,7 +1,9 @@
 import unittest
 import os
 import configparser
+import shutil
 from . import Settings
+from libpipeline.plugins import load
 
 class TestSettingsOverrides(unittest.TestCase):
     def test_default(self):
@@ -39,13 +41,15 @@ class TestSettingsOverridesPlugin(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         os.mkdir('./libpipeline/plugins/testplugin')
+        with open('./libpipeline/plugins/testplugin/__init__.py', 'w') as init_file:
+            pass
         with open('./libpipeline/plugins/testplugin/settings.ini', 'w') as settings_file:
             settings_file.write('[TestSection]\nsource=plugin')
+        load()  # Reload plugins
 
     @classmethod
     def tearDownClass(cls):
-        os.unlink('./libpipeline/plugins/testplugin/settings.ini')
-        os.rmdir('./libpipeline/plugins/testplugin')
+        shutil.rmtree('./libpipeline/plugins/testplugin')
 
     def test_plugins(self):
         # Verifies that plugin settings overrides default settings
