@@ -1,6 +1,6 @@
 ----------
 Exceptions
 ----------
-.. automodule:: libpipeline.exceptions
+.. automodule:: libpermian.exceptions
    :members:
    :undoc-members:

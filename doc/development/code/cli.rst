@@ -1,24 +1,24 @@
 ---
 CLI
 ---
-.. automodule:: libpipeline.cli
+.. automodule:: libpermian.cli
    :members:
    :undoc-members:
 
 Parser
 ------
-.. automodule:: libpipeline.cli.parser
+.. automodule:: libpermian.cli.parser
    :members:
    :undoc-members:
 
 Built-in
 --------
-.. automodule:: libpipeline.cli.builtin
+.. automodule:: libpermian.cli.builtin
    :members:
    :undoc-members:
 
 Factory
 -------
-.. automodule:: libpipeline.cli.factory
+.. automodule:: libpermian.cli.factory
    :members:
    :undoc-members:

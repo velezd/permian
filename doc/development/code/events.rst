@@ -1,24 +1,24 @@
 ------
 Events
 ------
-.. automodule:: libpipeline.events
+.. automodule:: libpermian.events
    :members:
    :undoc-members:
 
 Base
 ----
-.. automodule:: libpipeline.events.base
+.. automodule:: libpermian.events.base
    :members:
    :undoc-members:
 
 Built-in
 --------
-.. automodule:: libpipeline.events.builtin
+.. automodule:: libpermian.events.builtin
    :members:
    :undoc-members:
 
 Factory
 -------
-.. automodule:: libpipeline.events.factory
+.. automodule:: libpermian.events.factory
    :members:
    :undoc-members:

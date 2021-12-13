@@ -4,7 +4,7 @@ Plugin development
 
 API
 ---
-.. automodule:: libpipeline.plugins.api
+.. automodule:: libpermian.plugins.api
     :noindex:
 
 Example

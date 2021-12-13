@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+Permian Debug threads
+{% endblock %}
+
+{% block body %}
+<h1>Permian Debug threads</h1>
+
+<h2>Non-daemon threads</h2>
+<ul>
+{% for thread in threads %}
+{% if not thread.daemon %}
+  <li>{{ thread }}</li>
+{% endif %}
+{% endfor %}
+</ul>
+
+<h2>Daemon threads</h2>
+<ul>
+{% for thread in threads %}
+{% if thread.daemon %}
+  <li>{{ thread }}</li>
+{% endif %}
+{% endfor %}
+</ul>
+
+{% endblock %}

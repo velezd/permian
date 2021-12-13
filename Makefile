@@ -3,7 +3,7 @@
 rpms:
 test: test.lint test.unit test.integration
 test.lint:
-	pylint-3 -E libpipeline
+	pylint-3 -E libpermian
 test.unit:
 	./run_unit_tests.py
 test.integration:

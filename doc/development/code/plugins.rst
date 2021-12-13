@@ -1,18 +1,18 @@
 -------
 Plugins
 -------
-.. automodule:: libpipeline.plugins
+.. automodule:: libpermian.plugins
    :members:
    :undoc-members:
 
 API
 ---
-.. automodule:: libpipeline.plugins.api
+.. automodule:: libpermian.plugins.api
    :members:
    :undoc-members:
 
 Example
 -------
-.. automodule:: libpipeline.plugins.example
+.. automodule:: libpermian.plugins.example
    :members:
    :undoc-members:

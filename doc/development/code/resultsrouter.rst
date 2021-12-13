@@ -1,6 +1,6 @@
 --------------
 Results Router
 --------------
-.. automodule:: libpipeline.resultsrouter
+.. automodule:: libpermian.resultsrouter
    :members:
    :undoc-members:

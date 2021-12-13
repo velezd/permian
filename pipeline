@@ -1,5 +1,5 @@
 #!/usr/bin/python3
 
-from libpipeline.cli import main
+from libpermian.cli import main
 
 main()

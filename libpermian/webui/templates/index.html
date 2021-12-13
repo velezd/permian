@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}
+Permian WebUI
+{% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="{{ url_for('static', filename='refresh.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<header>
+    <div id="header-top">
+        <div id="header-left">
+            <h1>Permian WebUI</h1>
+        </div>
+        <div id="header-center" class="pipeline_actions">
+        <button onclick='toggle_filter()' class="">Filter</button>
+        <button onclick='cancel_all()' id="btn-cancel-all" class="">Cancel all</button>
+        </div>
+        <div id="header-right">
+            AutoRefresh
+            <select id="refresh_rate" onchange="change_refresh_rate()">
+                <option value="0">OFF</option>
+                <option value="1000">1s</option>
+                <option value="5000" selected="selected">5s</option>
+                <option value="10000">10s</option>
+                <option value="30000">30s</option>
+                <option value="60000">60s</option>
+            </select>
+            Testplan tables
+            <label class="switch">
+                <input type="checkbox" checked="checked" onclick='$("#display-testplans").toggle(); $("#display-all").toggle()' />
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+    <!-- BEGIN Filtering -->
+    <div id="filter-box">
+        <table>
+            <tr>
+                <td>Test case</td>
+                <td><input name="testcase" type="text" /></td>
+                <td>State</td>
+                <td>
+                    <select name="state">
+                    <option value="-">-</option>
+                    {%- for state in filter_data['states']  %}
+                    <option value="{{ state }}">{{ state }}</option>
+                    {% endfor -%}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Test plan</td>
+                <td><input name="testplan" type="text" /></td>
+                <td>Result</td>
+                <td>
+                    <select name="result">
+                    <option value="-">-</option>
+                    {%- for result in filter_data['results']  %}
+                    <option value="{{ result }}">{{ result }}</option>
+                    {% endfor -%}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Configuration</td>
+                <td><input name="configuration" type="text" placeholder="value;key:value" /></td>
+                <td>Workflow</td>
+                <td>
+                    <select name="workflow">
+                    <option value="-">-</option>
+                    {%- for workflow in filter_data['workflows']  %}
+                    <option value="{{ workflow }}">{{ workflow }}</option>
+                    {% endfor -%}
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <button onclick="filter()" class="btn">Filter</button>
+    </div>
+    <!-- END Filtering -->
+</header>
+
+<div id="display-testplans">
+    <!-- Cases in testplan tables -->
+    {% for testplan_name, testplan in pipeline.testRuns.testPlansMapping.items() %}
+    <div class="testplan_container container">
+        <div class="testplan_container_header">
+        <div class="testplan_header_left">
+            <h2>{{ testplan_name }}</h2>
+        </div>
+        <div class="testplan_header_right">
+            <!--<button onclick="show_report_{{ testrun_id }}()" class="btn btn-default">Show reporting</button>-->
+            <!--<button class="btn btn-warning">Postpone reporting</button>-->
+            <button onclick="cancel_plan('{{ testplan_name }}')" class="btn-cancel-plan" id="{{ testplan_name }}">Cancel plan</button>
+        </div>
+        </div>
+        <table>
+            <tr><th>Testcase</th><th>Configuration</th><th>Display Status</th><th>Workflow</th><th>Result</th><th>State</th><th>Logs</th><th>Actions</th></tr>
+            {% for crc in ( testplan | sort_crcs ) %}
+                <tr class="crc crc-{{ crc.id }}">
+                    <td class="crc_name"></td>
+                    <td class="crc_configuration"></td>
+                    <td class="crc_displaystatus"></td>
+                    <td class="crc_workflow"></td>
+                    <td class="crc_result" data-result=""></td>
+                    <td class="crc_state"></td>
+                    <td class="crc_logs"><button class="expander" onclick="expand_nextSibling(this)">▼</button><ul /></td>
+                    <td class="crc_actions"><button onclick="cancel('{{ crc.id }}')" class="crc_cancel">Cancel</button></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Cases in one table -->
+<div class="autohide container" id="display-all">
+    <table>
+        <tr><th>Testcase</th><th>Configuration</th><th>Running for</th><th>Workflow</th><th>Display Status</th><th>Result</th><th>State</th><th>Logs</th><th>Actions</th></tr>
+        {% for crc in ( pipeline.testRuns.caseRunConfigurations | sort_crcs ) %}
+            <tr class="crc crc-{{ crc.id }}">
+                <td class="crc_name"></td>
+                <td class="crc_configuration"></td>
+                <td class="crc_runningfor"></td>
+                <td class="crc_workflow"></td>
+                <td class="crc_displaystatus"></td>
+                <td class="crc_result" data-result=""></td>
+                <td class="crc_state"></td>
+                <td class="crc_logs"><button class="expander" onclick="expand_nextSibling(this)">▼</button><ul /></td>
+                <td class="crc_actions"><button onclick="cancel('{{ crc.id }}')" class="crc_cancel">Cancel</button></td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

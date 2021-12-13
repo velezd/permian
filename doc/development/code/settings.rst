@@ -1,6 +1,6 @@
 --------
 Settings
 --------
-.. automodule:: libpipeline.settings
+.. automodule:: libpermian.settings
    :members:
    :undoc-members:

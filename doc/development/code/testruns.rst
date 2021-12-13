@@ -1,6 +1,6 @@
 --------
 Testruns
 --------
-.. automodule:: libpipeline.testruns
+.. automodule:: libpermian.testruns
    :members:
    :undoc-members:

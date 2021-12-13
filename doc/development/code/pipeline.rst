@@ -1,6 +1,6 @@
 --------
 Pipeline
 --------
-.. automodule:: libpipeline.pipeline
+.. automodule:: libpermian.pipeline
    :members:
    :undoc-members:

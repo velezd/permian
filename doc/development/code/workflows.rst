@@ -1,30 +1,30 @@
 ---------
 Workflows
 ---------
-.. automodule:: libpipeline.workflows
+.. automodule:: libpermian.workflows
    :members:
    :undoc-members:
 
 Factory
 -------
-.. automodule:: libpipeline.workflows.factory
+.. automodule:: libpermian.workflows.factory
    :members:
    :undoc-members:
 
 Built-in
 --------
-.. automodule:: libpipeline.workflows.builtin
+.. automodule:: libpermian.workflows.builtin
    :members:
    :undoc-members:
 
 Grouped
 -------
-.. automodule:: libpipeline.workflows.grouped
+.. automodule:: libpermian.workflows.grouped
    :members:
    :undoc-members:
 
 Isolated
 --------
-.. automodule:: libpipeline.workflows.isolated
+.. automodule:: libpermian.workflows.isolated
    :members:
    :undoc-members:

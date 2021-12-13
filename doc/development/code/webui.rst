@@ -1,36 +1,36 @@
 -----
 WebUI
 -----
-.. automodule:: libpipeline.webui
+.. automodule:: libpermian.webui
    :members:
    :undoc-members:
 
 Server
 ------
-.. automodule:: libpipeline.webui.server
+.. automodule:: libpermian.webui.server
    :members:
    :undoc-members:
 
 Built-in
 --------
-.. automodule:: libpipeline.webui.builtin
+.. automodule:: libpermian.webui.builtin
    :members:
    :undoc-members:
 
 Hooks
 -----
-.. automodule:: libpipeline.webui.hooks
+.. automodule:: libpermian.webui.hooks
    :members:
    :undoc-members:
 
 Callbacks
 ---------
-.. automodule:: libpipeline.webui.callbacks
+.. automodule:: libpermian.webui.callbacks
    :members:
    :undoc-members:
 
 Request
 -------
-.. automodule:: libpipeline.webui.request
+.. automodule:: libpermian.webui.request
    :members:
    :undoc-members:

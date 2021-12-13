@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'rtt-pipeline'
+project = 'permian'
 copyright = '2020, Pavel Holica'
 author = 'Pavel Holica'
 

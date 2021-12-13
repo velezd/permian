@@ -1,24 +1,24 @@
 --------------
 Report Senders
 --------------
-.. automodule:: libpipeline.reportsenders
+.. automodule:: libpermian.reportsenders
    :members:
    :undoc-members:
 
 Base
 ----
-.. automodule:: libpipeline.reportsenders.base
+.. automodule:: libpermian.reportsenders.base
    :members:
    :undoc-members:
 
 Built-in
 --------
-.. automodule:: libpipeline.reportsenders.builtin
+.. automodule:: libpermian.reportsenders.builtin
    :members:
    :undoc-members:
 
 Factory
 -------
-.. automodule:: libpipeline.reportsenders.factory
+.. automodule:: libpermian.reportsenders.factory
    :members:
    :undoc-members:
