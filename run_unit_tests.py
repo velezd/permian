@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     tests = loader.discover(pattern="test*.py", start_dir=".")
     for dir in plugins_dirs:
-        tests += loader.discover(pattern="test*.py", start_dir=dir)
+        tests.addTests(loader.discover(pattern="test*.py", start_dir=dir))
 
     runner = unittest.runner.TextTestRunner(verbosity=1)
     result = runner.run(tests)
