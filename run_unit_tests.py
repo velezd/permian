@@ -5,17 +5,16 @@ import unittest
 import sys
 import os
 
-if __name__ == "__main__":
-    # Run unittests also for external plugins
-    plugins_path = os.environ.get('PIPELINEPLUGINS_PATH', '')
-    plugins_dirs = set(plugins_path.split(':')) if plugins_path != '' else set()
+import libpermian.plugins
 
+if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, filename="test_debug.log")
     loader = unittest.TestLoader()
 
     tests = loader.discover(pattern="test*.py", start_dir=".")
-    for dir in plugins_dirs:
-        tests.addTests(loader.discover(pattern="test*.py", start_dir=dir))
+    libpermian.plugins.load()
+    for plugin in libpermian.plugins.loaded_plugin_modules():
+        tests.addTests(loader.discover(pattern="test*.py", start_dir=plugin.__name__))
 
     runner = unittest.runner.TextTestRunner(verbosity=1)
     result = runner.run(tests)
