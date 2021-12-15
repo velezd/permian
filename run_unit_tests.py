@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     tests = loader.discover(pattern="test*.py", start_dir=".")
     libpermian.plugins.load()
-    for plugin in libpermian.plugins.loaded_plugin_modules():
+    for plugin in list(libpermian.plugins.loaded_plugin_modules()):
         tests.addTests(loader.discover(pattern="test*.py", start_dir=plugin.__name__))
 
     runner = unittest.runner.TextTestRunner(verbosity=1)
