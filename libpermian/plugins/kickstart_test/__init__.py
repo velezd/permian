@@ -90,8 +90,6 @@ class KickstartTestWorkflow(GroupedWorkflow):
         LOGGER.info("Running %s", command)
         rc = subprocess.run(
             command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
             check=False,
             cwd=self.ksrepo_dir,
         )
