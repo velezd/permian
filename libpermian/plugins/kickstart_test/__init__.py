@@ -88,17 +88,23 @@ class KickstartTestWorkflow(GroupedWorkflow):
         self.groupReportResult(self.crcList, Result('running'))
         command = self.runner_command + tests
         LOGGER.info("Running %s", command)
-        rc = subprocess.run(
+        with subprocess.Popen(
             command,
-            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            bufsize=1,
+            universal_newlines=True,
             cwd=self.ksrepo_dir,
-        )
-        if rc.returncode == 0:
+        ) as p:
+            for line in p.stdout:
+                LOGGER.info("[runner] %s", line.strip())
+
+        if p.returncode == 0:
             self.groupReportResult(
                 self.crcList,
                 Result('complete', 'PASS', True)
             )
-        elif rc.returncode == 1:
+        elif p.returncode == 1:
             self.groupReportResult(
                 self.crcList,
                 Result('complete', 'FAIL', True)
