@@ -111,11 +111,12 @@ class KickstartTestWorkflow(GroupedWorkflow):
         self.execute()
 
     def teardown(self):
-        LOGGER.info("Removing installer boot.iso.")
-        try:
-            os.remove(self.boot_iso_dest)
-        except FileNotFoundError:
-            LOGGER.debug("Installer boot.iso %s not found", self.boot_iso_dest)
+        if self.boot_iso_url:
+            LOGGER.info("Removing installer boot.iso.")
+            try:
+                os.remove(self.boot_iso_dest)
+            except FileNotFoundError:
+                LOGGER.debug("Installer boot.iso %s not found", self.boot_iso_dest)
 
         if self.temporary_ksrepo:
             tempdir = os.path.normpath(os.path.join(self.ksrepo_dir, '..'))
