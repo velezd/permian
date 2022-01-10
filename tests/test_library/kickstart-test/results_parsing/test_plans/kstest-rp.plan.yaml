@@ -1,0 +1,15 @@
+name: kstests results parsing plan
+description: Real sample of daily-iso output with reduced number of tests
+point_person: rvykydal@redhat.com
+artifact_type: kstest-poc
+verified_by:
+  test_cases:
+    direct_list:
+      - authselect-not-set
+      - clearpart-1
+      - container
+      - keyboard-convert-vc
+      - lang
+      - packages-multilib
+      - selinux-permissive
+      - services

@@ -1,0 +1,394 @@
+starting kickstart tests
+Thu Dec 30 01:25:19 UTC 2021
+Running tests: container.sh keyboard-convert-vc.sh selinux-permissive.sh lang.sh packages-multilib.sh services.sh clearpart-1.sh authselect-not-set.sh 
+INFO:apply-ksappend.py: running ksappend substitution on: container.ks.in
+INFO:apply-ksappend.py: running ksappend substitution on: keyboard-convert-vc.ks.in
+INFO:apply-ksappend.py: running ksappend substitution on: selinux-permissive.ks.in
+INFO:apply-ksappend.py: running ksappend substitution on: lang.ks.in
+INFO:apply-ksappend.py: running ksappend substitution on: packages-multilib.ks.in
+INFO:apply-ksappend.py: running ksappend substitution on: services.ks.in
+INFO:apply-ksappend.py: running ksappend substitution on: clearpart-1.ks.in
+INFO:apply-ksappend.py: running ksappend substitution on: authselect-not-set.ks.in
+Including post-nochroot-lib-keyboard.sh into keyboard-convert-vc.ks
+Including post-lib-keyboard.sh into keyboard-convert-vc.ks
+================================================================
+INFO: install_log = /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/virt-install.log
+INFO: virt-install ['-n', 'kstest-container_(18f92630-3e59-45b7-b1cd-e44f008434da)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/container.ks', '--disk', 'path=/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/container.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:56735,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+......................................
+INFO: Install finished. Or at least virt shut down.
+INFO: Disk Image install successful
+INFO: SUMMARY
+-------
+Logs are in /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph
+Disk image(s) at /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/disk-a.img,cache=unsafe
+Results are in /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph
+
+INFO: RESULT:container:a60e7dc23a91:SUCCESS:test done
+================================================================
+INFO: install_log = /var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/virt-install.log
+INFO: virt-install ['-n', 'kstest-selinux-permissive_(ec05d832-576e-48c9-86a1-8681a5ec7347)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/selinux-permissive.ks', '--disk', 'path=/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/selinux-permissive.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:48729,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+..............................................................................................
+INFO: Install finished. Or at least virt shut down.
+INFO: Disk Image install successful
+INFO: SUMMARY
+-------
+Logs are in /var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds
+Disk image(s) at /var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/disk-a.img,cache=unsafe
+Results are in /var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds
+
+INFO: RESULT:selinux-permissive:a60e7dc23a91:SUCCESS:test done
+================================================================
+INFO: install_log = /var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/virt-install.log
+INFO: virt-install ['-n', 'kstest-lang_(c80b15d7-35ad-4838-88b1-d5793eb848ff)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/lang.ks', '--disk', 'path=/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/lang.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:47331,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+.....................................................................................
+INFO: Install finished. Or at least virt shut down.
+INFO: Disk Image install successful
+INFO: SUMMARY
+-------
+Logs are in /var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn
+Disk image(s) at /var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/disk-a.img,cache=unsafe
+Results are in /var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn
+
+INFO: RESULT:lang:a60e7dc23a91:SUCCESS:test done
+================================================================
+INFO: install_log = /var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/virt-install.log
+INFO: virt-install ['-n', 'kstest-packages-multilib_(393bfc14-1ee5-4ae3-b6b5-baac44e05a3d)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/packages-multilib.ks', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/packages-multilib.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:54887,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+...........................
+INFO: Installation error detected. See logfile.
+ERROR: Install failed: Test failed on line: 02:59:35,444 INFO anaconda:anaconda: kickstart.script: All kickstart %%traceback script(s) have been run
+ERROR: ERROR: Image creation failed: Test failed on line: 02:59:35,444 INFO anaconda:anaconda: kickstart.script: All kickstart %%traceback script(s) have been run
+INFO: RESULT:packages-multilib:a60e7dc23a91:FAILED:Test failed on line: 02:59:35,444 INFO anaconda:anaconda: kickstart.script: All kickstart %%traceback script(s) have been run
+
+Retrying failed test once
+INFO: install_log = /var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/virt-install.log
+INFO: virt-install ['-n', 'kstest-packages-multilib_(81283f7d-aec6-4e03-81cd-5b8c9d1b9b93)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/packages-multilib.ks', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/packages-multilib.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:33229,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+..............................
+INFO: Installation error detected. See logfile.
+ERROR: Install failed: Test failed on line: 03:04:39,307 CRIT anaconda:anaconda: exception: Traceback (most recent call last):
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/threading.py", line 275, in run
+    threading.Thread.run(self)
+
+  File "/usr/lib64/python3.10/threading.py", line 946, in run
+    self._target(*self._args, **self._kwargs)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation.py", line 424, in run_installation
+    queue.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 311, in start
+    item.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 311, in start
+    item.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 311, in start
+    item.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 496, in start
+    self.run_task()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 458, in run_task
+    self._task(*self._task_args, **self._task_kwargs)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/payload/dnf/payload.py", line 569, in install
+    task.run()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/installation.py", line 243, in run
+    self._dnf_manager.install_packages(self.report_progress)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py", line 666, in install_packages
+    process_transaction_progress(queue, callback)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/transaction_progress.py", line 57, in process_transaction_progress
+    raise RuntimeError("The transaction process has ended abruptly: " + msg)
+
+RuntimeError: The transaction process has ended abruptly: Transaction test error:
+  file /usr/share/dbus-1/interfaces/org.freedesktop.systemd1.Manager.xml conflicts between attempted installs of systemd-250~rc3-1.fc36.i686 and systemd-250~rc3-1.fc36.x86_64
+Traceback (most recent call last):
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py", line 691, in _run_transaction
+    base.do_transaction(display)
+  File "/usr/lib/python3.10/site-packages/dnf/base.py", line 958, in do_transaction
+    raise dnf.exceptions.Error(errstring)
+dnf.exceptions.Error: Transaction test error:
+  file /usr/share/dbus-1/interfaces/org.freedesktop.systemd1.Manager.xml conflicts between attempted installs of systemd-250~rc3-1.fc36.i686 and systemd-250~rc3-1.fc36.x86_64
+
+
+ERROR: ERROR: Image creation failed: Test failed on line: 03:04:39,307 CRIT anaconda:anaconda: exception: Traceback (most recent call last):
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/threading.py", line 275, in run
+    threading.Thread.run(self)
+
+  File "/usr/lib64/python3.10/threading.py", line 946, in run
+    self._target(*self._args, **self._kwargs)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation.py", line 424, in run_installation
+    queue.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 311, in start
+    item.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 311, in start
+    item.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 311, in start
+    item.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 496, in start
+    self.run_task()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 458, in run_task
+    self._task(*self._task_args, **self._task_kwargs)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/payload/dnf/payload.py", line 569, in install
+    task.run()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/installation.py", line 243, in run
+    self._dnf_manager.install_packages(self.report_progress)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py", line 666, in install_packages
+    process_transaction_progress(queue, callback)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/transaction_progress.py", line 57, in process_transaction_progress
+    raise RuntimeError("The transaction process has ended abruptly: " + msg)
+
+RuntimeError: The transaction process has ended abruptly: Transaction test error:
+  file /usr/share/dbus-1/interfaces/org.freedesktop.systemd1.Manager.xml conflicts between attempted installs of systemd-250~rc3-1.fc36.i686 and systemd-250~rc3-1.fc36.x86_64
+Traceback (most recent call last):
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py", line 691, in _run_transaction
+    base.do_transaction(display)
+  File "/usr/lib/python3.10/site-packages/dnf/base.py", line 958, in do_transaction
+    raise dnf.exceptions.Error(errstring)
+dnf.exceptions.Error: Transaction test error:
+  file /usr/share/dbus-1/interfaces/org.freedesktop.systemd1.Manager.xml conflicts between attempted installs of systemd-250~rc3-1.fc36.i686 and systemd-250~rc3-1.fc36.x86_64
+
+
+INFO: RESULT:packages-multilib:a60e7dc23a91:FAILED:Test failed on line: 03:04:39,307 CRIT anaconda:anaconda: exception: Traceback (most recent call last):
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/threading.py", line 275, in run
+    threading.Thread.run(self)
+
+  File "/usr/lib64/python3.10/threading.py", line 946, in run
+    self._target(*self._args, **self._kwargs)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation.py", line 424, in run_installation
+    queue.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 311, in start
+    item.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 311, in start
+    item.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 311, in start
+    item.start()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 496, in start
+    self.run_task()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/installation_tasks.py", line 458, in run_task
+    self._task(*self._task_args, **self._task_kwargs)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/payload/dnf/payload.py", line 569, in install
+    task.run()
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/installation.py", line 243, in run
+    self._dnf_manager.install_packages(self.report_progress)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py", line 666, in install_packages
+    process_transaction_progress(queue, callback)
+
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/transaction_progress.py", line 57, in process_transaction_progress
+    raise RuntimeError("The transaction process has ended abruptly: " + msg)
+
+RuntimeError: The transaction process has ended abruptly: Transaction test error:
+  file /usr/share/dbus-1/interfaces/org.freedesktop.systemd1.Manager.xml conflicts between attempted installs of systemd-250~rc3-1.fc36.i686 and systemd-250~rc3-1.fc36.x86_64
+Traceback (most recent call last):
+  File "/usr/lib64/python3.10/site-packages/pyanaconda/modules/payloads/payload/dnf/dnf_manager.py", line 691, in _run_transaction
+    base.do_transaction(display)
+  File "/usr/lib/python3.10/site-packages/dnf/base.py", line 958, in do_transaction
+    raise dnf.exceptions.Error(errstring)
+dnf.exceptions.Error: Transaction test error:
+  file /usr/share/dbus-1/interfaces/org.freedesktop.systemd1.Manager.xml conflicts between attempted installs of systemd-250~rc3-1.fc36.i686 and systemd-250~rc3-1.fc36.x86_64
+
+
+================================================================
+INFO: install_log = /var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/virt-install.log
+INFO: virt-install ['-n', 'kstest-services_(e6ef3d6f-2776-4a00-bb35-f19178ae9fef)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/services.ks', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/services.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:44587,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+........................................................................................................................................................................................................................................................................................................................................................................
+INFO: Installation error detected. See logfile.
+ERROR: Install failed: Test timed out
+ERROR: ERROR: Image creation failed: Test timed out
+INFO: RESULT:services:a60e7dc23a91:FAILED:Test timed out
+
+Retrying failed test once
+INFO: install_log = /var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/virt-install.log
+INFO: virt-install ['-n', 'kstest-services_(39906c4c-6095-4dd1-b032-8bbe7f3d1ad9)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/services.ks', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/services.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:36317,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+..................................................................................................
+INFO: Install finished. Or at least virt shut down.
+INFO: Disk Image install successful
+INFO: SUMMARY
+-------
+Logs are in /var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a
+Disk image(s) at /var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/disk-a.img,cache=unsafe
+Results are in /var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a
+
+INFO: RESULT:services:a60e7dc23a91:SUCCESS:test done
+Canceling installation due to timeout
+Canceling installation due to timeout
+Canceling installation due to timeout
+================================================================
+INFO: install_log = /var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/virt-install.log
+INFO: virt-install ['-n', 'kstest-clearpart-1_(2e7c782e-c58e-453e-854f-2a4b340de11e)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/clearpart-1.ks', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/disk-a.img,cache=unsafe,bus=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/disk-b.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/clearpart-1.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:57817,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+........................................................................................................................................................................................................................................................................................................................................................................
+INFO: Installation error detected. See logfile.
+ERROR: Install failed: Test timed out
+ERROR: ERROR: Image creation failed: Test timed out
+INFO: RESULT:clearpart-1:a60e7dc23a91:FAILED:Test timed out
+
+Retrying failed test once
+INFO: install_log = /var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/virt-install.log
+INFO: virt-install ['-n', 'kstest-clearpart-1_(c22f4ba8-a31b-49d8-b482-09f390be4add)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/clearpart-1.ks', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/disk-a.img,cache=unsafe,bus=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/disk-b.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/clearpart-1.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:58631,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+..............................................................................................................
+INFO: Install finished. Or at least virt shut down.
+INFO: Disk Image install successful
+INFO: SUMMARY
+-------
+Logs are in /var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2
+Disk image(s) at /var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/disk-a.img,cache=unsafe,/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/disk-b.img,cache=unsafe
+Results are in /var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2
+
+INFO: RESULT:clearpart-1:a60e7dc23a91:SUCCESS:test done
+Canceling installation due to timeout
+Canceling installation due to timeout
+Canceling installation due to timeout
+================================================================
+INFO: install_log = /var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/virt-install.log
+INFO: virt-install ['-n', 'kstest-authselect-not-set_(3385d597-2d2f-42ef-869a-698e828b8275)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/authselect-not-set.ks', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/authselect-not-set.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:46223,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+....................................................................................
+INFO: Install finished. Or at least virt shut down.
+INFO: Disk Image install successful
+INFO: SUMMARY
+-------
+Logs are in /var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_
+Disk image(s) at /var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/disk-a.img,cache=unsafe
+Results are in /var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_
+
+Failed to run subprocess: '['/opt/kstest/kickstart-tests/scripts/launcher/lib/launcher_interface.sh', '-i', '/opt/kstest/data/images/boot.iso', '-k', '1', '-w', '/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_', '-t', '/opt/kstest/kickstart-tests/authselect-not-set.sh', 'validate']'
+stdout:
+*** Failed check: authselect not installed or no existing configuration detected
+
+INFO: RESULT:authselect-not-set:a60e7dc23a91:FAILED:Validation failed with return code 1
+
+Retrying failed test once
+INFO: install_log = /var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/virt-install.log
+INFO: virt-install ['-n', 'kstest-authselect-not-set_(7a3041b7-24d1-4455-a155-b95a36f816d7)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/authselect-not-set.ks', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/authselect-not-set.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:57461,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+............................................................................................
+INFO: Install finished. Or at least virt shut down.
+INFO: Disk Image install successful
+INFO: SUMMARY
+-------
+Logs are in /var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5
+Disk image(s) at /var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/disk-a.img,cache=unsafe
+Results are in /var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5
+
+Failed to run subprocess: '['/opt/kstest/kickstart-tests/scripts/launcher/lib/launcher_interface.sh', '-i', '/opt/kstest/data/images/boot.iso', '-k', '1', '-w', '/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5', '-t', '/opt/kstest/kickstart-tests/authselect-not-set.sh', 'validate']'
+stdout:
+*** Failed check: authselect not installed or no existing configuration detected
+
+INFO: RESULT:authselect-not-set:a60e7dc23a91:FAILED:Validation failed with return code 1
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/anaconda
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/anaconda
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/anaconda
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/anaconda
+/var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q
+/var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd
+/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/anaconda
+/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/anaconda
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/anaconda
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/anaconda
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/anaconda
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/anaconda/lvmdump
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/anaconda/lvmdump/sysreport
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/anaconda/lvmdump/udev
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/anaconda/lvmdump/udev/rules_etc
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/anaconda/lvmdump/udev/rules_lib
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/anaconda/lvmdump/lvm
+/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/anaconda/lvmdump/lvm/profile
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/anaconda
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/anaconda/lvmdump
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/anaconda/lvmdump/sysreport
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/anaconda/lvmdump/udev
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/anaconda/lvmdump/udev/rules_etc
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/anaconda/lvmdump/udev/rules_lib
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/anaconda/lvmdump/lvm
+/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/anaconda/lvmdump/lvm/profile
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/anaconda
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/anaconda/lvmdump
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/anaconda/lvmdump/sysreport
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/anaconda/lvmdump/udev
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/anaconda/lvmdump/udev/rules_etc
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/anaconda/lvmdump/udev/rules_lib
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/anaconda/lvmdump/lvm
+/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/anaconda/lvmdump/lvm/profile
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/anaconda
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/anaconda/lvmdump
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/anaconda/lvmdump/sysreport
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/anaconda/lvmdump/udev
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/anaconda/lvmdump/udev/rules_etc
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/anaconda/lvmdump/udev/rules_lib
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/anaconda/lvmdump/lvm
+/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/anaconda/lvmdump/lvm/profile
+/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/anaconda
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/anaconda/lvmdump
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/anaconda/lvmdump/sysreport
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/anaconda/lvmdump/udev
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/anaconda/lvmdump/udev/rules_etc
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/anaconda/lvmdump/udev/rules_lib
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/anaconda/lvmdump/lvm
+/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/anaconda/lvmdump/lvm/profile
+/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/anaconda
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/anaconda/lvmdump
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/anaconda/lvmdump/sysreport
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/anaconda/lvmdump/udev
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/anaconda/lvmdump/udev/rules_etc
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/anaconda/lvmdump/udev/rules_lib
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/anaconda/lvmdump/lvm
+/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/anaconda/lvmdump/lvm/profile
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/anaconda
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/anaconda/lvmdump
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/anaconda/lvmdump/sysreport
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/anaconda/lvmdump/udev
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/anaconda/lvmdump/udev/rules_etc
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/anaconda/lvmdump/udev/rules_lib
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/anaconda/lvmdump/lvm
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/anaconda/lvmdump/lvm/profile
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/anaconda
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/anaconda/lvmdump
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/anaconda/lvmdump/sysreport
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/anaconda/lvmdump/udev
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/anaconda/lvmdump/udev/rules_etc
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/anaconda/lvmdump/udev/rules_lib
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/anaconda/lvmdump/lvm
+/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/anaconda/lvmdump/lvm/profile
+test finished
+Thu Dec 30 05:39:24 UTC 2021
