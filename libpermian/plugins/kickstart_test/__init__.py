@@ -34,7 +34,7 @@ class KickstartTestWorkflow(GroupedWorkflow):
         self.boot_iso_url = None
         # The path of boot.iso expected by runner
         self.boot_iso_dest = None
-        self.runner_command = ['./containers/runner/launch']
+        self.runner_command = self.settings.get('kickstart_test', 'runner_command').split()
 
     def setup(self):
         if self.event.bootIso:

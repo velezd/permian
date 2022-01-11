@@ -27,8 +27,8 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
         cls.library = Library('./tests/test_library/')
         cls.settings = Settings(
             cmdline_overrides={
-                'workflows': {
-                    'dry_run': True,
+                'kickstart_test': {
+                    'runner_command': "echo containers/runner/launch"
                 },
             },
             environment={},
