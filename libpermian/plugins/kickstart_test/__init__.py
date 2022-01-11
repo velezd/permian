@@ -35,6 +35,8 @@ class KickstartTestWorkflow(GroupedWorkflow):
         # The path of boot.iso expected by runner
         self.boot_iso_dest = None
         self.runner_command = self.settings.get('kickstart_test', 'runner_command').split()
+        self.ksrepo = self.settings.get('kickstart_test', 'kstest_repo')
+        self.ksrepo_branch = self.settings.get('kickstart_test', 'kstest_repo_branch')
 
     def setup(self):
         if self.event.bootIso:
@@ -45,12 +47,16 @@ class KickstartTestWorkflow(GroupedWorkflow):
         if not self.ksrepo_dir:
             self.ksrepo_dir = os.path.join(tempfile.mkdtemp(), "kickstart-tests")
             LOGGER.info("Created kickstart-tests repository directory %s", self.ksrepo_dir)
-            LOGGER.info("Cloning kickstart-tests repository.")
+            LOGGER.info("Cloning kickstart-tests repository %s branch %s.",
+                        self.ksrepo, self.ksrepo_branch)
+
             subprocess.run(
                 ['git',
                  'clone',
-                 'https://github.com/rhinstaller/kickstart-tests.git',
+                 self.ksrepo,
                  self.ksrepo_dir,
+                 '--branch',
+                 self.ksrepo_branch,
                  ],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
