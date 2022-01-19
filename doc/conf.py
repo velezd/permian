@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath('..'))
 project = 'permian'
 copyright = '2020, Pavel Holica'
 author = 'Pavel Holica'
-
+master_doc = 'index'
 
 # -- General configuration ---------------------------------------------------
 
@@ -30,7 +30,6 @@ author = 'Pavel Holica'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinxarg.ext',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -47,7 +46,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'default'
+html_theme = 'bizstyle'
 
 html_theme_options = {
     'body_max_width': None,
@@ -57,3 +56,4 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_logo = '_static/logo.png'
