@@ -1,4 +1,4 @@
-FROM registry.centos.org/centos:8
+FROM quay.io/centos/centos:stream8
 
 # pipeline dependecies
 RUN yum -y install git python3 python3-flask python3-requests python3-libxml2 python3-yaml
@@ -10,6 +10,10 @@ RUN yum -y install yum-utils; \
     yum-config-manager --add-repo https://beaker-project.org/yum/beaker-client-RedHatEnterpriseLinux.repo; \
     yum-config-manager --enable beaker-client; \
     yum -y install python3-bugzilla beaker-client python3-productmd
+
+# docs dependencies
+RUN yum-config-manager --enable powertools; \
+    yum -y install python3-sphinx
 
 # fetch other libraries and tools
 WORKDIR /root
