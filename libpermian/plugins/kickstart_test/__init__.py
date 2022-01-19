@@ -142,7 +142,7 @@ class KickstartTestWorkflow(GroupedWorkflow):
     def __init__(self, testRuns, crcList):
         super().__init__(testRuns, crcList)
         self.ksrepo_dir = None
-        self.temporary_ksrepo = False
+        self.ksrepo_local_dir = self.settings.get('kickstart_test', 'kstest_local_repo')
         self.boot_iso_url = None
         # The path of boot.iso expected by runner
         self.boot_iso_dest = None
@@ -156,7 +156,10 @@ class KickstartTestWorkflow(GroupedWorkflow):
 
         self.groupReportResult(self.crcList, Result('queued'))
 
-        if not self.ksrepo_dir:
+        if self.ksrepo_local_dir:
+            self.ksrepo_dir = self.ksrepo_local_dir
+            LOGGER.info("Using existing kickstart-tests repository %s.", self.ksrepo_local_dir)
+        else:
             self.ksrepo_dir = os.path.join(tempfile.mkdtemp(), "kickstart-tests")
             LOGGER.info("Created kickstart-tests repository directory %s", self.ksrepo_dir)
             LOGGER.info("Cloning kickstart-tests repository %s branch %s.",
@@ -174,7 +177,6 @@ class KickstartTestWorkflow(GroupedWorkflow):
                 stderr=subprocess.PIPE,
                 check=True,
             )
-            self.temporary_ksrepo = True
 
         self.boot_iso_dest = os.path.join(self.ksrepo_dir, BOOT_ISO_RELATIVE_PATH)
 
@@ -258,7 +260,7 @@ class KickstartTestWorkflow(GroupedWorkflow):
             except FileNotFoundError:
                 LOGGER.debug("Installer boot.iso %s not found", self.boot_iso_dest)
 
-        if self.temporary_ksrepo:
+        if not self.ksrepo_local_dir and self.ksrepo_dir:
             tempdir = os.path.normpath(os.path.join(self.ksrepo_dir, '..'))
             LOGGER.info("Removing %s with kickstart-tests repo.", tempdir)
             shutil.rmtree(tempdir)
