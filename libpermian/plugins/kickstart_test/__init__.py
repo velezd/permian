@@ -224,6 +224,7 @@ class KickstartTestWorkflow(GroupedWorkflow):
         self.groupReportResult(self.crcList, Result('running', current_results=current_results))
 
         command = self.runner_command + tests
+        LOGGER.info(f"Runner is starting. {current_results.summary_message()}")
         LOGGER.info("Running %s", command)
         with subprocess.Popen(
             command,
@@ -241,6 +242,9 @@ class KickstartTestWorkflow(GroupedWorkflow):
                 if finished_test:
                     self.groupReportResult(test_to_crcs[finished_test], result)
                     LOGGER.info(f"Test {finished_test} finished. {current_results.summary_message()}")
+
+        LOGGER.info(f"Runner return code: {p.returncode}")
+        LOGGER.info(f"Runner finished. {current_results.summary_message()}")
 
     def dry_execute(self):
         self.runner_command = ['echo'] + self.runner_command
