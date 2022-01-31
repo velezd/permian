@@ -22,7 +22,7 @@ reporting:
       reporter: 7
       filename: 'plan6_report2.txt'
 configurations:
-  - test: 4
+  - test: 2
   - test: 5
 acceptance_criteria:
   test_cases:
