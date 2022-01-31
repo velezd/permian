@@ -1,8 +1,8 @@
 reporter 8 - testrun "testing plugin plan 9" started
-reporter 8 - result final testing plugin case 7-4 - complete, FAIL->FAIL(IssueSet({<TestIssue(some_unresolved_issue_url, resolved=False)>})), True
+reporter 8 - result final testing plugin case 7-2 - complete, FAIL->FAIL(IssueSet({<TestIssue(some_unresolved_issue_url, resolved=False)>})), True
 reporter 8 - result final testing plugin case 7-5 - complete, FAIL->FAIL(IssueSet({<TestIssue(some_unresolved_issue_url, resolved=False)>})), True
 reporter 8 - finished testcase "testing plugin case 7" in "testing plugin plan 9"
-reporter 8 - result final testing plugin case 8-4 - complete, FAIL->ERROR(IssueSet({<TestIssue(some_resolved_issue_url, resolved=True)>})), True
+reporter 8 - result final testing plugin case 8-2 - complete, FAIL->ERROR(IssueSet({<TestIssue(some_resolved_issue_url, resolved=True)>})), True
 reporter 8 - result final testing plugin case 8-5 - complete, FAIL->ERROR(IssueSet({<TestIssue(some_resolved_issue_url, resolved=True)>})), True
 reporter 8 - finished testcase "testing plugin case 8" in "testing plugin plan 9"
 reporter 8 - testrun "testing plugin plan 9" finished

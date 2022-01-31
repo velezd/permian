@@ -19,7 +19,7 @@ reporting:
       filename: 'plan2_report1.txt'
 configurations:
   - test: 1
-  - test: 2
+  - test: 3
 acceptance_criteria:
   test_cases:
     direct_list:
