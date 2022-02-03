@@ -18,7 +18,7 @@ reporting:
       reporter: 5
       filename: 'plan5_report1.txt'
 configurations:
-  - test: 4
+  - test: 2
   - test: 5
 acceptance_criteria:
   test_cases:
