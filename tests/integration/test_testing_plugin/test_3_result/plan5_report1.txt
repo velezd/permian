@@ -1,19 +1,19 @@
 reporter 5 - testrun "testing plugin plan 5" started
-reporter 5 - result partial testing plugin case 3-4 - queued, None, False
+reporter 5 - result partial testing plugin case 3-2 - queued, None, False
 reporter 5 - result partial testing plugin case 3-5 - queued, None, False
-reporter 5 - result partial testing plugin case 4-4 - queued, None, False
+reporter 5 - result partial testing plugin case 4-2 - queued, None, False
 reporter 5 - result partial testing plugin case 4-5 - queued, None, False
-reporter 5 - result partial testing plugin case 3-4 - running, None, False
+reporter 5 - result partial testing plugin case 3-2 - running, None, False
 reporter 5 - result partial testing plugin case 3-5 - running, None, False
-reporter 5 - result partial testing plugin case 4-4 - running, None, False
+reporter 5 - result partial testing plugin case 4-2 - running, None, False
 reporter 5 - result partial testing plugin case 4-5 - running, None, False
-reporter 5 - result partial testing plugin case 3-4 - running, FAIL, False
-reporter 5 - result final testing plugin case 3-4 - complete, FAIL->ERROR(IssueSet()), True
+reporter 5 - result partial testing plugin case 3-2 - running, FAIL, False
+reporter 5 - result final testing plugin case 3-2 - complete, FAIL->ERROR(IssueSet()), True
 reporter 5 - result partial testing plugin case 3-5 - running, FAIL, False
 reporter 5 - result final testing plugin case 3-5 - complete, FAIL->ERROR(IssueSet()), True
 reporter 5 - finished testcase "testing plugin case 3" in "testing plugin plan 5"
-reporter 5 - result partial testing plugin case 4-4 - running, FAIL, False
-reporter 5 - result final testing plugin case 4-4 - complete, FAIL->ERROR(IssueSet()), True
+reporter 5 - result partial testing plugin case 4-2 - running, FAIL, False
+reporter 5 - result final testing plugin case 4-2 - complete, FAIL->ERROR(IssueSet()), True
 reporter 5 - result partial testing plugin case 4-5 - running, FAIL, False
 reporter 5 - result final testing plugin case 4-5 - complete, FAIL->ERROR(IssueSet()), True
 reporter 5 - finished testcase "testing plugin case 4" in "testing plugin plan 5"

@@ -1,0 +1,93 @@
+name: Pull request checks
+
+on:
+  pull_request:
+    branches: [ main ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  base:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout change
+        uses: actions/checkout@v2
+        with:
+          path: permian
+
+      - name: Build main container
+        run: |
+          pushd $GITHUB_WORKSPACE/permian
+          ./build_container
+          popd
+
+      - name: Run base tests
+        run: |
+          pushd $GITHUB_WORKSPACE/permian
+          ./in_container make test
+          popd
+
+      - name: Build documentation
+        run: |
+          pushd $GITHUB_WORKSPACE/permian
+          ./in_container make doc
+          popd
+
+      - name: Cleanup
+        if: always()
+        run: |
+          podman rmi -f permian
+
+  secrets-check:
+    name: Check if some secrets are set
+    runs-on: ubuntu-latest
+    outputs:
+      extra_plugins_available: ${{ steps.extra_plugins.outputs.extra_plugins_available }}
+    steps:
+      - name: Check if ADDITIONAL_PLUGINS_REPO is set
+        id: extra_plugins
+        run: |
+            echo "::set-output name=extra_plugins_available::${{ secrets.ADDITIONAL_PLUGINS_REPO != '' }}"
+
+  extra-plugins:
+    needs: [secrets-check]
+    runs-on: [self-hosted, kstest]
+    if: needs.secrets-check.outputs.extra_plugins_available == 'true'
+    steps:
+      - name: Checkout change
+        uses: actions/checkout@v2
+        with:
+          path: permian
+
+      - name: Clone repository with additional plugins and tests
+        run: |
+          git clone --depth 1 ${{ secrets.ADDITIONAL_PLUGINS_REPO }} permian-redhat
+
+      - name: Build main container
+        run: |
+          pushd $GITHUB_WORKSPACE/permian
+          ./build_container
+          popd
+
+      - name: Build container for extra plugins and tests
+        run: |
+          pushd $GITHUB_WORKSPACE/permian-redhat
+          ./build_container > /dev/null 2>&1
+          popd
+
+      - name: Run extra tests
+        run: |
+          pushd $GITHUB_WORKSPACE/permian
+          export PIPELINEPLUGINS_PATH="$GITHUB_WORKSPACE/permian-redhat/plugins"
+          $GITHUB_WORKSPACE/permian-redhat/in_container make test.unit > /dev/null 2>&1
+          popd
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -rf $GITHUB_WORKSPACE/permian-redhat
+          podman rmi -f permian-redhat || true
+          podman rmi -f permian
