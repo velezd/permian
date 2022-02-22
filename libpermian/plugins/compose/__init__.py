@@ -12,7 +12,8 @@ from ...cli.parser import bool_argument, ToPayload, AppendToPayload
 from ..beaker import list_tagged_composes
 from libpermian.events.structures.builtin import ProductStructure
 from libpermian.events.structures.base import BaseStructure
-
+from libpermian.plugins.kickstart_test import BootIsoStructure
+from libpermian.exceptions import StructureConversionError
 from .compose_info import ComposeInfo
 from .compose_diff import ComposeDiff
 from .exceptions import ComposeNotAvailable
@@ -171,6 +172,21 @@ class ComposeStructure(BaseStructure):
             self.major,
             self.minor,
         )
+
+    def to_bootIso(self):
+        boot_isos = {}
+
+        for variant in self.composeinfo.metadata.images.images.values():
+            for arch_name, arch in variant.items():
+                for img in arch:
+                    if img.type == 'boot':
+                        if arch_name in boot_isos.keys():
+                            raise StructureConversionError(ComposeStructure,
+                                                           BootIsoStructure,
+                                                           'multiple boot isos found for one architecture')
+                        boot_isos[arch_name] = self.location + img.path
+
+        return BootIsoStructure(self.settings, **boot_isos)
 
 @api.cli.register_command_parser('compose')
 def compose_command(base_parser, args):
