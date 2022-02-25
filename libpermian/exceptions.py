@@ -83,3 +83,8 @@ class ResourceNotAvailable(Exception):
     """
     def __init__(self, msg):
         super().__init__(msg)
+
+class StructureConversionError(Exception):
+    """ Raised when confersion of event structure fails """
+    def __init__(self, from_structure, to_structure, reason):
+        super().__init__(f"Conversion from '{from_structure.__name__}' to '{to_structure.__name__}' has failed, {reason}")

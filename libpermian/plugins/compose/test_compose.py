@@ -5,15 +5,23 @@ import productmd
 
 from libpermian.cli.factory import CliFactory
 from libpermian.settings import Settings
+from libpermian.exceptions import StructureConversionError
 from libpermian.events.factory import EventFactory
 from libpermian.plugins.compose import ComposeStructure
 from libpermian.plugins.compose.compose_diff import ComposeDiff
+from libpermian.plugins.kickstart_test import BootIsoStructure
+
 
 class MockComposeResponse():
     def __init__(self, url):
         self.url = url
     def geturl(self):
         return self.url.replace('example.com/compose', 'example.com/here')
+
+class DummyImage():
+    def __init__(self, image_type, image_path):
+        self.type = image_type
+        self.path = image_path
 
 def MockProductmdCompose(location):
     instance = create_autospec(productmd.compose.Compose)(location)
@@ -23,6 +31,25 @@ def MockProductmdCompose(location):
     else:
         instance.info.compose.type = "production"
         instance.info.compose.label = "Hello-3.14"
+    return instance
+
+def MockProductmdComposeImages(location):
+    instance = MockProductmdCompose(location)
+    instance.images.images = {'Main': {'x86_64': {DummyImage('dvd', 'Main/isos/x86_64/dvd.iso'),
+                                                  DummyImage('boot', 'Main/isos/x86_64/boot.iso'),
+                                                  DummyImage('qcow2', 'Main/images/x86_64/guest.qcow2')},
+                                       'aarch64': {DummyImage('dvd', 'Main/isos/aarch64/dvd.iso'),
+                                                   DummyImage('boot', 'Main/isos/aarch64/boot.iso'),
+                                                   DummyImage('qcow2', 'Main/images/aarch64/guest.qcow2')}},
+                              'Other': {'x86_64': {DummyImage('dvd', 'Other/isos/x86_64/dvd.iso'),
+                                                   DummyImage('qcow2', 'Other/images/x86_64/guest.qcow2')},
+                                        'aarch64': {DummyImage('dvd', 'Other/isos/aarch64/dvd.iso'),
+                                                    DummyImage('qcow2', 'Other/images/aarch64/guest.qcow2')}}}
+    return instance
+
+def MockProductmdComposeImagesMultipleBoot(location):
+    instance = MockProductmdComposeImages(location)
+    instance.images.images['Other']['x86_64'].add(DummyImage('boot', 'Other/isos/x86_64/boot.iso'))
     return instance
 
 class MockUrlopen():
@@ -222,3 +249,30 @@ class TestComposeDiff(unittest.TestCase):
             diff = ComposeDiff(ComposeTest1(), None)
             self.assertEqual(diff.component_names, {'anaconda', 'python-blivet'})
         self.assertTrue(cm.output[0].startswith('WARNING:libpermian.plugins.compose.compose_diff:'))
+
+@patch('productmd.compose.Compose', new=MockProductmdComposeImages)
+@patch('urllib.request.urlopen', new=MockUrlopen)
+class TestComposeToBootIso(unittest.TestCase):
+    def setUp(self):
+        self.settings = Settings(cmdline_overrides={'compose': {'location': 'http://example.com/compose/%s/'}},
+                            environment={},
+                            settings_locations=[])
+        self.comp = ComposeStructure(self.settings, 'OS-1.0.2-20220221.1')
+
+    def test_succesfull_conversion(self):
+        boot_iso = self.comp.to_bootIso()
+        self.assertIsInstance(boot_iso, BootIsoStructure)
+        self.assertAlmostEqual(boot_iso.fields, {'x86_64': 'http://example.com/here/OS-1.0.2-20220221.1/Main/isos/x86_64/boot.iso',
+                                                 'aarch64': 'http://example.com/here/OS-1.0.2-20220221.1/Main/isos/aarch64/boot.iso'})
+
+@patch('productmd.compose.Compose', new=MockProductmdComposeImagesMultipleBoot)
+@patch('urllib.request.urlopen', new=MockUrlopen)
+class TestComposeToBootIsoFail(unittest.TestCase):
+    def setUp(self):
+        self.settings = Settings(cmdline_overrides={'compose': {'location': 'http://example.com/compose/%s/'}},
+                            environment={},
+                            settings_locations=[])
+        self.comp = ComposeStructure(self.settings, 'OS-1.0.2-20220221.1')
+
+    def test_failed_conversion(self):
+        self.assertRaises(StructureConversionError, self.comp.to_bootIso)
