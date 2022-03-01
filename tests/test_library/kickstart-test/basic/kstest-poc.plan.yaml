@@ -6,3 +6,5 @@ verified_by:
   test_cases:
     direct_list:
       - container-basic
+configurations:
+  - architecture: x86_64

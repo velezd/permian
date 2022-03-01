@@ -6,6 +6,8 @@ import shutil
 from libpermian.testruns import TestRuns
 from libpermian.events.base import Event
 from libpermian.settings import Settings
+from libpermian.exceptions import UnsupportedConfiguration
+from libpermian.plugins.kickstart_test import SUPPORTED_ARCHITECTURES
 
 from tclib.library import Library
 
@@ -56,10 +58,8 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
             environment={},
             settings_locations=[],
         )
-        cls.event = TestFakePOCEvent(cls.settings)
 
     def setUp(self):
-        self.testRuns = TestRuns(self.library, self.event, self.settings)
         self._ensure_file_exists(DUMMY_BOOT_ISO_URL[7:])
 
     def _ensure_file_exists(self, path):
@@ -68,13 +68,40 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
                 pass
 
     def testWorkflowRun(self):
+        event = TestFakePOCEvent(self.settings)
+        testRuns = TestRuns(self.library, event, self.settings)
         executed_workflows = set()
-        for caseRunConfiguration in self.testRuns.caseRunConfigurations:
+        for caseRunConfiguration in testRuns.caseRunConfigurations:
             with self.subTest(caseRunConfiguration=caseRunConfiguration):
                 if id(caseRunConfiguration.workflow) not in executed_workflows:
                     caseRunConfiguration.workflow.run()
                     executed_workflows.add(id(caseRunConfiguration.workflow))
         self.assertEqual(len(executed_workflows), 1)
+
+    def testUnsupportedArchWorkflowRun(self):
+        event = TestFakePOCEvent(self.settings, event_type="kstest-unsupported-arch")
+        testRuns = TestRuns(self.library, event, self.settings)
+        executed_workflows = set()
+        for caseRunConfiguration in testRuns.caseRunConfigurations:
+            with self.subTest(caseRunConfiguration=caseRunConfiguration):
+                if id(caseRunConfiguration.workflow) not in executed_workflows:
+                    if caseRunConfiguration.workflow.arch not in SUPPORTED_ARCHITECTURES:
+                        with self.assertRaises(UnsupportedConfiguration) as uc:
+                            caseRunConfiguration.workflow.run()
+                    else:
+                        caseRunConfiguration.workflow.run()
+                        executed_workflows.add(id(caseRunConfiguration.workflow))
+        self.assertEqual(len(executed_workflows), 1)
+
+    def testMissingArchWorkflowRun(self):
+        event = TestFakePOCEvent(self.settings, event_type="kstest-missing-arch")
+        testRuns = TestRuns(self.library, event, self.settings)
+        executed_workflows = set()
+        for caseRunConfiguration in testRuns.caseRunConfigurations:
+            with self.subTest(caseRunConfiguration=caseRunConfiguration):
+                if id(caseRunConfiguration.workflow) not in executed_workflows:
+                    with self.assertRaises(UnsupportedConfiguration) as uc:
+                        caseRunConfiguration.workflow.run()
 
 
 class TestKickstartTestWorkflowResultsParsing(unittest.TestCase):

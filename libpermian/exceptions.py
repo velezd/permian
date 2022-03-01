@@ -88,3 +88,13 @@ class StructureConversionError(Exception):
     """ Raised when confersion of event structure fails """
     def __init__(self, from_structure, to_structure, reason):
         super().__init__(f"Conversion from '{from_structure.__name__}' to '{to_structure.__name__}' has failed, {reason}")
+
+class UnsupportedConfiguration(Exception):
+    """
+    Raised for test configuration value not supported by workflow.
+    """
+    def __init__(self, configuration, value):
+        msg = f"Configuration '{configuration}: {value}' is not supported"
+        self.configuration = configuration
+        self.value = value
+        super().__init__(msg)

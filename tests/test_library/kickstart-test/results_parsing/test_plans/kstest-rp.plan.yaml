@@ -13,3 +13,5 @@ verified_by:
       - packages-multilib
       - selinux-permissive
       - services
+configurations:
+  - architecture: x86_64

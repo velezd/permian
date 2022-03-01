@@ -1,0 +1,11 @@
+name: kstests usnupported arch
+description: The plan to test unsupported architecture configuration
+point_person: rvykydal@redhat.com
+artifact_type: kstest-unsupported-arch
+verified_by:
+  test_cases:
+    direct_list:
+      - container-basic
+configurations:
+  - architecture: x86_64
+  - architecture: unsupported

@@ -1,0 +1,8 @@
+name: kstests missing arch
+description: The plan to test missing architecture configuration
+point_person: rvykydal@redhat.com
+artifact_type: kstest-missing-arch
+verified_by:
+  test_cases:
+    direct_list:
+      - container-basic
