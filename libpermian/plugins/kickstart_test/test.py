@@ -49,7 +49,8 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
         cls.settings = Settings(
             cmdline_overrides={
                 'kickstart_test': {
-                    'runner_command': "echo containers/runner/launch"
+                    'runner_command': "echo containers/runner/launch",
+                    'kstest_local_repo': "/tmp/mockrepo",
                 },
             },
             environment={},
@@ -90,7 +91,8 @@ class TestKickstartTestWorkflowResultsParsing(unittest.TestCase):
             cmdline_overrides={
                 'kickstart_test': {
                     'runner_command': "%s %s 1000 0" %
-                    (mock_launcher_path, output_dump_path)
+                    (mock_launcher_path, output_dump_path),
+                    'kstest_local_repo': "/tmp/mockrepo",
                 },
             },
             environment={},
