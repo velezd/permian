@@ -59,6 +59,50 @@ class TestFakePlatformEvent(Event):
         )
 
 
+class TestFakeScenariosEventRhel9(Event):
+    def __init__(self, settings, event_type='github.scheduled.daily.kstest.rhel9'):
+        super().__init__(
+            settings,
+            event_type,
+            bootIso={
+                'x86_64': DUMMY_BOOT_ISO_URL,
+            },
+            kstestParams={
+                'platform': "rhel9",
+                'urls': {
+                    'x86_64': {
+                        'installation_tree': 'http://example.org/the-rhel-9/compose/BaseOS/x86_64/os',
+                        'modular_url': 'http://example.org/the-rhel-9/compose/AppStream/x86_64/os',
+                        'ftp_url': 'ftp://example.org/the-rhel-9/compose/BaseOS/x86_64/os'
+                    }
+                }
+            },
+        )
+
+
+class TestFakeScenariosEventDailyiso(Event):
+    def __init__(self, settings, event_type='github.scheduled.daily.kstest.daily-iso'):
+        super().__init__(
+            settings,
+            event_type,
+            bootIso={
+                'x86_64': DUMMY_BOOT_ISO_URL,
+            },
+            kstestParams={
+                'platform': "fedora_rawhide",
+                'urls': {
+                    'x86_64': {
+                        'installation_tree': 'http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/Everything/$basearch/os/',
+                        'modular_url': 'http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/Modular/$basearch/os/',
+                        'metalink': 'https://mirrors.fedoraproject.org/metalink?repo=fedora-$releasever&arch=$basearch',
+                        'mirrorlist': 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch',
+                        'ftp_url': 'ftp://ftp.tu-chemnitz.de/pub/linux/fedora/linux/development/rawhide/Everything/$basearch/os/',
+                    }
+                }
+            },
+        )
+
+
 class TestKickstartTestWrorkflow(unittest.TestCase):
     """Basic test with dummy / noop launcher."""
     @classmethod
@@ -367,3 +411,49 @@ class TestInstallationUrlStructureProcessing(unittest.TestCase):
         workflow = self.testRuns.caseRunConfigurations[0].workflow
         for kstest_params_struct, expected_result in self.cases:
             self._check_result(workflow, kstest_params_struct.urls, expected_result)
+
+
+class TestKickstartTestScenarios(unittest.TestCase):
+    """Test with example of scenarios defined in test plans."""
+    @classmethod
+    def setUpClass(cls):
+        cls.library = Library('./tests/test_library/kickstart-test/scenarios')
+        cls.settings = Settings(
+            cmdline_overrides={
+                'kickstart_test': {
+                    'runner_command': "echo containers/runner/launch",
+                    'kstest_local_repo': "/tmp/mockrepo",
+                },
+            },
+            environment={},
+            settings_locations=[],
+        )
+
+    def setUp(self):
+        self._ensure_file_exists(DUMMY_BOOT_ISO_URL[7:])
+
+    def _ensure_file_exists(self, path):
+        if not os.path.isfile(path):
+            with open(path, 'w'):
+                pass
+
+    def _check_scenario_event(self, event, expected_num_of_crcs):
+        self.testRuns = TestRuns(self.library, event, self.settings)
+        self.assertEqual(len(self.testRuns.caseRunConfigurations), expected_num_of_crcs)
+        executed_workflows = set()
+        for caseRunConfiguration in self.testRuns.caseRunConfigurations:
+            with self.subTest(caseRunConfiguration=caseRunConfiguration):
+                if id(caseRunConfiguration.workflow) not in executed_workflows:
+                    caseRunConfiguration.workflow.run()
+                    executed_workflows.add(id(caseRunConfiguration.workflow))
+        self.assertEqual(len(executed_workflows), 1)
+
+    def testScenarioRhel9Run(self):
+        """Test multiple platform configurations in test plan."""
+        event = TestFakeScenariosEventRhel9(self.settings)
+        self._check_scenario_event(event, 4)
+
+    def testScenarioRhelDailyiso(self):
+        """Test multiple platform configurations in test plan."""
+        event = TestFakeScenariosEventDailyiso(self.settings)
+        self._check_scenario_event(event, 3)
