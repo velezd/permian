@@ -43,6 +43,20 @@ class TestFakePOCEvent(Event):
         )
 
 
+class TestFakePlatformEvent(Event):
+    def __init__(self, settings, event_type='kstest-poc'):
+        super().__init__(
+            settings,
+            event_type,
+            kstestParams={
+                'platform': "rhel8",
+            },
+            bootIso={
+                'x86_64': DUMMY_BOOT_ISO_URL,
+            },
+        )
+
+
 class TestKickstartTestWrorkflow(unittest.TestCase):
     """Basic test with dummy / noop launcher."""
     @classmethod
@@ -102,6 +116,17 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
                 if id(caseRunConfiguration.workflow) not in executed_workflows:
                     with self.assertRaises(UnsupportedConfiguration) as uc:
                         caseRunConfiguration.workflow.run()
+
+    def testWorkflowWithPlatformRun(self):
+        event = TestFakePlatformEvent(self.settings)
+        testRuns = TestRuns(self.library, event, self.settings)
+        executed_workflows = set()
+        for caseRunConfiguration in testRuns.caseRunConfigurations:
+            with self.subTest(caseRunConfiguration=caseRunConfiguration):
+                if id(caseRunConfiguration.workflow) not in executed_workflows:
+                    caseRunConfiguration.workflow.run()
+                    executed_workflows.add(id(caseRunConfiguration.workflow))
+        self.assertEqual(len(executed_workflows), 1)
 
 
 class TestKickstartTestWorkflowResultsParsing(unittest.TestCase):

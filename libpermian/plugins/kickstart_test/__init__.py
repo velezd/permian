@@ -9,7 +9,7 @@ import itertools
 from libpermian.plugins import api
 from libpermian.workflows.isolated import GroupedWorkflow
 from libpermian.events.base import Event
-from libpermian.events.structures.builtin import OtherStructure
+from libpermian.events.structures.builtin import OtherStructure, BaseStructure
 from libpermian.result import Result
 from libpermian.exceptions import UnsupportedConfiguration
 
@@ -136,6 +136,13 @@ class BootIsoStructure(OtherStructure):
     pass
 
 
+@api.events.register_structure('kstestParams')
+class KstestParamsStructure(BaseStructure):
+    def __init__(self, settings, platform):
+        super().__init__(settings)
+        self.platform = platform
+
+
 @api.workflows.register("kickstart-test")
 class KickstartTestWorkflow(GroupedWorkflow):
     @classmethod
@@ -151,6 +158,7 @@ class KickstartTestWorkflow(GroupedWorkflow):
         self.boot_iso_url = None
         # The path of boot.iso expected by runner
         self.boot_iso_dest = None
+        self.platform = None
         self.runner_command = self.settings.get('kickstart_test', 'runner_command').split()
         self.ksrepo = self.settings.get('kickstart_test', 'kstest_repo')
         self.ksrepo_branch = self.settings.get('kickstart_test', 'kstest_repo_branch')
@@ -159,6 +167,9 @@ class KickstartTestWorkflow(GroupedWorkflow):
         if self.arch not in SUPPORTED_ARCHITECTURES:
             LOGGER.info(f"Architecture {self.arch} is not supported.")
             raise UnsupportedConfiguration('architecture', self.arch)
+
+        if self.event.kstestParams:
+            self.platform = self.event.kstestParams.platform
 
         if self.event.bootIso:
             try:
@@ -240,7 +251,12 @@ class KickstartTestWorkflow(GroupedWorkflow):
         current_results = KicstartTestBatchCurrentResults(tests)
         self.groupReportResult(self.crcList, Result('running', current_results=current_results))
 
-        command = self.runner_command + tests
+        command = self.runner_command
+
+        if self.platform:
+            command = command + ['--platform', self.platform]
+
+        command = command + tests
         LOGGER.info(f"Runner is starting. {current_results.summary_message()}")
         LOGGER.info("Running %s", command)
         with subprocess.Popen(
