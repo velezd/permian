@@ -5,6 +5,7 @@ import os
 import shutil
 import requests
 import itertools
+import stat
 
 from libpermian.plugins import api
 from libpermian.workflows.isolated import GroupedWorkflow
@@ -16,6 +17,7 @@ from libpermian.exceptions import UnsupportedConfiguration
 LOGGER = logging.getLogger(__name__)
 
 BOOT_ISO_RELATIVE_PATH = 'data/images/boot.iso'
+BOOT_ISO_PATH_IN_INSTALLATION_TREE = 'images/boot.iso'
 
 SUPPORTED_ARCHITECTURES = {'x86_64'}
 
@@ -138,9 +140,10 @@ class BootIsoStructure(OtherStructure):
 
 @api.events.register_structure('kstestParams')
 class KstestParamsStructure(BaseStructure):
-    def __init__(self, settings, platform):
+    def __init__(self, settings, platform, urls=None):
         super().__init__(settings)
         self.platform = platform
+        self.urls = urls or dict()
 
 
 @api.workflows.register("kickstart-test")
@@ -159,9 +162,70 @@ class KickstartTestWorkflow(GroupedWorkflow):
         # The path of boot.iso expected by runner
         self.boot_iso_dest = None
         self.platform = None
+        self.defaults_file_path = None
         self.runner_command = self.settings.get('kickstart_test', 'runner_command').split()
         self.ksrepo = self.settings.get('kickstart_test', 'kstest_repo')
         self.ksrepo_branch = self.settings.get('kickstart_test', 'kstest_repo_branch')
+
+    def _create_defaults_file(self, content):
+        with tempfile.NamedTemporaryFile("w", delete=False, prefix="defaults-") as f:
+            f.write(content)
+            fpath = f.name
+        os.chmod(fpath, os.stat(fpath).st_mode | stat.S_IROTH)
+        return fpath
+
+    def _get_url_overrides(self, urls):
+        try:
+            arch_urls = urls[self.arch]
+        except KeyError:
+            return ""
+        kstest_var_map = {
+            'KSTEST_URL': 'installation_tree',
+            'KSTEST_METALINK': 'metalink',
+            'KSTEST_MIRRORLIST': 'mirrorlist',
+            'KSTEST_FTP_URL': 'ftp_url',
+            'KSTEST_MODULAR_URL': 'modular_url',
+        }
+        overrides = []
+        for variable, event_key in kstest_var_map.items():
+            value = arch_urls.get(event_key)
+            if value:
+                overrides.append(f"export {variable}={value}")
+
+        return "\n".join(overrides)
+
+    def process_installation_urls(self, urls):
+        """Get test run parameters from installationUrls event structure
+
+        :param urls: structure holding scenario data
+        :type urls: InstallationUrlsStructure
+        :returns: tuple with
+                  - boot.iso URL based on installation_tree location or None if
+                    the installation_tree location is not available
+                  - path of override defaults file with urls to be used by launcher
+                    or None if there are no relevant overrides
+        :rtype: (str, str))
+        """
+        boot_iso_url = None
+        defaults_file_path = None
+
+        try:
+            tree = urls[self.arch]['installation_tree']
+        except KeyError:
+            pass
+        else:
+            if tree:
+                boot_iso_url = os.path.join(tree, BOOT_ISO_PATH_IN_INSTALLATION_TREE)
+
+        # Configure installation repositories
+        variable_overrides = self._get_url_overrides(urls)
+        if variable_overrides:
+            defaults_file_path = self._create_defaults_file(variable_overrides)
+            LOGGER.info("Created override defaults file "
+                        f"{defaults_file_path} with content:"
+                        f"\n{variable_overrides}")
+
+        return (boot_iso_url, defaults_file_path)
 
     def setup(self):
         if self.arch not in SUPPORTED_ARCHITECTURES:
@@ -170,6 +234,12 @@ class KickstartTestWorkflow(GroupedWorkflow):
 
         if self.event.kstestParams:
             self.platform = self.event.kstestParams.platform
+
+            urls = self.event.kstestParams.urls
+            if urls:
+                tree_boot_iso_url, defaults_file_path = self.process_installation_urls(urls)
+                self.boot_iso_url = self.boot_iso_url or tree_boot_iso_url
+                self.defaults_file_path = defaults_file_path
 
         if self.event.bootIso:
             try:
@@ -256,6 +326,9 @@ class KickstartTestWorkflow(GroupedWorkflow):
         if self.platform:
             command = command + ['--platform', self.platform]
 
+        if self.defaults_file_path:
+            command = command + ["--defaults", self.defaults_file_path]
+
         command = command + tests
         LOGGER.info(f"Runner is starting. {current_results.summary_message()}")
         LOGGER.info("Running %s", command)
@@ -290,6 +363,9 @@ class KickstartTestWorkflow(GroupedWorkflow):
                 os.remove(self.boot_iso_dest)
             except FileNotFoundError:
                 LOGGER.debug("Installer boot.iso %s not found", self.boot_iso_dest)
+
+        if self.defaults_file_path:
+            os.unlink(self.defaults_file_path)
 
         if not self.ksrepo_local_dir and self.ksrepo_dir:
             tempdir = os.path.normpath(os.path.join(self.ksrepo_dir, '..'))

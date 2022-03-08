@@ -1,0 +1,10 @@
+name: kstests urls plan
+description: A plan to test processing of installation urls structure
+point_person: rvykydal@redhat.com
+artifact_type: kstest-urls
+verified_by:
+  test_cases:
+    direct_list:
+      - container-basic
+configurations:
+  - architecture: x86_64
