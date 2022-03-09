@@ -167,6 +167,7 @@ class KickstartTestWorkflow(GroupedWorkflow):
         self.ksrepo = self.settings.get('kickstart_test', 'kstest_repo')
         self.ksrepo_branch = self.settings.get('kickstart_test', 'kstest_repo_branch')
         self.retry = self.settings.getboolean('kickstart_test', 'retry_on_failure')
+        self.timeout = self.settings.get('kickstart_test', 'timeout')
 
     def _create_defaults_file(self, content):
         with tempfile.NamedTemporaryFile("w", delete=False, prefix="defaults-") as f:
@@ -332,6 +333,8 @@ class KickstartTestWorkflow(GroupedWorkflow):
 
         if self.retry:
             command = command + ["--retry"]
+
+        command = command + ["--timeout", self.timeout]
 
         command = command + tests
         LOGGER.info(f"Runner is starting. {current_results.summary_message()}")
