@@ -166,6 +166,7 @@ class KickstartTestWorkflow(GroupedWorkflow):
         self.runner_command = self.settings.get('kickstart_test', 'runner_command').split()
         self.ksrepo = self.settings.get('kickstart_test', 'kstest_repo')
         self.ksrepo_branch = self.settings.get('kickstart_test', 'kstest_repo_branch')
+        self.retry = self.settings.getboolean('kickstart_test', 'retry_on_failure')
 
     def _create_defaults_file(self, content):
         with tempfile.NamedTemporaryFile("w", delete=False, prefix="defaults-") as f:
@@ -318,7 +319,7 @@ class KickstartTestWorkflow(GroupedWorkflow):
 
         test_to_crcs = self._map_tests_to_crcs(self.crcList)
         tests = list(test_to_crcs.keys())
-        current_results = KicstartTestBatchCurrentResults(tests)
+        current_results = KicstartTestBatchCurrentResults(tests, retry=self.retry)
         self.groupReportResult(self.crcList, Result('running', current_results=current_results))
 
         command = self.runner_command
@@ -328,6 +329,9 @@ class KickstartTestWorkflow(GroupedWorkflow):
 
         if self.defaults_file_path:
             command = command + ["--defaults", self.defaults_file_path]
+
+        if self.retry:
+            command = command + ["--retry"]
 
         command = command + tests
         LOGGER.info(f"Runner is starting. {current_results.summary_message()}")

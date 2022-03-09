@@ -147,6 +147,7 @@ class TestKickstartTestWorkflowResultsParsing(unittest.TestCase):
                     'runner_command': "%s %s 1000 0" %
                     (mock_launcher_path, output_dump_path),
                     'kstest_local_repo': "/tmp/mockrepo",
+                    'retry_on_failure': True,
                 },
             },
             environment={},
