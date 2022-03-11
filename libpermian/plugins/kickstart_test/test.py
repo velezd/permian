@@ -147,7 +147,7 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
                 if id(caseRunConfiguration.workflow) not in executed_workflows:
                     if caseRunConfiguration.workflow.arch not in SUPPORTED_ARCHITECTURES:
                         with self.assertRaises(UnsupportedConfiguration) as uc:
-                            caseRunConfiguration.workflow.run()
+                            caseRunConfiguration.workflow.setup()
                     else:
                         caseRunConfiguration.workflow.run()
                         executed_workflows.add(id(caseRunConfiguration.workflow))
@@ -160,8 +160,7 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
         for caseRunConfiguration in testRuns.caseRunConfigurations:
             with self.subTest(caseRunConfiguration=caseRunConfiguration):
                 if id(caseRunConfiguration.workflow) not in executed_workflows:
-                    with self.assertRaises(UnsupportedConfiguration) as uc:
-                        caseRunConfiguration.workflow.run()
+                    caseRunConfiguration.workflow.run()
 
     def testWorkflowWithPlatformRun(self):
         event = TestFakePlatformEvent(self.settings)

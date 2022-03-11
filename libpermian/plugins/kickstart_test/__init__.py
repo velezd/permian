@@ -148,6 +148,8 @@ class KstestParamsStructure(BaseStructure):
 
 @api.workflows.register("kickstart-test")
 class KickstartTestWorkflow(GroupedWorkflow):
+    silent_exceptions = (UnsupportedConfiguration, )
+
     @classmethod
     def factory(cls, testRuns, crcList):
         for (arch, ), crcList in crcList.by_configuration('architecture').items():
