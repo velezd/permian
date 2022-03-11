@@ -22,6 +22,16 @@ BOOT_ISO_PATH_IN_INSTALLATION_TREE = 'images/boot.iso'
 SUPPORTED_ARCHITECTURES = {'x86_64'}
 
 
+class MissingBootIso(Exception):
+    """
+    Raised when boot.iso for an architecture is not configured.
+    """
+    def __init__(self, architecture):
+        msg = f"Boot.iso for '{architecture} is not supported"
+        self.architecture = architecture
+        super().__init__(msg)
+
+
 class KicstartTestBatchCurrentResults():
     """Container for storing individual results of kickstart tests run in a batch.
 
@@ -148,7 +158,7 @@ class KstestParamsStructure(BaseStructure):
 
 @api.workflows.register("kickstart-test")
 class KickstartTestWorkflow(GroupedWorkflow):
-    silent_exceptions = (UnsupportedConfiguration, )
+    silent_exceptions = (UnsupportedConfiguration, MissingBootIso)
 
     @classmethod
     def factory(cls, testRuns, crcList):
@@ -255,7 +265,7 @@ class KickstartTestWorkflow(GroupedWorkflow):
 
         if not self.boot_iso_url:
             LOGGER.info(f"Installer boot.iso location configuration for {self.arch} is missing")
-            return
+            raise MissingBootIso(self.arch)
 
         self.groupReportResult(self.crcList, Result('queued'))
 
