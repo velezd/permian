@@ -9,7 +9,7 @@ from libpermian.events.base import Event
 from libpermian.settings import Settings
 from libpermian.exceptions import UnsupportedConfiguration
 from libpermian.plugins.kickstart_test import SUPPORTED_ARCHITECTURES, \
-    KstestParamsStructure, MissingBootIso
+    KstestParamsStructure, MissingBootIso, MissingInformation
 
 from tclib.library import Library
 
@@ -34,7 +34,7 @@ EXPECTED_RESULTS = {
 }
 
 
-class TestFakePOCEvent(Event):
+class TestFakeMissingPlatformEvent(Event):
     def __init__(self, settings, event_type='kstest-poc'):
         super().__init__(
             settings,
@@ -50,10 +50,13 @@ class TestFakeMissingBootIsoEvent(Event):
         super().__init__(
             settings,
             event_type,
+            kstestParams={
+                'platform': "rhel8",
+            },
         )
 
 
-class TestFakePlatformEvent(Event):
+class TestFakeMinimalEvent(Event):
     def __init__(self, settings, event_type='kstest-poc'):
         super().__init__(
             settings,
@@ -136,7 +139,7 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
                 pass
 
     def testWorkflowRun(self):
-        event = TestFakePOCEvent(self.settings)
+        event = TestFakeMinimalEvent(self.settings)
         testRuns = TestRuns(self.library, event, self.settings)
         executed_workflows = set()
         for caseRunConfiguration in testRuns.caseRunConfigurations:
@@ -169,8 +172,19 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
                         caseRunConfiguration.workflow.run()
                     executed_workflows.add(id(caseRunConfiguration.workflow))
 
+    def testMissingPlatformWorkflowException(self):
+        event = TestFakeMissingPlatformEvent(self.settings)
+        testRuns = TestRuns(self.library, event, self.settings)
+        executed_workflows = set()
+        for caseRunConfiguration in testRuns.caseRunConfigurations:
+            with self.subTest(caseRunConfiguration=caseRunConfiguration):
+                if id(caseRunConfiguration.workflow) not in executed_workflows:
+                    with self.assertRaises(MissingInformation):
+                        caseRunConfiguration.workflow.run()
+                    executed_workflows.add(id(caseRunConfiguration.workflow))
+
     def testUnsupportedArchWorkflowRun(self):
-        event = TestFakePOCEvent(self.settings, event_type="kstest-unsupported-arch")
+        event = TestFakeMinimalEvent(self.settings, event_type="kstest-unsupported-arch")
         testRuns = TestRuns(self.library, event, self.settings)
         executed_workflows = set()
         for caseRunConfiguration in testRuns.caseRunConfigurations:
@@ -185,7 +199,7 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
         self.assertEqual(len(executed_workflows), 1)
 
     def testMissingArchWorkflowRun(self):
-        event = TestFakePOCEvent(self.settings, event_type="kstest-missing-arch")
+        event = TestFakeMinimalEvent(self.settings, event_type="kstest-missing-arch")
         testRuns = TestRuns(self.library, event, self.settings)
         executed_workflows = set()
         for caseRunConfiguration in testRuns.caseRunConfigurations:
@@ -194,7 +208,7 @@ class TestKickstartTestWrorkflow(unittest.TestCase):
                     caseRunConfiguration.workflow.run()
 
     def testWorkflowWithPlatformRun(self):
-        event = TestFakePlatformEvent(self.settings)
+        event = TestFakeMinimalEvent(self.settings)
         testRuns = TestRuns(self.library, event, self.settings)
         executed_workflows = set()
         for caseRunConfiguration in testRuns.caseRunConfigurations:
@@ -227,7 +241,7 @@ class TestKickstartTestWorkflowResultsParsing(unittest.TestCase):
             environment={},
             settings_locations=[],
         )
-        cls.event = TestFakePOCEvent(cls.settings)
+        cls.event = TestFakeMinimalEvent(cls.settings)
 
     def setUp(self):
         self.testRuns = TestRuns(self.library, self.event, self.settings)
@@ -409,7 +423,7 @@ class TestInstallationUrlStructureProcessing(unittest.TestCase):
             environment={},
             settings_locations=[],
         )
-        cls.event = TestFakePOCEvent(cls.settings)
+        cls.event = TestFakeMinimalEvent(cls.settings)
 
     def setUp(self):
         self.testRuns = TestRuns(self.library, self.event, self.settings)

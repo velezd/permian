@@ -32,6 +32,13 @@ class MissingBootIso(Exception):
         super().__init__(msg)
 
 
+class MissingInformation(Exception):
+    """
+    Raised when workflow is missing required information.
+    """
+    pass
+
+
 class KicstartTestBatchCurrentResults():
     """Container for storing individual results of kickstart tests run in a batch.
 
@@ -247,14 +254,17 @@ class KickstartTestWorkflow(GroupedWorkflow):
             LOGGER.info(f"Architecture {self.arch} is not supported.")
             raise UnsupportedConfiguration('architecture', self.arch)
 
-        if self.event.kstestParams:
-            self.platform = self.event.kstestParams.platform
+        if not self.event.kstestParams:
+            LOGGER.error(f"Platform configuration by kstestParams is missing")
+            raise MissingInformation("platform configuration")
 
-            urls = self.event.kstestParams.urls
-            if urls:
-                tree_boot_iso_url, url_overrides_path = self.process_installation_urls(urls)
-                self.boot_iso_url = self.boot_iso_url or tree_boot_iso_url
-                self.url_overrides_path = url_overrides_path
+        self.platform = self.event.kstestParams.platform
+
+        urls = self.event.kstestParams.urls
+        if urls:
+            tree_boot_iso_url, url_overrides_path = self.process_installation_urls(urls)
+            self.boot_iso_url = self.boot_iso_url or tree_boot_iso_url
+            self.url_overrides_path = url_overrides_path
 
         if self.event.bootIso:
             try:
@@ -338,8 +348,7 @@ class KickstartTestWorkflow(GroupedWorkflow):
 
         command = self.runner_command
 
-        if self.platform:
-            command = command + ['--platform', self.platform]
+        command = command + ['--platform', self.platform]
 
         if self.url_overrides_path:
             command = command + ["--defaults", self.url_overrides_path]
