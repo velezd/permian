@@ -348,6 +348,8 @@ class KickstartTestWorkflow(GroupedWorkflow):
 
         command = self.runner_command
 
+        command = command + ['--scenario', self.event.type]
+
         command = command + ['--platform', self.platform]
 
         if self.url_overrides_path:
