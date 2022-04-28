@@ -64,12 +64,12 @@ class KicstartTestBatchCurrentResults():
         :rtype: (str, libpermian.result.Result)
         """
         finished_test, permian_result = None, None
-        if line.startswith("INFO: RESULT:"):
-            fields = line.split(":", 5)
-            if len(fields) != 6:
+        if "INFO: RESULT:" in line:
+            fields = line.split(":", 7)
+            if len(fields) != 8:
                 LOGGER.warning("Workflow is not able to parse result from output")
                 return (None, None)
-            _, _, test, _, result, detail = fields
+            _, _, _, _, test, _, result, detail = fields
             if test in self.results:
                 self.results[test].append((result, detail))
                 finished_test = test

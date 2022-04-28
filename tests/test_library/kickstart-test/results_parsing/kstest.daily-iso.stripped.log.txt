@@ -12,72 +12,72 @@ INFO:apply-ksappend.py: running ksappend substitution on: authselect-not-set.ks.
 Including post-nochroot-lib-keyboard.sh into keyboard-convert-vc.ks
 Including post-lib-keyboard.sh into keyboard-convert-vc.ks
 ================================================================
-INFO: install_log = /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/virt-install.log
-INFO: virt-install ['-n', 'kstest-container_(18f92630-3e59-45b7-b1cd-e44f008434da)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/container.ks', '--disk', 'path=/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/container.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:56735,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-container_(18f92630-3e59-45b7-b1cd-e44f008434da)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/container.ks', '--disk', 'path=/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/container.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:56735,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ......................................
-INFO: Install finished. Or at least virt shut down.
-INFO: Disk Image install successful
-INFO: SUMMARY
+2022-04-28 12:21:21,293 INFO: Install finished. Or at least virt shut down.
+2022-04-28 12:21:21,293 INFO: Disk Image install successful
+2022-04-28 12:21:21,293 INFO: SUMMARY
 -------
 Logs are in /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph
 Disk image(s) at /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/disk-a.img,cache=unsafe
 Results are in /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph
 
-INFO: RESULT:container:a60e7dc23a91:SUCCESS:test done
+2022-04-28 12:21:21,293 INFO: RESULT:container:a60e7dc23a91:SUCCESS:test done
 ================================================================
-INFO: install_log = /var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/virt-install.log
-INFO: virt-install ['-n', 'kstest-keyboard-convert-vc_(2b0b4773-ea0f-4432-980e-bde2ca84c3af)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/keyboard-convert-vc.ks', '--disk', 'path=/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/keyboard-convert-vc.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:52475,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-keyboard-convert-vc_(2b0b4773-ea0f-4432-980e-bde2ca84c3af)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/keyboard-convert-vc.ks', '--disk', 'path=/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/keyboard-convert-vc.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:52475,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ...........................................................................................................
-INFO: Install finished. Or at least virt shut down.
-INFO: Disk Image install successful
-INFO: SUMMARY
+2022-04-28 12:21:21,293 INFO: Install finished. Or at least virt shut down.
+2022-04-28 12:21:21,293 INFO: Disk Image install successful
+2022-04-28 12:21:21,293 INFO: SUMMARY
 -------
 Logs are in /var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug
 Disk image(s) at /var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug/disk-a.img,cache=unsafe
 Results are in /var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug
 
-INFO: RESULT:keyboard-convert-vc:a60e7dc23a91:SUCCESS:test done
+2022-04-28 12:21:21,293 INFO: RESULT:keyboard-convert-vc:a60e7dc23a91:SUCCESS:test done
 ================================================================
-INFO: install_log = /var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/virt-install.log
-INFO: virt-install ['-n', 'kstest-selinux-permissive_(ec05d832-576e-48c9-86a1-8681a5ec7347)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/selinux-permissive.ks', '--disk', 'path=/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/selinux-permissive.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:48729,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-selinux-permissive_(ec05d832-576e-48c9-86a1-8681a5ec7347)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/selinux-permissive.ks', '--disk', 'path=/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/selinux-permissive.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:48729,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ..............................................................................................
-INFO: Install finished. Or at least virt shut down.
-INFO: Disk Image install successful
-INFO: SUMMARY
+2022-04-28 12:21:21,293 INFO: Install finished. Or at least virt shut down.
+2022-04-28 12:21:21,293 INFO: Disk Image install successful
+2022-04-28 12:21:21,293 INFO: SUMMARY
 -------
 Logs are in /var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds
 Disk image(s) at /var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds/disk-a.img,cache=unsafe
 Results are in /var/tmp/kstest-selinux-permissive.2021_12_30-04_43_19.pubh63ds
 
-INFO: RESULT:selinux-permissive:a60e7dc23a91:SUCCESS:test done
+2022-04-28 12:21:21,293 INFO: RESULT:selinux-permissive:a60e7dc23a91:SUCCESS:test done
 ================================================================
-INFO: install_log = /var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/virt-install.log
-INFO: virt-install ['-n', 'kstest-lang_(c80b15d7-35ad-4838-88b1-d5793eb848ff)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/lang.ks', '--disk', 'path=/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/lang.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:47331,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-lang_(c80b15d7-35ad-4838-88b1-d5793eb848ff)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/lang.ks', '--disk', 'path=/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/lang.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:47331,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 .....................................................................................
-INFO: Install finished. Or at least virt shut down.
-INFO: Disk Image install successful
-INFO: SUMMARY
+2022-04-28 12:21:21,293 INFO: Install finished. Or at least virt shut down.
+2022-04-28 12:21:21,293 INFO: Disk Image install successful
+2022-04-28 12:21:21,293 INFO: SUMMARY
 -------
 Logs are in /var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn
 Disk image(s) at /var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn/disk-a.img,cache=unsafe
 Results are in /var/tmp/kstest-lang.2021_12_30-02_12_54.vlyxl6jn
 
-INFO: RESULT:lang:a60e7dc23a91:SUCCESS:test done
+2022-04-28 12:21:21,293 INFO: RESULT:lang:a60e7dc23a91:SUCCESS:test done
 ================================================================
-INFO: install_log = /var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/virt-install.log
-INFO: virt-install ['-n', 'kstest-packages-multilib_(393bfc14-1ee5-4ae3-b6b5-baac44e05a3d)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/packages-multilib.ks', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/packages-multilib.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:54887,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-packages-multilib_(393bfc14-1ee5-4ae3-b6b5-baac44e05a3d)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/packages-multilib.ks', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/packages-multilib.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-packages-multilib.2021_12_30-02_55_09.dt0agg2q/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:54887,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ...........................
-INFO: Installation error detected. See logfile.
-ERROR: Install failed: Test failed on line: 02:59:35,444 INFO anaconda:anaconda: kickstart.script: All kickstart %%traceback script(s) have been run
-ERROR: ERROR: Image creation failed: Test failed on line: 02:59:35,444 INFO anaconda:anaconda: kickstart.script: All kickstart %%traceback script(s) have been run
-INFO: RESULT:packages-multilib:a60e7dc23a91:FAILED:Test failed on line: 02:59:35,444 INFO anaconda:anaconda: kickstart.script: All kickstart %%traceback script(s) have been run
+2022-04-28 12:21:21,293 INFO: Installation error detected. See logfile.
+2022-04-28 12:21:21,293 ERROR: Install failed: Test failed on line: 02:59:35,444 INFO anaconda:anaconda: kickstart.script: All kickstart %%traceback script(s) have been run
+2022-04-28 12:21:21,293 ERROR: ERROR: Image creation failed: Test failed on line: 02:59:35,444 INFO anaconda:anaconda: kickstart.script: All kickstart %%traceback script(s) have been run
+2022-04-28 12:21:21,293 INFO: RESULT:packages-multilib:a60e7dc23a91:FAILED:Test failed on line: 02:59:35,444 INFO anaconda:anaconda: kickstart.script: All kickstart %%traceback script(s) have been run
 
 Retrying failed test once
-INFO: install_log = /var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/virt-install.log
-INFO: virt-install ['-n', 'kstest-packages-multilib_(81283f7d-aec6-4e03-81cd-5b8c9d1b9b93)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/packages-multilib.ks', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/packages-multilib.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:33229,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-packages-multilib_(81283f7d-aec6-4e03-81cd-5b8c9d1b9b93)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/packages-multilib.ks', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/packages-multilib.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-packages-multilib.2021_12_30-02_59_42.cd95zrbd/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:33229,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ..............................
-INFO: Installation error detected. See logfile.
-ERROR: Install failed: Test failed on line: 03:04:39,307 CRIT anaconda:anaconda: exception: Traceback (most recent call last):
+2022-04-28 12:21:21,293 INFO: Installation error detected. See logfile.
+2022-04-28 12:21:21,293 ERROR: Install failed: Test failed on line: 03:04:39,307 CRIT anaconda:anaconda: exception: Traceback (most recent call last):
 
   File "/usr/lib64/python3.10/site-packages/pyanaconda/threading.py", line 275, in run
     threading.Thread.run(self)
@@ -126,7 +126,7 @@ dnf.exceptions.Error: Transaction test error:
   file /usr/share/dbus-1/interfaces/org.freedesktop.systemd1.Manager.xml conflicts between attempted installs of systemd-250~rc3-1.fc36.i686 and systemd-250~rc3-1.fc36.x86_64
 
 
-ERROR: ERROR: Image creation failed: Test failed on line: 03:04:39,307 CRIT anaconda:anaconda: exception: Traceback (most recent call last):
+2022-04-28 12:21:21,293 ERROR: ERROR: Image creation failed: Test failed on line: 03:04:39,307 CRIT anaconda:anaconda: exception: Traceback (most recent call last):
 
   File "/usr/lib64/python3.10/site-packages/pyanaconda/threading.py", line 275, in run
     threading.Thread.run(self)
@@ -175,7 +175,7 @@ dnf.exceptions.Error: Transaction test error:
   file /usr/share/dbus-1/interfaces/org.freedesktop.systemd1.Manager.xml conflicts between attempted installs of systemd-250~rc3-1.fc36.i686 and systemd-250~rc3-1.fc36.x86_64
 
 
-INFO: RESULT:packages-multilib:a60e7dc23a91:FAILED:Test failed on line: 03:04:39,307 CRIT anaconda:anaconda: exception: Traceback (most recent call last):
+2022-04-28 12:21:21,293 INFO: RESULT:packages-multilib:a60e7dc23a91:FAILED:Test failed on line: 03:04:39,307 CRIT anaconda:anaconda: exception: Traceback (most recent call last):
 
   File "/usr/lib64/python3.10/site-packages/pyanaconda/threading.py", line 275, in run
     threading.Thread.run(self)
@@ -225,62 +225,62 @@ dnf.exceptions.Error: Transaction test error:
 
 
 ================================================================
-INFO: install_log = /var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/virt-install.log
-INFO: virt-install ['-n', 'kstest-services_(e6ef3d6f-2776-4a00-bb35-f19178ae9fef)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/services.ks', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/services.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:44587,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-services_(e6ef3d6f-2776-4a00-bb35-f19178ae9fef)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/services.ks', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/services.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-services.2021_12_30-01_59_45.kk5vjdnd/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:44587,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ........................................................................................................................................................................................................................................................................................................................................................................
-INFO: Installation error detected. See logfile.
-ERROR: Install failed: Test timed out
-ERROR: ERROR: Image creation failed: Test timed out
-INFO: RESULT:services:a60e7dc23a91:FAILED:Test timed out
+2022-04-28 12:21:21,293 INFO: Installation error detected. See logfile.
+2022-04-28 12:21:21,293 ERROR: Install failed: Test timed out
+2022-04-28 12:21:21,293 ERROR: ERROR: Image creation failed: Test timed out
+2022-04-28 12:21:21,293 INFO: RESULT:services:a60e7dc23a91:FAILED:Test timed out
 
 Retrying failed test once
-INFO: install_log = /var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/virt-install.log
-INFO: virt-install ['-n', 'kstest-services_(39906c4c-6095-4dd1-b032-8bbe7f3d1ad9)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/services.ks', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/services.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:36317,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-services_(39906c4c-6095-4dd1-b032-8bbe7f3d1ad9)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/services.ks', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/services.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:36317,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ..................................................................................................
-INFO: Install finished. Or at least virt shut down.
-INFO: Disk Image install successful
-INFO: SUMMARY
+2022-04-28 12:21:21,293 INFO: Install finished. Or at least virt shut down.
+2022-04-28 12:21:21,293 INFO: Disk Image install successful
+2022-04-28 12:21:21,293 INFO: SUMMARY
 -------
 Logs are in /var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a
 Disk image(s) at /var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a/disk-a.img,cache=unsafe
 Results are in /var/tmp/kstest-services.2021_12_30-02_59_51.awuie1_a
 
-INFO: RESULT:services:a60e7dc23a91:SUCCESS:test done
+2022-04-28 12:21:21,293 INFO: RESULT:services:a60e7dc23a91:SUCCESS:test done
 Canceling installation due to timeout
 Canceling installation due to timeout
 Canceling installation due to timeout
 ================================================================
-INFO: install_log = /var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/virt-install.log
-INFO: virt-install ['-n', 'kstest-clearpart-1_(2e7c782e-c58e-453e-854f-2a4b340de11e)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/clearpart-1.ks', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/disk-a.img,cache=unsafe,bus=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/disk-b.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/clearpart-1.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:57817,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-clearpart-1_(2e7c782e-c58e-453e-854f-2a4b340de11e)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/clearpart-1.ks', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/disk-a.img,cache=unsafe,bus=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/disk-b.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/clearpart-1.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-clearpart-1.2021_12_30-01_59_26.kc13qtxg/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:57817,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ........................................................................................................................................................................................................................................................................................................................................................................
-INFO: Installation error detected. See logfile.
-ERROR: Install failed: Test timed out
-ERROR: ERROR: Image creation failed: Test timed out
-INFO: RESULT:clearpart-1:a60e7dc23a91:FAILED:Test timed out
+2022-04-28 12:21:21,293 INFO: Installation error detected. See logfile.
+2022-04-28 12:21:21,293 ERROR: Install failed: Test timed out
+2022-04-28 12:21:21,293 ERROR: ERROR: Image creation failed: Test timed out
+2022-04-28 12:21:21,293 INFO: RESULT:clearpart-1:a60e7dc23a91:FAILED:Test timed out
 
 Retrying failed test once
-INFO: install_log = /var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/virt-install.log
-INFO: virt-install ['-n', 'kstest-clearpart-1_(c22f4ba8-a31b-49d8-b482-09f390be4add)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/clearpart-1.ks', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/disk-a.img,cache=unsafe,bus=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/disk-b.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/clearpart-1.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:58631,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-clearpart-1_(c22f4ba8-a31b-49d8-b482-09f390be4add)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/clearpart-1.ks', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/disk-a.img,cache=unsafe,bus=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/disk-b.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/clearpart-1.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:58631,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ..............................................................................................................
-INFO: Install finished. Or at least virt shut down.
-INFO: Disk Image install successful
-INFO: SUMMARY
+2022-04-28 12:21:21,293 INFO: Install finished. Or at least virt shut down.
+2022-04-28 12:21:21,293 INFO: Disk Image install successful
+2022-04-28 12:21:21,293 INFO: SUMMARY
 -------
 Logs are in /var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2
 Disk image(s) at /var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/disk-a.img,cache=unsafe,/var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2/disk-b.img,cache=unsafe
 Results are in /var/tmp/kstest-clearpart-1.2021_12_30-02_59_32.25lzzvu2
 
-INFO: RESULT:clearpart-1:a60e7dc23a91:SUCCESS:test done
+2022-04-28 12:21:21,293 INFO: RESULT:clearpart-1:a60e7dc23a91:SUCCESS:test done
 Canceling installation due to timeout
 Canceling installation due to timeout
 Canceling installation due to timeout
 ================================================================
-INFO: install_log = /var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/virt-install.log
-INFO: virt-install ['-n', 'kstest-authselect-not-set_(3385d597-2d2f-42ef-869a-698e828b8275)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/authselect-not-set.ks', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/authselect-not-set.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:46223,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-authselect-not-set_(3385d597-2d2f-42ef-869a-698e828b8275)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/authselect-not-set.ks', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/authselect-not-set.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:46223,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ....................................................................................
-INFO: Install finished. Or at least virt shut down.
-INFO: Disk Image install successful
-INFO: SUMMARY
+2022-04-28 12:21:21,293 INFO: Install finished. Or at least virt shut down.
+2022-04-28 12:21:21,293 INFO: Disk Image install successful
+2022-04-28 12:21:21,293 INFO: SUMMARY
 -------
 Logs are in /var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_
 Disk image(s) at /var/tmp/kstest-authselect-not-set.2021_12_30-04_32_35.leqc142_/disk-a.img,cache=unsafe
@@ -290,15 +290,15 @@ Failed to run subprocess: '['/opt/kstest/kickstart-tests/scripts/launcher/lib/la
 stdout:
 *** Failed check: authselect not installed or no existing configuration detected
 
-INFO: RESULT:authselect-not-set:a60e7dc23a91:FAILED:Validation failed with return code 1
+2022-04-28 12:21:21,293 INFO: RESULT:authselect-not-set:a60e7dc23a91:FAILED:Validation failed with return code 1
 
 Retrying failed test once
-INFO: install_log = /var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/virt-install.log
-INFO: virt-install ['-n', 'kstest-authselect-not-set_(7a3041b7-24d1-4455-a155-b95a36f816d7)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/authselect-not-set.ks', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/authselect-not-set.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:57461,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
+2022-04-28 12:21:21,293 INFO: install_log = /var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/virt-install.log
+2022-04-28 12:21:21,293 INFO: virt-install ['-n', 'kstest-authselect-not-set_(7a3041b7-24d1-4455-a155-b95a36f816d7)', '-r', '2048', '--noautoconsole', '--vcpus', '1', '--rng', '/dev/random', '--noreboot', '--graphics', 'vnc,listen=0.0.0.0', '--video', 'virtio', '--initrd-inject', '/opt/kstest/kickstart-tests/authselect-not-set.ks', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/disk-a.img,cache=unsafe,bus=virtio', '--network', 'user,model=virtio', '--disk', 'path=/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/boot.iso,device=cdrom,readonly=on,shareable=on', '--extra-args', 'inst.ks=file:/authselect-not-set.ks debug=1 inst.debug rd.shell=0 rd.emergency=poweroff inst.kernel.hung_task_timeout_secs=1200 inst.stage2=hd:CDLABEL=Fedora-S-dvd-x86_64-rawh', '--location', '/var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/boot.iso,kernel=isolinux/vmlinuz,initrd=isolinux/initrd.img', '--channel', 'tcp,host=127.0.0.1:57461,mode=connect,target_type=virtio,name=org.fedoraproject.anaconda.log.0']
 ............................................................................................
-INFO: Install finished. Or at least virt shut down.
-INFO: Disk Image install successful
-INFO: SUMMARY
+2022-04-28 12:21:21,293 INFO: Install finished. Or at least virt shut down.
+2022-04-28 12:21:21,293 INFO: Disk Image install successful
+2022-04-28 12:21:21,293 INFO: SUMMARY
 -------
 Logs are in /var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5
 Disk image(s) at /var/tmp/kstest-authselect-not-set.2021_12_30-04_47_11.a0crexj5/disk-a.img,cache=unsafe
@@ -308,7 +308,7 @@ Failed to run subprocess: '['/opt/kstest/kickstart-tests/scripts/launcher/lib/la
 stdout:
 *** Failed check: authselect not installed or no existing configuration detected
 
-INFO: RESULT:authselect-not-set:a60e7dc23a91:FAILED:Validation failed with return code 1
+2022-04-28 12:21:21,293 INFO: RESULT:authselect-not-set:a60e7dc23a91:FAILED:Validation failed with return code 1
 /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph
 /var/tmp/kstest-container.2021_12_30-04_23_11.bm6awoph/anaconda
 /var/tmp/kstest-keyboard-convert-vc.2021_12_30-03_44_59.u3nhh2ug
