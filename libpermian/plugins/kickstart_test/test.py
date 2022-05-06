@@ -531,3 +531,10 @@ class TestParamsToBootIso(unittest.TestCase):
         kstest_workflow = KickstartTestWorkflow(testRuns, [], 'x86_64')
         kstest_workflow.setup()
         self.assertAlmostEqual(kstest_workflow.boot_iso_url, DUMMY_BOOT_ISO_URL)
+
+    def testParamsPriority(self):
+        event = TestFakeScenariosEventDailyiso(self.settings)
+        testRuns = TestRuns(self.library, event, self.settings)
+        kstest_workflow = KickstartTestWorkflow(testRuns, [], 'x86_64')
+        kstest_workflow.setup()
+        self.assertAlmostEqual(kstest_workflow.boot_iso_url, DUMMY_BOOT_ISO_URL)
