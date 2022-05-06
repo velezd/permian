@@ -27,7 +27,7 @@ class MissingBootIso(Exception):
     Raised when boot.iso for an architecture is not configured.
     """
     def __init__(self, architecture):
-        msg = f"Boot.iso for '{architecture} is not supported"
+        msg = f"Boot.iso for '{architecture} is not configured"
         self.architecture = architecture
         super().__init__(msg)
 
