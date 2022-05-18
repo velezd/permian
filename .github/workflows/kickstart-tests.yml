@@ -1,0 +1,149 @@
+# Run kickstart tests in a PR triggered by a "/kickstart-test" comment from an organization member.
+name: kickstart-tests
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  pr-info:
+    if: startsWith(github.event.comment.body, '/kickstart-test')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query comment author repository permissions
+        uses: octokit/request-action@v2.x
+        id: user_permission
+        with:
+          route: GET /repos/${{ github.repository }}/collaborators/${{ github.event.sender.login }}/permission
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # restrict running of tests to users with admin or write permission for the repository
+      # see https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#get-repository-permissions-for-a-user
+      # store output if user is allowed in allowed_user job output so it has to be checked in downstream job
+      - name: Check if user does have correct permissions
+        if: contains('admin write', fromJson(steps.user_permission.outputs.data).permission)
+        id: check_user_perm
+        run: |
+          echo "User '${{ github.event.sender.login }}' has permission '${{ fromJson(steps.user_permission.outputs.data).permission }}' allowed values: 'admin', 'write'"
+          echo "::set-output name=allowed_user::true"
+
+      - name: Get information for pull request
+        uses: octokit/request-action@v2.x
+        id: pr_api
+        with:
+          route: GET /repos/${{ github.repository }}/pulls/${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    outputs:
+      allowed_user: ${{ steps.check_user_perm.outputs.allowed_user }}
+      base_ref: ${{ fromJson(steps.pr_api.outputs.data).base.ref }}
+      sha: ${{ fromJson(steps.pr_api.outputs.data).head.sha }}
+      pr_number: ${{ github.event.issue.number }}
+
+  run:
+    needs: pr-info
+    if: needs.pr-info.outputs.allowed_user == 'true'
+    runs-on: [self-hosted, kstest]
+    timeout-minutes: 40
+    env:
+       TARGET_BRANCH: ${{ needs.pr-info.outputs.base_ref }}
+       TEST_JOBS: 16
+       REPOSITORY: "http://dl.fedoraproject.org/pub/fedora/linux/releases/36"
+       PLATFORM: "fedora_rawhide"
+    steps:
+      # self-hosted runners don't do this automatically; also useful to keep stuff around for debugging
+      # need to run sudo as the launch script and the container create root/other user owned files
+      - name: Clean up previous run
+        run: |
+          sudo podman ps -q --all --filter='ancestor=kstest-runner' | xargs -tr sudo podman rm -f
+          sudo podman volume rm --all || true
+          sudo rm -rf * .git
+
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.pr-info.outputs.sha }}
+          path: permian
+          fetch-depth: 0
+
+      - name: Rebase to current ${{ env.TARGET_BRANCH }}
+        working-directory: ./permian
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git log --oneline -1 origin/${{ env.TARGET_BRANCH }}
+          git rebase origin/${{ env.TARGET_BRANCH }}
+
+      - name: Clone tplib repository
+        uses: actions/checkout@v3
+        with:
+          repository: rhinstaller/tplib
+          path: tplib
+
+      - name: Clone kickstart-tests repository
+        uses: actions/checkout@v3
+        with:
+          repository: rhinstaller/kickstart-tests
+          path: kickstart-tests
+
+      - name: Generate tplib test cases
+        working-directory: ./kickstart-tests
+        run: scripts/generate-testcases.py -t ./testlib/test_cases/kstest-template.tc.yaml.j2 . -o ./testlib/test_cases
+
+      - name: Ensure http proxy is running
+        run: sudo kickstart-tests/containers/squid.sh start
+
+      - name: Configure Permian event values
+        id: set_event_values
+        run: |
+          set -eux
+          echo "::set-output name=installation_tree::${REPOSITORY}/Everything/x86_64/os/"
+          echo "::set-output name=modular_url::${REPOSITORY}/Modular/x86_64/os/"
+          echo "::set-output name=platform::${PLATFORM}"
+
+      - name: Create Permian settings file
+        working-directory: ./permian
+        run: |
+          cat <<EOF > settings.ini
+          [kickstart_test]
+          kstest_local_repo=${{ github.workspace }}/kickstart-tests
+          [library]
+          directPath=${{ github.workspace }}/kickstart-tests/testlib
+          [github]
+          pull-request=${{ needs.pr-info.outputs.pr_number }}
+          repository=${{ github.repository }}
+          token=${{ secrets.GITHUB_TOKEN }}
+          EOF
+
+      - name: Run kickstart tests in container
+        working-directory: ./permian
+        run: |
+          sudo --preserve-env=TEST_JOBS \
+          PYTHONPATH=${PYTHONPATH:-}:${{ github.workspace }}/tplib \
+          ./pipeline --debug-log permian.log \
+            --settings settings.ini \
+            run_event '{"type":"github.pr.permian","kstestParams":{"platform":"${{ steps.set_event_values.outputs.platform }}","urls":{"x86_64":{"installation_tree":"${{ steps.set_event_values.outputs.installation_tree }}","modular_url":"${{ steps.set_event_values.outputs.modular_url }}"}}}}'
+
+      - name: Collect anaconda logs
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: 'logs'
+          # skip the /anaconda subdirectories, too large
+          path: |
+            kickstart-tests/data/logs/kstest.log
+            kickstart-tests/data/logs/kstest-*/*.log
+            kickstart-tests/data/additional_repo/*.rpm
+
+      - name: Collect Permian logs
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: 'logs-permian'
+          path: |
+            permian/permian.log
