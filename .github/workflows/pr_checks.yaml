@@ -40,21 +40,9 @@ jobs:
         run: |
           podman rmi -f permian
 
-  secrets-check:
-    name: Check if some secrets are set
-    runs-on: ubuntu-latest
-    outputs:
-      extra_plugins_available: ${{ steps.extra_plugins.outputs.extra_plugins_available }}
-    steps:
-      - name: Check if ADDITIONAL_PLUGINS_REPO is set
-        id: extra_plugins
-        run: |
-            echo "::set-output name=extra_plugins_available::${{ secrets.ADDITIONAL_PLUGINS_REPO != '' }}"
-
   extra-plugins:
-    needs: [secrets-check]
     runs-on: [self-hosted, kstest]
-    if: needs.secrets-check.outputs.extra_plugins_available == 'true'
+    if: github.repository == 'rhinstaller/permian'
     steps:
       - name: Checkout change
         uses: actions/checkout@v3
